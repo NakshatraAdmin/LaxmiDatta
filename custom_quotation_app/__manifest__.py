@@ -1,0 +1,28 @@
+{
+    'name': 'Custom Quotation App',
+    'version': '17.0.1.0',
+    'category': 'Custom',
+    'description': 'Module for managing custom quotations',
+    'depends': ['base', 'mail', 'sale_management', 'stock', 'mrp', 'account', 'sale_stock', 'web'],
+    'data': [
+        'security/ir.model.access.csv',
+        'report/report_deliveryslip.xml',
+        'views/custom_quotation_view.xml',
+        'views/product_template.xml',
+        'views/mrp_bom_view.xml',
+        'views/account_move_view.xml',
+        'views/sale_order_view.xml',
+        'views/res_config_settings_view.xml',
+        'views/stock.xml',
+        'data/ir_sequence_data.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'custom_quotation_app/static/src/widgets/qty_at_date_widget.js',
+            'custom_quotation_app/static/src/widgets/qty_at_date_widget.xml',
+        ],
+    },
+    'installable': True,
+    'application': True,
+    'license': 'LGPL-3',
+}

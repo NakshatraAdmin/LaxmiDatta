@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_overview_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="page">
+                    <h2 style="text-align: center; font-size: 24px; border-bottom: 1px solid #000; padding-bottom: 5px;">Manufacturing Order Overview</h2>
+                    <h3 style="font-size: 18px; margin-top: 20px;">Order Details</h3>
+                    <table style="width: 100%; margin-bottom: 20px; font-size: 16px;">
+                        <tr>
+                            <td>Name:</td>
+                            <td><t t-esc="doc.name"/></td>
+                            <td>Start Date:</td>
+                            <td><t t-esc="doc.date_start"/></td>
+                        </tr>
+                        <tr>
+                            <td>Product:</td>
+                            <td><t t-esc="doc.product_id.name"/></td>
+                            <td>End Date:</td>
+                            <td><t t-esc="doc.date_finished"/></td>
+                        </tr>
+                        <tr>
+                            <td>Quantity:</td>
+                            <td><t t-esc="doc.product_qty"/></td>
+                            <td>Unit of Measure:</td>
+                            <td><t t-esc="doc.product_uom_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td>BOM:</td>
+                            <td><t t-esc="doc.bom_id.display_name"/></td>
+                        </tr>
+                    </table>
+                    <h3 style="font-size: 18px; margin-top: 20px;">Components</h3>
+                    <table class="table table-sm" style="width: 100%; margin-bottom: 20px; border-collapse: collapse; font-size: 16px;" border="1">
+                        <thead style="background-color: #f0f0f0; text-align: center;">
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>UoM</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Total Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total_component_cost" t-value="0"/> <!-- Set initial total component cost to 0 -->
+                            <t t-foreach="doc.move_raw_ids" t-as="component">
+                                <tr>
+                                    <td style="text-align: center;"><t t-esc="component.product_id.name"/></td>
+                                    <td style="text-align: center;"><t t-esc="component.product_id.standard_price"/></td>
+                                    <td style="text-align: center;"><t t-esc="component.product_qty"/></td>
+                                    <td style="text-align: center;"><t t-esc="component.product_uom.name"/></td>
+                                    <td style="text-align: center;"><t t-esc="component.location_id.display_name or component.location_id.name"/></td>
+                                    <td style="text-align: center;"><t t-esc="component.state"/></td>
+                                    <td style="text-align: center;">
+                                        <t t-set="line_total_cost" t-value="component.product_id.standard_price * component.product_qty"/>
+                                        <t t-set="mo_dict" t-value="doc.get_updated_childs_dict()"/>
+                                        <t t-set="mo_dict_list" t-value="list(mo_dict.keys())"/>
+                                        <t t-if="component.product_id.id in mo_dict_list">
+                                            <t t-esc="mo_dict[component.product_id.id]"/>
+                                            <t t-set="total_component_cost" t-value="total_component_cost + mo_dict[component.product_id.id]"/>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-esc="line_total_cost"/>
+                                            <t t-set="total_component_cost" t-value="total_component_cost + line_total_cost"/>
+                                        </t>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <h3 style="font-size: 18px; margin-top: 50px;">Work Order Lines</h3>
+                    <table class="table table-sm" style="width: 100%; margin-bottom: 20px; border-collapse: collapse; font-size: 16px;" border="1">
+                        <thead style="background-color: #f0f0f0; text-align: center;">
+                            <tr>
+                                <th>Work Center</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Work Order</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="doc.workorder_ids" t-as="operation">
+                                <tr>
+                                    <td style="text-align: center;"><t t-esc="operation.workcenter_id.name"/></td>
+                                    <td style="text-align: center;"><t t-esc="operation.date_start"/></td>
+                                    <td style="text-align: center;"><t t-esc="operation.date_finished"/></td>
+                                    <td style="text-align: center;"><t t-esc="operation.name"/></td>
+                                    <td style="text-align: center;"><t t-esc="operation.state"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <h3 style="font-size: 18px; margin-top: 40px;">Labour Cost Lines</h3>
+                    <table class="table table-sm" style="width: 100%; border-collapse: collapse; font-size: 16px;" border="1">
+                        <thead style="background-color: #f0f0f0; text-align: center;">
+                            <tr>
+                                <th>Employee</th>
+                                <th>Individual Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total_labour_cost" t-value="0"/>
+                            <t t-set="total_workcenter_cost" t-value="0"/>
+                            <t t-foreach="doc.workorder_ids.line_ids" t-as="labour_line">
+                                <tr>
+                                    <td style="text-align: center;"><t t-esc="labour_line.employee_id.name"/></td>
+                                    <td style="text-align: center;">
+                                        <t t-esc="labour_line.individual_cost"/> 
+                                        <t t-set="total_labour_cost" t-value="total_labour_cost + labour_line.individual_cost"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-foreach="doc.workorder_ids" t-as="operation">
+                                <t t-if="operation.workcenter_id.costs_hour">
+                                    <t t-set="total_workcenter_cost" t-value="total_workcenter_cost + operation.workcenter_id.costs_hour"/>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                    <p style="text-align: left; font-size: 16px; margin-top: 40px;">
+                        <strong>Total Cost of Finished Product:</strong>
+                        <t t-esc="total_labour_cost + total_component_cost + total_workcenter_cost"/> 
+                    </p>
+                    <p style="text-align: left; font-size: 16px; margin-top: 40px;">
+                        <strong>Total Cost Per Unit:</strong>
+                        <t t-if="doc.product_qty > 0">
+                            <t t-esc="'{:.2f}'.format((total_labour_cost + total_component_cost + total_workcenter_cost) / doc.product_qty)"/> 
+                        </t>
+                    </p>
+                    <p style="text-align: left; font-size: 16px; margin-top: 40px;">
+                        <strong>Total Cost of Components:</strong>
+                        <t t-esc="total_component_cost"/>
+                    </p>
+                    <p style="text-align: left; font-size: 16px; margin-top: 40px;">
+                        <strong>Total Cost of Labour:</strong> 
+                        <t t-esc="total_labour_cost"/> 
+                    </p>
+                    <p style="text-align: left; font-size: 16px; margin-top: 40px;">
+                        <strong>Total Cost of Work Center:</strong> 
+                        <t t-esc="total_workcenter_cost"/> 
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

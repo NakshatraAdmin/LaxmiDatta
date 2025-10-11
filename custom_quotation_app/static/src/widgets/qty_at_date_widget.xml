@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <!-- Override the existing QtyAtDatePopover template using xpath -->
+    <t t-name="sale_stock.QtyAtDatePopover" t-inherit="sale_stock.QtyAtDatePopover" t-inherit-mode="extension">
+        <!-- Add warehouse details section before the existing button -->
+        <xpath expr="//button[@t-if='!props.record.data.is_mto']" position="before">
+            <hr class="my-2"/>
+            <div class="mb-3">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                    <strong>Warehouse Details</strong>
+                    <button class="btn btn-sm btn-secondary"
+                            type="button"
+                            t-on-click="onShowWarehouseDetails"
+                            t-att-disabled="state.isLoading">
+                        <i t-if="state.isLoading" class="fa fa-spinner fa-spin"></i>
+                        <i t-else="" class="fa fa-refresh"></i>
+                        <span t-if="state.isLoading"> Loading...</span>
+                        <span t-else=""> Load Details</span>
+                    </button>
+                </div>
+                <div t-if="state.warehouseDetails" class="alert alert-info p-2">
+                    <t t-foreach="state.warehouseDetails" t-as="wh" t-key="wh_index" t-index="wh_index">
+                        <span t-out="wh" />
+                        <br/>
+                    </t>
+                </div>
+                <div t-if="state.locationDetails" class="alert alert-warning p-2 mt-2">
+                    <strong>Location-wise Stock:</strong><br/>
+                    <t t-foreach="state.locationDetails" t-as="loc" t-key="loc_index" t-index="loc_index">
+                        <span t-out="loc" />
+                        <br/>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

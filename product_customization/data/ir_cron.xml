@@ -1,0 +1,12 @@
+<odoo>
+  <record id="ir_cron_update_product_cost_from_bom" model="ir.cron">
+    <field name="name">Update Product Cost from BoM</field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <!-- <field name="numbercall">-1</field> -->
+    <field name="model_id" ref="product.model_product_product"/>
+    <field name="state">code</field>
+    <field name="code">model.cron_update_product_cost_from_bom()</field>
+    <field name="active">True</field>
+  </record>
+</odoo>

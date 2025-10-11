@@ -1,0 +1,35 @@
+<odoo>
+    <record id="view_company_settings_form_inherit" model="ir.ui.view">
+        <field name="name">company.settings.form.inherit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Settings">
+                    <group>
+                        <div class="o_setting_left_pane">
+                            <field name="avoid_products_name_duplication"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="avoid_products_name_duplication"/>
+                            <div class="text-muted">
+                                Restrict creation of the products with a name which already exists
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <div class="o_setting_left_pane">
+                            <field name="avoid_internal_references_duplication"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="avoid_internal_references_duplication"/>
+                            <div class="text-muted">
+                                Restrict creation of the products with a reference which already exists
+                            </div>
+                        </div>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

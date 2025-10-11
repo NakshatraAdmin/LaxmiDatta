@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="mrp_bom_form_view_inherit_seconday_uom" model="ir.ui.view">
+        <field name="name">mrp.bom.line.view.form.inherit.product.secondary.uom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="model">mrp.bom</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_uom_id']" position="after">
+                <field name="weight"/>
+                <field name="height"/>
+                <field name="length"/>
+                <field name="width"/>
+                <field name="depth"/>
+                <field name="secondary_product_uom_qty"/>
+                <field name="sec_uom_id"/>
+                <field name="consumption_product_uom_qty"/>
+                <field name="consumption_uom_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

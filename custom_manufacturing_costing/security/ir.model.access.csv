@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mrp_workorder_line,access_mrp_workorder_line,model_mrp_workorder_line,base.group_user,1,1,1,1
+access_product_details,access_product_details,model_product_details,base.group_user,1,1,1,1
+access_assign_employee_wizard_id,access_assign_employee_wizard_name,model_assign_employee_wizard,base.group_user,1,1,1,1
+custom_manufacturing_costing.access_mrp_workorder_datewise_summary,access_mrp_workorder_datewise_summary,custom_manufacturing_costing.model_mrp_workorder_datewise_summary,base.group_user,1,1,1,1

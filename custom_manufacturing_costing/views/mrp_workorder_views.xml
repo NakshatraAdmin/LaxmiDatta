@@ -1,0 +1,67 @@
+<odoo>
+    <record id="view_mrp_workorder_tree_inherit_laxmidatta_mandap" model="ir.ui.view">
+        <field name="name">mrp.workorder.tree.total.qty.inherit</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='qty_remaining']" position="replace"/>
+            <xpath expr="//field[@name='product_id']" position="after">
+            	<field name="qty_remaining" string="Quantity Remaining" optional="hide"/>
+            </xpath>
+        	<xpath expr="//field[@name='json_popover']" position="after">
+                <field name="total_operation" optional="show"/>
+        		<field name="total_done_qty" optional="show"/>
+                <field name="total_pending_qty" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mrp_workorder_line_tree_custom" model="ir.ui.view">
+        <field name="name">Work Order Report</field>
+        <field name="model">mrp.workorder.line</field>
+        <field name="arch" type="xml">
+            <tree string="Workorder Productivity">
+                <field name="date" string="Date"/>
+                <field name="production_id" string="MO No / WO No"/>
+                <field name="qty_production" string="Product Quantity"/>
+                <field name="product_id" string="Product Name"/>
+                <field name="workorder_name" string="Operation"/>
+                <field name="employee_id" string="Worker"/>
+                <field name="no_of_repitation" string="Number of Repetition"/>
+<!--                <field name="total_operation" string="Total Operation Cost"/>-->
+<!--                <field name="operation_rate" string="Operation Rate"/>-->
+                <field name="process_cost" string="Process Cost"/>
+                <field name="done_qty" string="Done Quantity"/>
+                <field name="total_cost" string="Amount"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_mrp_workorder_line_search_custom" model="ir.ui.view">
+        <field name="name">mrp.workorder.line.search.custom</field>
+        <field name="model">mrp.workorder.line</field>
+        <field name="arch" type="xml">
+            <search string="Workorder Line Filters">
+                <field name="date" string="Date"/>
+                <field name="production_id" string="MO/WO"/>
+                <field name="employee_id" string="Worker"/>
+                <field name="workorder_name" string="Operation"/>
+                <field name="product_id" string="Item"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_mrp_workorder_line_custom" model="ir.actions.act_window">
+        <field name="name">Work Order Lines</field>
+        <field name="res_model">mrp.workorder.line</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_mrp_workorder_line_tree_custom"/>
+        <field name="search_view_id" ref="view_mrp_workorder_line_search_custom"/>
+    </record>
+
+    <menuitem id="menu_mrp_workorder_line_custom"
+            name="Labour Report"
+            parent="mrp.menu_mrp_reporting"
+            action="action_mrp_workorder_line_custom"/>
+
+</odoo>

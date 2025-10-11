@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_custom_quotation,access_custom_quotation,model_custom_quotation,base.group_user,1,1,1,1
+access_custom_bom_line,access_custom_bom_line,model_custom_bom_line,base.group_user,1,1,1,1
+access_labour_cost_line,access_labour_cost_line,model_labour_cost_line,base.group_user,1,1,1,1
+access_item_type,access_item_type,model_item_type,base.group_user,1,1,1,1
+access_product_group,access_product_group,model_product_group,base.group_user,1,1,1,1
+access_sub_product_group,access_sub_product_group,model_sub_product_group,base.group_user,1,1,1,1
+access_cost_segment,access_cost_segment,model_cost_segment,base.group_user,1,1,1,1
+access_labour_cost,access_labour_cost,model_labour_cost,base.group_user,1,1,1,1
+access_labour_cost_category,access_labour_cost_category,model_labour_cost_category,base.group_user,1,1,1,1
+

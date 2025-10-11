@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="custom_quotation_app_res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">custom.quotation.app.res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="7"/>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='sale_management']" position="inside">
+                <block title="Custom Quotation App" name="custom_quotation_app">
+                    <setting string="Direct Overhead Cost Percentage">
+                        <field name="direct_overhead_cost_percentage"/>
+                    </setting>
+                    <setting string="Indirect Overhead Cost Percentage">
+                        <field name="indirect_overhead_cost_percentage"/>
+                    </setting>
+                    <setting string="Profit Material Trading Percentage">
+                        <field name="profit_material_trading_percentage"/>
+                    </setting>
+                    <setting string="Profit Overhead Trading Percentage">
+                        <field name="profit_overhead_trading_percentage"/>
+                    </setting>
+                    <setting string="Profit Material Customer Percentage">
+                        <field name="profit_material_customer_percentage"/>
+                    </setting>
+                    <setting string="Profit Overhead Customer Percentage">
+                        <field name="profit_overhead_customer_percentage"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

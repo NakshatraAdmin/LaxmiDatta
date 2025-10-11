@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_custom_quotation_form" model="ir.ui.view">
+            <field name="name">custom.quotation.form</field>
+            <field name="model">custom.quotation</field>
+            <field name="arch" type="xml">
+                <form string="Custom Quotation">
+                    <header>
+                        <button name="action_confirm" type="object" string="Confirm" class="btn-primary" invisible="state != 'draft'"/>
+                        <button name="print_xlsx_report" type="object" string="Profit Generation Report" class="btn-primary" invisible="state != 'confirmed'"/>
+                        <button name="action_cancel" type="object" string="Cancel" class="btn-secondary" invisible="state != 'confirmed'"/>
+                        <button name="action_reset_to_draft" type="object" string="Reset to Draft" class="btn-secondary"
+                        invisible="state != 'cancel'"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,cancel"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" nolabel="1" style="font-size: 24px; font-weight: bold; margin-bottom: 10px; color: #333333;"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="customer_id"/>
+                                <field name="remarks"/>
+                            </group>
+                            <group>
+                                <field name="quotation_date"/>
+                                <field name="update_date" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="Product Details">
+                            <group>
+                                <field name="selection_type" widget="radio" invisible='1'/>
+                                <field name="is_product" invisible='1'/>
+                                <field name="is_category" invisible='1'/>
+                                <field name="group_product_id" invisible="not is_category"/>
+                                <field name="product_categ_id"/>
+                                <field name="product_product_id"/>
+                                <field name="default_code" required="1"/>
+                                <field name="cq_item_type_id"/>
+                                <field name="cq_sub_product_group_id"/>
+                                <field name="product_uom_id"/>
+                                <field name="cq_cost_segment_id"/>
+                            </group>
+                            <group>
+                                <field name="cq_sec_uom_id"/>
+                                <field name="unit_std_qty"/>
+                                <label for="unit_purchase_rate"/>
+                                <div class="o_row">
+                                    <field name="unit_purchase_rate" widget='monetary' class="oe_inline" options="{'currency_field': 'cost_currency_id'}"/>
+                                </div>
+                                <field name="consumable_unit_rate"/>
+                                <field name="minimum_stock_qty"/>
+                                <field name="production_batch_qty"/>
+                                <field name="cq_ratio"/>
+                                <field name="cq_sec_uom_qty"/>
+                                <field name="cq_secondary_uom_ratio"/>
+                                <field name="cq_remarks"/>
+                            </group>
+                        </group>
+                        <group string="MATERIAL COST" invisible="1">
+                            <field name="bom_line_ids" options="{'no_create': True, 'no_edit': True}">
+                                <tree editable="bottom">
+                                    <field name="component_name"/>
+                                    <field name="quantity"/>
+                                    <field name="sec_qty"/>
+                                    <field name="bom_unit_purchase_rate"/>
+                                    <field name="product_cost"/>
+                                    <field name="consume_unit_rate"/>
+                                    <field name="consume_unit_qty"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <field name="bom_total_amount" readonly="1" string="Total Material Cost"/>
+                            </group>
+                        </group>
+                        <group string="MATERIAL COST">
+                            <field name="bom_line_ids" options="{'no_create': True, 'no_edit': True}">
+                                <tree editable="bottom">
+<!--                                    <field name="product_group"/>-->
+                                    <field name="product_categ_id"/>
+                                    <field name="product_product_id" />
+                                    <field name="quantity"/>
+                                    <field name="sec_qty"/>
+                                    <field name="bom_unit_purchase_rate"/>
+                                    <field name="product_cost"/>
+                                    <field name="consume_unit_rate"/>
+                                    <field name="consume_unit_qty"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <field name="bom_total_amount" readonly="1" string="Total Material Cost"/>
+                            </group>
+                        </group>
+                        <group string="Labour cost">
+                            <field name="labour_line_ids" options="{'no_create': True, 'no_edit': True}">
+                                <tree editable="bottom">
+                                    <field name="labour_cost_category"/>
+                                    <field name="labour_cost_id"/>
+                                    <field name="labour_cost_rate"/>
+                                    <field name="labour_qty"/>
+                                    <field name="labour_uom"/>
+                                    <field name="labour_total_amount"/>
+                                </tree>
+                            </field>
+                            <group>
+                                <field name="labour_total_amount" readonly="1" string="Total Labour Cost"/>
+                            </group>
+                        </group>
+                        <br/>
+                        <group string="Cost Calculation">
+                            <group>
+                                <field name="bom_total_amount_cc" readonly="1" style="font-weight: bold;"/>
+                                <field name="labour_total_amount_cc" readonly="1" style="font-weight: bold;"/>
+                                <field name="primary_cost" readonly="1"/>
+                                <field name="direct_overhead_cost_percentage" />
+                                <field name="direct_overheads" readonly="1"/>
+                                <!--                                <field name="actual_direct_overheads" readonly="1" string="Actual Direct Overheads" />-->
+                                <field name="gross_total" readonly="1" string="Gross Total" style="font-weight: bold;"/>
+                            </group>
+                            <group>
+                                <field name="indirect_overhead_cost_percentage" />
+                                <field name="indirect_cost" readonly="1"/>
+                                <field name="process_cost" readonly="1"/>
+                                <!--                                <field name="total_overhead_cost" readonly="1" string="Total Overhead Cost" />-->
+                                <field name="net_cost" readonly="1" string="Net Cost" style="font-weight: bold;"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="TRADING">
+                                <group>
+                                    <field name="bom_total_amount_cc" readonly="1"/>
+                                    <field name="profit_material_trading_percentage" />
+                                    <field name="profit_material_trading_rs" style="font-weight: bold;"/>
+                                    <field name="profit_material_trading" style="font-weight: bold;"/>
+                                    <field name="total_profit_trading" style="font-weight: bold;"/>
+                                    <br/>
+                                    <br/>
+                                    <field name="gst_item_gst_rate" widget="many2many_tags"/>
+                                    <field name="trading_sale_rate"/>
+                                    <field name="gst_total_rate_trading"/>
+                                    <field name="mrp_trading" style="font-weight: bold;"/>
+                                </group>
+                                <group>
+                                    <field name="trading_customer_labour_amount" readonly="1"/>
+                                    <field name="profit_overhead_trading_percentage" />
+                                    <field name="profit_overhead_trading_rs" style="font-weight: bold;"/>
+                                    <field name="profit_overhead_trading" style="font-weight: bold;" readonly='1'/>
+                                    <field name="trading_profit" style="font-weight: bold;"/>
+                                </group>
+                                <group>
+                                </group>
+                            </group>
+                            <group string="CUSTOMER">
+                                <group>
+                                    <field name="bom_total_amount_cc" readonly="1"/>
+                                    <field name="profit_material_customer_percentage" />
+                                    <field name="profit_material_customer_rs" style="font-weight: bold;"/>
+                                    <field name="profit_material_customer" style="font-weight: bold;"/>
+                                    <field name="total_profit_customer" style="font-weight: bold;"/>
+                                    <br/>
+                                    <br/>
+                                    <field name="gst_item_gst_customer_rate" widget="many2many_tags"/>
+                                    <field name="customer_sale_rate"/>
+                                    <field name="gst_total_rate_customer"/>
+                                    <field name="mrp_customer" style="font-weight: bold;"/>
+                                </group>
+                                <group>
+                                    <field name="trading_customer_labour_amount" readonly="1"/>
+                                    <field name="profit_overhead_customer_percentage" />
+                                    <field name="profit_overhead_customer_rs" style="font-weight: bold;" readonly='1'/>
+                                    <field name="profit_overhead_customer" style="font-weight: bold;" readonly='1'/>
+                                    <field name="customer_profit" style="font-weight: bold;" readonly='1'/>
+                                </group>
+                                <group>
+                                    
+                                </group>
+                            </group>
+                        </group>
+                        <div name="button_box" position="inside">
+                            <button class="oe_stat_button" type="object" icon="fa-cogs" 
+                                    name="action_view_bom_record" invisible="1">
+                                <field name="bom_count" widget="statinfo" string="BOMs"/>
+                            </button>
+                        </div>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_bom_tree" model="ir.actions.act_window">
+            <field name="name">BOMs</field>
+            <field name="res_model">mrp.bom</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_custom_quotation_tree" model="ir.ui.view">
+            <field name="name">custom.quotation.tree</field>
+            <field name="model">custom.quotation</field>
+            <field name="arch" type="xml">
+                <tree string="Custom Quotation">
+                    <field name="name"/>
+                    <field name="quotation_date"/>
+                    <field name="update_date"/>
+                    <field name="customer_id"/>
+                    <field name="remarks"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_custom_quotation" model="ir.actions.act_window">
+            <field name="name">Custom Quotations</field>
+            <field name="res_model">custom.quotation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_item_type_form" model="ir.ui.view">
+            <field name="name">item.type.form</field>
+            <field name="model">item.type</field>
+            <field name="arch" type="xml">
+                <form string="Item Type">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_item_type_tree" model="ir.ui.view">
+            <field name="name">item.type.tree</field>
+            <field name="model">item.type</field>
+            <field name="arch" type="xml">
+                <tree string="Item Types">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_item_type" model="ir.actions.act_window">
+            <field name="name">Item Types</field>
+            <field name="res_model">item.type</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_product_group_form" model="ir.ui.view">
+            <field name="name">product.group.form</field>
+            <field name="model">product.group</field>
+            <field name="arch" type="xml">
+                <form string="Product Group">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_group_tree" model="ir.ui.view">
+            <field name="name">product.group.tree</field>
+            <field name="model">product.group</field>
+            <field name="arch" type="xml">
+                <tree string="Product Groups">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_product_group" model="ir.actions.act_window">
+            <field name="name">Product Groups</field>
+            <field name="res_model">product.group</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_sub_product_group_form" model="ir.ui.view">
+            <field name="name">sub.product.group.form</field>
+            <field name="model">sub.product.group</field>
+            <field name="arch" type="xml">
+                <form string="Sub Product Group">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_sub_product_group_tree" model="ir.ui.view">
+            <field name="name">sub.product.group.tree</field>
+            <field name="model">sub.product.group</field>
+            <field name="arch" type="xml">
+                <tree string="Sub Product Groups">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_sub_product_group" model="ir.actions.act_window">
+            <field name="name">Sub Product Groups</field>
+            <field name="res_model">sub.product.group</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_cost_segment_form" model="ir.ui.view">
+            <field name="name">cost.segment.form</field>
+            <field name="model">cost.segment</field>
+            <field name="arch" type="xml">
+                <form string="Cost Segment">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_cost_segment_tree" model="ir.ui.view">
+            <field name="name">cost.segment.tree</field>
+            <field name="model">cost.segment</field>
+            <field name="arch" type="xml">
+                <tree string="Cost Segments">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_cost_segment" model="ir.actions.act_window">
+            <field name="name">Cost Segments</field>
+            <field name="res_model">cost.segment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_labour_cost_form" model="ir.ui.view">
+            <field name="name">labour.cost.form</field>
+            <field name="model">labour.cost</field>
+            <field name="arch" type="xml">
+                <form string="Labour Cost">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="category_id"/>
+                            </group>
+                            <group>
+                                <field name="amount"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_labour_cost_tree" model="ir.ui.view">
+            <field name="name">labour.cost.tree</field>
+            <field name="model">labour.cost</field>
+            <field name="arch" type="xml">
+                <tree string="Labour Costs">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_labour_cost" model="ir.actions.act_window">
+            <field name="name">Labour Costs</field>
+            <field name="res_model">labour.cost</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record id="view_labour_cost_category_form" model="ir.ui.view">
+            <field name="name">labour.cost.category.form</field>
+            <field name="model">labour.cost.category</field>
+            <field name="arch" type="xml">
+                <form string="Labour Cost">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_labour_cost_category_tree" model="ir.ui.view">
+            <field name="name">labour.cost.category.tree</field>
+            <field name="model">labour.cost.category</field>
+            <field name="arch" type="xml">
+                <tree string="Labour Costs">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_labour_cost_category" model="ir.actions.act_window">
+            <field name="name">Labour Costs</field>
+            <field name="res_model">labour.cost.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="custom_quotation_easy_edit_view_bom_inherit" model="ir.ui.view">
+            <field name="name">custom.quotation.product.view.form.easy.bom.inherit</field>
+            <field name="model">custom.quotation</field>
+            <field name="inherit_id" ref="view_custom_quotation_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='unit_purchase_rate']" position="after">
+                        <field name="unit_std_qty" invisible="1"/>
+                        <button name="get_unit_purchase_rate"
+                                string="Get Price from Product"
+                                type="object"
+                                class="oe_link pt-0"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <menuitem id="menu_custom_quotation_root" name="Custom Quotation"/>
+        <menuitem id="menu_custom_quotation" name="Quotations" parent="menu_custom_quotation_root" action="action_custom_quotation"/>
+        <menuitem id="menu_item_type" name="Item Types" parent="stock.menu_stock_config_settings" action="action_item_type"/>
+        <menuitem id="menu_product_group" name="Product Groups" parent="stock.menu_stock_config_settings" action="action_product_group"/>
+        <menuitem id="menu_sub_product_group" name="Sub Product Groups" parent="stock.menu_stock_config_settings" action="action_sub_product_group"/>
+        <menuitem id="menu_cost_segment" name="Cost Segments" parent="stock.menu_stock_config_settings" action="action_cost_segment"/>
+        <menuitem id="menu_labour_cost" name="Labour Costs" parent="stock.menu_stock_config_settings" action="action_labour_cost"/>
+        <menuitem id="menu_labour_cost_category" name="Labour Costs Category" parent="stock.menu_stock_config_settings" action="action_labour_cost_category"/>
+    </data>
+</odoo>

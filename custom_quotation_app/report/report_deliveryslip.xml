@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="stock_report_delivery_document_inherit_sale_order_slip" inherit_id="stock.report_delivery_document">
+        <xpath expr="//div[@name='div_sched_date']" position="after">
+            <div t-if="o.check_by" class="col-auto col-3 mw-100 mb-2" name="div_check_by">
+                <strong>Checked By:</strong>
+                <p t-field="o.check_by" class="m-0"/>
+            </div>
+            <div t-if="o.pack_by" class="col-auto col-3 mw-100 mb-2" name="div_pack_by">
+                <strong>Packed By:</strong>
+                <p t-field="o.pack_by" class="m-0"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>

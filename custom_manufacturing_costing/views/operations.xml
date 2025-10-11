@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="mrp_routing_workcenter_inherit_form_view" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.form</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_product_template_attribute_value_ids']" position="after">
+                <field name="process_cost"/>
+                <field name="no_of_repitation"/>
+            </xpath>
+            <xpath expr="//field[@name='note']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="note"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_routing_workcenter_inherit_tree_view" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.tree</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='workcenter_id']" position="before">
+                <field name="process_cost"/>
+                <field name="no_of_repitation"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

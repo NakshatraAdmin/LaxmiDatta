@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_move_form_custom" model="ir.ui.view">
+            <field name="name">account.move.form.custom</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="before">
+                    <field name="product_image_1920" widget="image" options="{'width': 10, 'height': 10}" string="Product Image"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_uom_id']" position="after">
+                    <field name="secondary_product_uom_qty"/>
+                    <field name="sec_uom_id"/>
+                    <field name="secondary_unit_price"/>
+                </xpath>
+            </field>
+        </record>
+
+        <template id="report_invoice_document_customization" inherit_id="account.report_invoice_document">
+            <xpath expr="//table//thead//th[contains(@name, 'th_description')]" position="before">
+                <th name="th_product_image" class="text-start"><span>Product Image</span></th>
+            </xpath>
+            <xpath expr="//table//tbody//td[contains(@name, 'account_invoice_line_name')]" position="before">
+                <td name="td_product_image" class="text-start">
+                    <img t-if="line.product_id.image_1920" t-att-src="'data:image/png;base64,' + line.product_id.image_1920.decode('utf-8')" style="max-height: 50px; max-width: 50px;"/>
+                    <span t-else="True">No Image</span>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>
