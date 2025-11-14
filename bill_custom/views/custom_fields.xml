@@ -1,0 +1,61 @@
+<odoo>
+    <record id="view_order_form_inherit_extra_fields" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.extra.fields</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add a notebook page with extra fields -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Extra Info" name="page_extra_info">
+                    <group>
+                        <group>
+                            <field name="other_ref"/>
+                            <field name="article"/>
+                        </group>
+                        <group>
+                            <field name="vehical_num"/>
+                            <field name="less_advance" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+             
+
+            <xpath expr="//group[@name='sale_total']" position="inside">
+                 
+                     <field name="down_payment"  colspan="2"  widget="monetary" readonly="1" options="{'currency_field': 'currency_id'}" />
+                      <field name="amount_total_after_down_payment" colspan="2"  
+                        widget="monetary" readonly="1"
+                         options="{'currency_field': 'currency_id'}" />
+                  
+            </xpath> 
+            <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="before">
+                    <field name="hsn_sac"
+                                    />
+                </xpath>
+
+
+           <!--   <xpath expr="//group[@name='order_amount']" position="inside">
+                <field name="down_payment" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </xpath> -->
+
+            <!-- Add the computed total after down payment below the amount_total -->
+           <!--  <xpath expr="//field[@name='amount_total']" position="after">
+                <field name="amount_total_after_down_payment" widget="monetary" readonly="1" options="{'currency_field': 'currency_id'}"/>
+            </xpath> -->
+        </field>
+    </record>
+
+    <!-- Optionally add fields visible in tree (Quotations list) -->
+    <record id="view_order_tree_inherit_extra_fields" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.extra.fields</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="amount_total_after_down_payment" widget="monetary" readonly="1" options="{'currency_field': 'currency_id'}"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

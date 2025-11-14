@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+
+    <!--  <record id="view_mrp_bom_line_tree_inherit" model="ir.ui.view">
+        <field name="name">mrp.bom.line.tree.inherit.product.template</field>
+        <field name="model">mrp.bom.</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml"> -->
+             <!-- <xpath expr="//sheet" position="inside">
+            <group>
+                <field name="product_tmpl_id"/>
+            </group>
+        </xpath> -->
+            <!-- <xpath expr="//form/sheet/notebook/page[@name='components']" position="after">
+                <field name="product_tmpl_id"/>
+            </xpath> -->
+
+            <!-- <xpath expr="///field[@name='product_qty']" position="after">
+            </xpath>
+
+        </field>
+    </record> -->
+
+    <record id="view_mrp_bom_line_form_inherit" model="ir.ui.view">
+            <field name="name">mrp.bom.line.form.inherit</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_id']" position="before">
+                    <field name="product_template_id"
+                                    string="Product"
+                                    />
+                    <button name="action_configure_variant" type="object" string="Configure" icon="fa-cog"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+
+</odoo>
+
