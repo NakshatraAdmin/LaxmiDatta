@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "Product Customization",
+    "name": "Product Customizations",
     "summary": "Product Customization",
     "description": """Product Customization""",
     "author": "7span",
