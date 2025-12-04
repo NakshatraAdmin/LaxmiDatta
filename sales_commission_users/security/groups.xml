@@ -3,7 +3,7 @@
     <!-- Create a custom category -->
     <record id="sales_commission_users.sales_custom_category" model="ir.module.category">
         <field name="name">Sales Commission</field>
-        <field name="parent_id" ref="base.module_category_sales_management"/> <!-- Optional: parent category -->
+        <field name="parent_id" ref="base.module_category_sales_point_of_sale"/> <!-- Optional: parent category -->
     </record>
 
     <!-- Reference the custom category in your group -->
@@ -14,3 +14,5 @@
 </odoo>
 
 </odoo>
+
+
