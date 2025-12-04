@@ -10,6 +10,39 @@
                 <strong>Packed By:</strong>
                 <p t-field="o.pack_by" class="m-0"/>
             </div>
+            <div t-if="o.dispatched_through_id" class="col-auto col-3 mw-100 mb-2" name="div_dispatch">
+                <strong>Dispatched Through:</strong>
+                <p t-field="o.dispatched_through_id" class="m-0"/>
+            </div>
+            <div t-if="o.article_no" class="col-auto col-3 mw-100 mb-2" name="div_pack_by">
+                <strong>Article No:</strong>
+                <p t-field="o.article_no" class="m-0"/>
+            </div>
+            <div t-if="o.vehical_num" class="col-auto col-3 mw-100 mb-2" name="div_vehical_by">
+                <strong>VEHICLE NO:</strong>
+                <p t-field="o.vehical_num" class="m-0"/>
+            </div>
+             <div t-if="o.sale_user_id" class="col-auto col-3 mw-100 mb-2" name="div_vehical_by">
+                <strong>Salesperson :</strong>
+                <p t-field="o.sale_user_id.name" class="m-0"/>
+            </div>
+
         </xpath>
+
+        <xpath expr="//table//thead//th[contains(@name, 'th_sm_product')]" position="before">
+                <th name="th_product_image" class="text-start"><span>Product Image</span></th>
+                <th name="hsn_sac" class="text-start"><span>HSN/SAC</span></th>
+            </xpath>
+            <xpath expr="//table//tbody//td[1]" position="before">
+                <td name="td_product_image" class="text-start">
+                    <img t-if="o.product_id.image_1920" t-att-src="'data:image/png;base64,' + o.product_id.image_1920.decode('utf-8')" style="max-height: 50px; max-width: 50px;"/>
+                    <span t-else="True">No Image</span>
+                </td>
+                <td>
+                    <span t-field="o.product_id.l10n_in_hsn_code"></span>
+                </td>
+               
+            </xpath>
+
     </template>
 </odoo>

@@ -20,3 +20,4 @@ class SaleOrder(models.Model):
     other_references = fields.Char()
     dispatched_through_id = fields.Many2one('res.partner')
     vehicle_no = fields.Char()
+    article= fields.Char(string="ARTICLE NO")

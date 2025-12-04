@@ -6,6 +6,13 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="before">
+                 <field name="dispatched_through_id"/>
+                 <field name="article_no"/>
+                  <field name="vehical_num"/>
+                 
+             </xpath>
+
                 <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="before">
                     <field name="product_image_1920" widget="image" options="{'width': 10, 'height': 10}" string="Product Image"/>
                 </xpath>
@@ -27,6 +34,38 @@
                     <span t-else="True">No Image</span>
                 </td>
             </xpath>
+
+<xpath expr="//div[@name='invoice_date']" position="after">                         <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.dispatched_through_id" name="dispatched_through_id">
+                                <strong>Dispatched Through:</strong><br/>
+                                <span t-field="o.dispatched_through_id"></span>
+                            </div>
+                             <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.article_no" name="article_no">
+                                <strong>Article No:</strong><br/>
+                                <span t-field="o.article_no"></span>
+                            </div>
+                             <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.vehical_num" name="vehical_num">
+                                <strong>VEHICLE NO:</strong><br/>
+                                <span t-field="o.vehical_num"></span>
+                            </div>
+                        </xpath>
+                            <!-- <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_origin" name="origin">
+                                <strong>Source:</strong><br/>
+                                <span t-field="o.invoice_origin">SO123</span>
+                            </div>
+
+
+
+                 <th class="text-start"><span>Dispatched Through</span></th>
+
+                 <th class="text-start"><span>Article No</span></th>
+                 <th class="text-start"><span>VEHICLE No</span></th>
+             </xpath>
+
+
+                   dispatched_through_id = fields.Many2one('res.partner',string="Dispatched Through")
+    article_no = fields.Char(string="Article No")
+    vehical_num= fields.Char(string="VEHICLE NO") -->
+                
         </template>
     </data>
 </odoo>

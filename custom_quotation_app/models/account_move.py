@@ -2,6 +2,26 @@
 
 from odoo import models, fields, api
 
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    down_payment = fields.Monetary(
+        string="Down Payment",
+        currency_field="currency_id",
+        help="Amount already received as down payment to be subtracted from the order total."
+    )
+
+    amount_total_after_down_payment = fields.Monetary(
+        string="Total after Down Payment",
+      
+        store=True,
+        currency_field="currency_id"
+    )
+
+    dispatched_through_id = fields.Many2one('res.partner',string="Dispatched Through")
+    article_no = fields.Char(string="Article No")
+    vehical_num= fields.Char(string="VEHICLE NO")
+
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
