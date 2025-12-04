@@ -1,0 +1,6 @@
+<odoo>
+    <record id="group_sales_commission_access" model="res.groups">
+        <field name="name">Sales Commission Access</field>
+        <field name="category_id" ref="base.module_category_sales_management"/>
+    </record>
+</odoo>
