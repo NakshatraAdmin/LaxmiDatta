@@ -14,11 +14,19 @@
                         <tree create="0">
                             <field name="date"/>
                             <field name="description"/>
+                             <field name="sales_person_id"/>
                             <field name="commission_amount" sum="Total"/>
                         </tree>
                     </field>
                 </page>
             </xpath>
+             <xpath expr="//field[@name='user_id']" position="after">
+                <field name="salesperson_ids" widget="many2many_tags"/> 
+                <field name="commission_type_id" />
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath>
         </field>
     </record>
 </odoo>

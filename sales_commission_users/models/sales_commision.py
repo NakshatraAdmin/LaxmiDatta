@@ -9,8 +9,7 @@ class SalesCommission(models.Model):
     _description = "Sales Commission"
 
     name = fields.Char(string="Commission Name", help="Name of the commission", required=True)
-    sales_person_ids = fields.Many2many('res.users', string='Sales Person',
-                                        help="Sales person")
+
     commission_type = fields.Selection(
         string="Commission Type",
         selection=[('standard', 'Standard'),
