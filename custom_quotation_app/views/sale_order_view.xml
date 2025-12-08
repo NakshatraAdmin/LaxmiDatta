@@ -13,6 +13,7 @@
                     <field name="bom_id"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="after">
+                     <field name="bill_date"/>
                     <field name="other_references"/>
                     <field name="dispatched_through_id" context="{'show_address': 1}"/>
                     <field name="vehicle_no"/>

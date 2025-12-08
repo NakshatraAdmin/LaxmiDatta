@@ -21,3 +21,4 @@ class SaleOrder(models.Model):
     dispatched_through_id = fields.Many2one('res.partner')
     vehicle_no = fields.Char()
     article= fields.Char(string="ARTICLE NO")
+    bill_date = fields.Date(string='Due Date', default=fields.Date.today, tracking=True)

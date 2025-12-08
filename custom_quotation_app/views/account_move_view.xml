@@ -10,6 +10,7 @@
                  <field name="dispatched_through_id"/>
                  <field name="article_no"/>
                   <field name="vehical_num"/>
+                  <field name="other_references"/>
                  
              </xpath>
 
@@ -46,6 +47,10 @@
                              <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.vehical_num" name="vehical_num">
                                 <strong>VEHICLE NO:</strong><br/>
                                 <span t-field="o.vehical_num"></span>
+                            </div>
+                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.other_references" name="other_references">
+                                <strong>Other References:</strong><br/>
+                                <span t-field="o.other_references"></span>
                             </div>
                         </xpath>
                             <!-- <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_origin" name="origin">

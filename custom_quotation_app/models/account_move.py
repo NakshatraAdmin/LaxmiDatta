@@ -17,10 +17,12 @@ class AccountMove(models.Model):
         store=True,
         currency_field="currency_id"
     )
+    sale_id =fields.Many2one('sale.order',string="Sale Order")
 
-    dispatched_through_id = fields.Many2one('res.partner',string="Dispatched Through")
-    article_no = fields.Char(string="Article No")
-    vehical_num= fields.Char(string="VEHICLE NO")
+    dispatched_through_id = fields.Many2one('res.partner',related="sale_id.dispatched_through_id" , string="Dispatched Through")
+    article_no = fields.Char(string="Article No" , related="sale_id.article" )
+    vehical_num= fields.Char(string="VEHICLE NO" , related="sale_id.vehicle_no")
+    other_references = fields.Char(string = "Other References" , related="sale_id.other_references")
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

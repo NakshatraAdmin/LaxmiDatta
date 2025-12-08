@@ -29,6 +29,7 @@
     <template id="product_image_document_customization" inherit_id="stock.report_picking">
 
          <xpath expr="//div[@name='div_sched_date']" position="after">
+            <div class="row mt-4 mb-2" id="dispatch_ref">
             <div t-if="o.check_by" class="col-auto col-3 mw-100 mb-2" name="div_check_by">
                 <strong>Checked By:</strong>
                 <p t-field="o.check_by" class="m-0"/>
@@ -37,7 +38,7 @@
                 <strong>Packed By:</strong>
                 <p t-field="o.pack_by" class="m-0"/>
             </div>
-            <div t-if="o.dispatched_through_id" class="col-auto col-3 mw-100 mb-2" name="div_dispatch">
+             <div t-if="o.dispatched_through_id" class="col-auto col-3 mw-100 mb-2" name="div_dispatch">
                 <strong>Dispatched Through:</strong>
                 <p t-field="o.dispatched_through_id" class="m-0"/>
             </div>
@@ -53,10 +54,11 @@
                 <strong>Salesperson :</strong>
                 <p t-field="o.sale_user_id.name" class="m-0"/>
             </div>
-            <div t-if="o.bag_no" class="col-auto col-3 mw-100 mb-2" name="div_vehical_by">
-                <strong>Bag No :</strong>
-                <p t-field="o.bag_no" class="m-0"/>
+            <div t-if="o.date_deadline" class="col-auto col-3 mw-100 mb-2" name="div_date_deadline">
+                <strong>Due Date :</strong>
+                <p t-field="o.date_deadline" class="m-0"/>
             </div>
+        </div>
         </xpath>
 
     <xpath expr="//table//thead//th[contains(@name, 'th_product')]" position="before">

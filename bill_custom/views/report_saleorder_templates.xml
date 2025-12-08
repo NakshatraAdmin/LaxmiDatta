@@ -63,6 +63,10 @@
                     <strong>Salesperson:</strong><br/>
                     <span class="m-0" t-field="doc.user_id">Mitchell Admin</span>
                 </div>
+                <div t-if="doc.bill_date" class="col-auto col-3 mw-100 mb-2">
+                    <strong>Due Date:</strong><br/>
+                    <span class="m-0" t-field="doc.bill_date"></span>
+                </div>
             </div>
 
             <!-- Is there a discount on at least one line? -->
@@ -119,7 +123,10 @@
                                     <span t-field="line.discount">-</span>
                                 </td>
                                 <t t-set="taxes" t-value="', '.join([(tax.invoice_label or tax.name) for tax in line.tax_id])"/>
-                                <td name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
+                                <td t-if="line.is_downpayment">
+                                    <span></span>
+                                </td>
+                                <td t-if="not line.is_downpayment" name="td_taxes" t-attf-class="text-end {{ 'text-nowrap' if len(taxes) &lt; 10 else '' }}">
                                     <span t-out="taxes">Tax 15%</span>
                                 </td>
                                 <td >

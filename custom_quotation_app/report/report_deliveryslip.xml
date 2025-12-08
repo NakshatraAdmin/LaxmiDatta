@@ -26,6 +26,12 @@
                 <strong>Salesperson :</strong>
                 <p t-field="o.sale_user_id.name" class="m-0"/>
             </div>
+            <div t-if="o.date_deadline" class="col-auto col-3 mw-100 mb-2" name="div_date_deadline">
+                <strong>Due Date :</strong>
+                <p t-field="o.date_deadline" class="m-0"/>
+            </div>
+
+
 
         </xpath>
 

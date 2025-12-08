@@ -14,17 +14,18 @@
                         <tree create="0">
                             <field name="date"/>
                             <field name="description"/>
-                             <field name="sales_person_id"/>
+                             <field name="sales_person_id" />
                             <field name="commission_amount" sum="Total"/>
                         </tree>
                     </field>
                 </page>
             </xpath>
-               <xpath expr="//field[@name='user_id']" position="after">
-                <field name="salesperson_ids" widget="many2many_tags" string="Commission Sales Persons" readonly="state != 'draft'"/> 
+             <xpath expr="//field[@name='vehicle_no']" position="after">
                 <field name="commission_type_id" readonly="state != 'draft'"/>
             </xpath>
-            
+            <xpath expr="//field[@name='article']" position="after">
+
+                <field name="salesperson_ids" widget="many2many_tags" string="Commission Sales Persons"/>             </xpath>
         </field>
     </record>
 </odoo>

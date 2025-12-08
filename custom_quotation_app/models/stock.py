@@ -6,9 +6,9 @@ class StockPicking(models.Model):
 
     check_by = fields.Many2one(comodel_name='hr.employee', string='Check By')
     pack_by = fields.Many2one(comodel_name='hr.employee', string='Pack By')
-    dispatched_through_id = fields.Many2one('res.partner',string="Dispatched Through")
-    article_no = fields.Char(string="Article No")
-    vehical_num= fields.Char(string="VEHICLE NO")
+    dispatched_through_id = fields.Many2one('res.partner',string="Dispatched Through" , related="sale_id.dispatched_through_id")
+    article_no = fields.Char(string="Article No" , related="sale_id.article" )
+    vehical_num= fields.Char(string="VEHICLE NO" , related="sale_id.vehicle_no")
     sale_user_id = fields.Many2one(
         "res.users",
         related="sale_id.user_id",
