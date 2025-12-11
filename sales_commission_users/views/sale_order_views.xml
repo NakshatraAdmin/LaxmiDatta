@@ -15,6 +15,8 @@
                             <field name="date"/>
                             <field name="description"/>
                              <field name="sales_person_id" />
+                             <field name="order_ref" />
+                             <field name="partner_id" />
                             <field name="commission_amount" sum="Total"/>
                         </tree>
                     </field>

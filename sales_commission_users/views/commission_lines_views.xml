@@ -25,7 +25,6 @@
         <field name="arch" type="xml">
             <tree string="Sales Commission">
                 <field name="date"/>
-                <field name="description"/>
                 <field name="sales_person_id"/>
                 <field name="order_ref"/>
                 <field name="commission"/>
