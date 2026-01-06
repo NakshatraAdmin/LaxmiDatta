@@ -24,18 +24,20 @@
                             </div>
                             <div class="col-lg-6 mt-4 mt-lg-0">
                                 <div class="mandap-hero-image">
-                                    <t t-set="hero_design" t-value="featured_designs[0] if featured_designs and len(featured_designs) > 0 else None"/>
-                                    <t t-if="hero_design and hero_design.image">
-                                        <img t-attf-src="/web/image/mandap.design/#{hero_design.id}/image" 
+                                    <t t-set="featured_categories" t-value="featured_categories if featured_categories else request.env['product.category'].search([('show_on_homepage', '=', True)], limit=1, order='name')"/>
+                                    <t t-set="hero_category" t-value="featured_categories[0] if featured_categories and len(featured_categories) > 0 else None"/>
+                                    <t t-if="hero_category and hero_category.image">
+                                        <img t-attf-src="/web/image/product.category/#{hero_category.id}/image" 
                                              class="img-fluid rounded shadow-lg" 
-                                             t-att-alt="hero_design.name"
+                                             t-att-alt="hero_category.name"
                                              style="max-height: 500px; object-fit: cover; width: 100%;"/>
                                     </t>
                                     <t t-else="">
                                         <div class="bg-light rounded shadow-lg d-flex align-items-center justify-content-center" style="min-height: 400px; max-height: 500px;">
                                             <div class="text-center text-muted p-4">
                                                 <i class="fa fa-image fa-5x mb-3"></i>
-                                                <p class="mb-0">Upload mandap designs to see images here</p>
+                                                <p class="mb-0">Upload category image to see it here</p>
+                                                <p class="small mt-2">Go to: Products → Categories → Select a category → Upload Image</p>
                                             </div>
                                         </div>
                                     </t>
