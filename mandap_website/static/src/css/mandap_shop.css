@@ -1,0 +1,183 @@
+/* Mandap Shop Page Styling - Matching Homepage Theme */
+
+/* Shop Page Container */
+.o_wsale_products_page {
+    background-color: #f8f9fa;
+}
+
+/* Category Cards on Homepage */
+.mandap-design-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.mandap-design-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.mandap-card-image-wrapper {
+    height: 280px;
+    overflow: hidden;
+}
+
+.mandap-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.mandap-design-card:hover .mandap-card-image {
+    transform: scale(1.05);
+}
+
+.mandap-card-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.mandap-design-card:hover .mandap-card-overlay {
+    opacity: 1;
+}
+
+.mandap-card-overlay .btn {
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.mandap-design-card:hover .mandap-card-overlay .btn {
+    transform: translateY(0);
+}
+
+/* Shop Page Filters Sidebar */
+#products_grid_before {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Product Cards on Shop Page */
+.o_wsale_products_grid .o_wsale_products_item {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.o_wsale_products_grid .o_wsale_products_item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+}
+
+/* Primary Button Styling to Match Homepage */
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Category Badge */
+.badge.bg-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Shop Header */
+.products_header {
+    background-color: #ffffff;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Filter Sections */
+.products_categories,
+.products_attributes_filters {
+    margin-bottom: 1.5rem;
+}
+
+.products_categories h5,
+.products_attributes_filters h5 {
+    color: #667eea;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Color Swatches (if added) */
+.mandap-color-swatch {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 5px;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.mandap-color-swatch:hover {
+    transform: scale(1.2);
+    border-color: #667eea;
+}
+
+.mandap-color-swatch.active {
+    border-color: #667eea;
+    border-width: 3px;
+}
+
+/* Product Description Styling */
+.oe_subdescription {
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+/* Add to Cart Button Styling */
+.o_wsale_product_btn .btn-primary {
+    white-space: nowrap;
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+}
+
+.o_wsale_product_btn .btn-primary:hover {
+    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+}
+
+/* Product Card Enhancements */
+.o_wsale_products_item {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.5rem;
+    background: #ffffff;
+}
+
+.o_wsale_products_item:hover {
+    border-color: #667eea;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .mandap-card-image-wrapper {
+        height: 200px;
+    }
+    
+    .oe_subdescription {
+        max-height: 45px;
+        -webkit-line-clamp: 2;
+    }
+    
+    .o_wsale_product_btn .btn-primary {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+}

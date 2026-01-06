@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mandap_design_user,mandap.design.user,model_mandap_design,base.group_user,1,1,1,1
+access_mandap_category_user,mandap.category.user,model_mandap_category,base.group_user,1,1,1,1
+access_mandap_design_image_user,mandap.design.image.user,model_mandap_design_image,base.group_user,1,1,1,1
+access_mandap_design_public,mandap.design.public,model_mandap_design,base.group_public,1,0,0,0
+access_mandap_category_public,mandap.category.public,model_mandap_category,base.group_public,1,0,0,0
+access_mandap_color_user,mandap.color.user,model_mandap_color,base.group_user,1,1,1,1
+access_mandap_color_public,mandap.color.public,model_mandap_color,base.group_public,1,0,0,0

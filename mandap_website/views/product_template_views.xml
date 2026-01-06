@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Product Template Form View -->
+    <record id="product_template_form_view_inherit_mandap" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.mandap</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Add Description field before detailed_type -->
+            <xpath expr="//field[@name='detailed_type']" position="before">
+                <field name="description" widget="html" placeholder="Product description..."/>
+            </xpath>
+            <xpath expr="//page[@name='sales']" position="inside">
+                <group string="Mandap Colors" col="2">
+                    <field name="color_ids" widget="many2many_tags" options="{'no_create_edit': False}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

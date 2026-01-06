@@ -1,0 +1,279 @@
+/* Professional Mandap Homepage Styling */
+
+/* Hero Banner Section */
+.mandap-hero-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.mandap-hero-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.mandap-hero-banner .container {
+    position: relative;
+    z-index: 2;
+}
+
+.mandap-hero-banner .text-white {
+    position: relative;
+    z-index: 3;
+}
+
+.mandap-hero-image img {
+    transition: transform 0.3s ease;
+}
+
+.mandap-hero-image:hover img {
+    transform: scale(1.05);
+}
+
+.min-vh-50 {
+    min-height: 50vh;
+}
+
+/* Featured Designs Gallery */
+.mandap-featured-gallery {
+    background: #f8f9fa;
+}
+
+.mandap-design-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.mandap-design-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+.mandap-card-image-wrapper {
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+}
+
+.mandap-card-image {
+    transition: transform 0.5s ease;
+}
+
+.mandap-design-card:hover .mandap-card-image {
+    transform: scale(1.1);
+}
+
+.mandap-card-overlay {
+    background: rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 12px 12px 0 0;
+}
+
+.mandap-design-card:hover .mandap-card-overlay {
+    opacity: 1;
+}
+
+/* Services Section */
+.mandap-services {
+    background: #ffffff;
+}
+
+.mandap-service-icon {
+    transition: transform 0.3s ease;
+}
+
+.mandap-services .col-lg-4:hover .mandap-service-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Features Section */
+.mandap-features {
+    background: #f8f9fa;
+}
+
+.mandap-feature-icon {
+    transition: transform 0.3s ease;
+}
+
+.mandap-features .col-lg-3:hover .mandap-feature-icon {
+    transform: scale(1.15);
+}
+
+/* Testimonials Section */
+.mandap-testimonials {
+    background: #ffffff;
+}
+
+.mandap-testimonial-card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    background: #ffffff;
+}
+
+.mandap-testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+.mandap-testimonial-avatar {
+    opacity: 0.8;
+}
+
+/* Call to Action Section */
+.mandap-cta {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.mandap-cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+}
+
+.mandap-cta .container {
+    position: relative;
+    z-index: 2;
+}
+
+.mandap-cta .btn-light:hover {
+    background: #ffffff;
+    color: #667eea;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .mandap-hero-banner h1 {
+        font-size: 2.5rem !important;
+    }
+    
+    .mandap-hero-banner .lead {
+        font-size: 1rem;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .display-5 {
+        font-size: 1.75rem;
+    }
+    
+    .mandap-design-card {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Animation for sections on scroll */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.mandap-featured-gallery,
+.mandap-services,
+.mandap-features,
+.mandap-testimonials {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Card Hover Effects */
+.mandap-design-card .card-body {
+    transition: background-color 0.3s ease;
+}
+
+.mandap-design-card:hover .card-body {
+    background-color: #f8f9fa;
+}
+
+/* Button Enhancements */
+.mandap-hero-banner .btn,
+.mandap-cta .btn {
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.mandap-hero-banner .btn:hover,
+.mandap-cta .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Section Spacing */
+section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+@media (max-width: 768px) {
+    section {
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+    }
+}
+
+/* Typography Enhancements */
+.mandap-hero-banner h1,
+.mandap-featured-gallery h2,
+.mandap-services h2,
+.mandap-features h2,
+.mandap-testimonials h2 {
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* Image Optimization */
+.mandap-card-image,
+.mandap-hero-image img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+/* Loading State */
+.mandap-design-card {
+    position: relative;
+}
+
+.mandap-design-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0);
+    transition: background 0.3s ease;
+    pointer-events: none;
+    border-radius: 12px;
+}
+
+.mandap-design-card:hover::after {
+    background: rgba(255, 255, 255, 0.05);
+}
