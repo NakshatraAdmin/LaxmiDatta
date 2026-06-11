@@ -118,7 +118,7 @@ class ExcelReportController(http.Controller):
             ('E', 'OPERATION RATE', 15),
             ('F', 'Date', 20),
             ('G', 'STATUS', 15),
-            ('H', '', 10)  # Time column
+            ('H', 'TOTAL TIME', 10)
         ]
 
         min_workers = 2
@@ -187,18 +187,18 @@ class ExcelReportController(http.Controller):
             # Store initial row for merging
             initial_row = row
 
-            # Calculate total rows needed for this work order
+            # Match the sample layout: each block starts directly with ST-/ET- rows.
             time_rows = []
             if line_items:
                 for i, line in enumerate(line_items):
-                    time_row = row + 3 + (i * 2)
+                    time_row = row + (i * 2)
                     time_rows.append(time_row)  # START TIME row
                     time_rows.append(time_row + 1)  # END TIME row
             else:
-                time_rows.append(row + 3)  # START TIME row
-                time_rows.append(row + 4)  # END TIME row
+                time_rows.append(row)  # START TIME row
+                time_rows.append(row + 1)  # END TIME row
 
-            total_rows = 3 + len(time_rows)  # Product+MO+WO rows + time rows
+            total_rows = len(time_rows)
 
             # Merge ITEMNAME column (A) for all rows of this work order
             worksheet.merge_range(
@@ -272,18 +272,16 @@ class ExcelReportController(http.Controller):
             # Write time entries and corresponding WORK STRATEGY dates
             if line_items:
                 for i, line in enumerate(line_items):
-                    time_row = row + 3 + (i * 2)
+                    time_row = row + (i * 2)
 
-                    # Write WORK STRATEGY date for this time entry
+                    # Match the sample sheet: one Date cell spans each ST/ET pair.
                     if line.date:
-                        worksheet.write_datetime(time_row, 5, line.date, date_format)
-                        worksheet.write_datetime(time_row + 1, 5, line.date, date_format)
+                        worksheet.merge_range(time_row, 5, time_row + 1, 5, line.date, date_format)
                     else:
-                        worksheet.write(time_row, 5, "", empty_format)
-                        worksheet.write(time_row + 1, 5, "", empty_format)
+                        worksheet.merge_range(time_row, 5, time_row + 1, 5, "", empty_format)
 
                     # Write time entries
-                    worksheet.write(time_row, 6, "START TIME", data_format)
+                    worksheet.write(time_row, 6, "ST-", data_format)
                     if line.start_date:
                         local_start = line.start_date + timedelta(hours=5, minutes=30)
                         worksheet.write_datetime(time_row, 7, local_start, time_format)
@@ -291,21 +289,20 @@ class ExcelReportController(http.Controller):
                         worksheet.write(time_row, 7, "", empty_format)
 
                     time_row += 1
-                    worksheet.write(time_row, 6, "END TIME", data_format)
+                    worksheet.write(time_row, 6, "ET-", data_format)
                     if line.end_date:
                         local_end = line.end_date + timedelta(hours=5, minutes=30)
                         worksheet.write_datetime(time_row, 7, local_end, time_format)
                     else:
                         worksheet.write(time_row, 7, "", empty_format)
             else:
-                time_row = row + 3
-                worksheet.write(time_row, 5, "", empty_format)
-                worksheet.write(time_row, 6, "START TIME", data_format)
+                time_row = row
+                worksheet.merge_range(time_row, 5, time_row + 1, 5, "", empty_format)
+                worksheet.write(time_row, 6, "ST-", data_format)
                 worksheet.write(time_row, 7, "", empty_format)
 
                 time_row += 1
-                worksheet.write(time_row, 5, "", empty_format)
-                worksheet.write(time_row, 6, "END TIME", data_format)
+                worksheet.write(time_row, 6, "ET-", data_format)
                 worksheet.write(time_row, 7, "", empty_format)
 
             # Fill empty cells with borders
