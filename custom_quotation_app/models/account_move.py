@@ -4,6 +4,17 @@ from odoo import models, fields, api
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
+    
+    salesperson_partner_ids = fields.Many2many(
+        'res.partner',
+        'account_move_salesperson_partner_rel',
+        'move_id',
+        'partner_id',
+        string='Salespersons',
+        domain="[('salesperson_employee_contact', '=', True)]",
+        copy=False,
+        help='Employee contacts assigned as salespersons for this invoice.',
+    )
 
     down_payment = fields.Monetary(
         string="Down Payment",
@@ -23,6 +34,70 @@ class AccountMove(models.Model):
     article_no = fields.Char(string="Article No" , related="sale_id.article" )
     vehical_num= fields.Char(string="VEHICLE NO" , related="sale_id.vehicle_no")
     other_references = fields.Char(string = "Other References" , related="sale_id.other_references")
+
+    def _get_salesperson_partners_from_user(self, user):
+        self.ensure_one()
+        if not user:
+            return self.env['res.partner']
+
+        employees = user.sudo().employee_ids
+        if self.company_id:
+            employees = employees.filtered(lambda emp: emp.company_id == self.company_id)
+        return employees.mapped('work_contact_id')
+
+    def _get_primary_salesperson_user(self):
+        self.ensure_one()
+        employees = self.salesperson_partner_ids.sudo().mapped('employee_ids')
+        if self.company_id:
+            company_employees = employees.filtered(lambda emp: emp.company_id == self.company_id)
+            if company_employees:
+                employees = company_employees
+        return employees.mapped('user_id')[:1]
+
+    def _sync_invoice_user_from_salesperson_partners(self):
+        for move in self:
+            move.with_context(skip_salesperson_partner_sync=True).invoice_user_id = move._get_primary_salesperson_user()
+
+    def _sync_salesperson_partners_from_invoice_user(self):
+        for move in self:
+            move.with_context(skip_salesperson_partner_sync=True).salesperson_partner_ids = move._get_salesperson_partners_from_user(move.invoice_user_id)
+
+    @api.onchange('salesperson_partner_ids')
+    def _onchange_salesperson_partner_ids(self):
+        for move in self:
+            move.invoice_user_id = move._get_primary_salesperson_user()
+
+    @api.onchange('invoice_user_id')
+    def _onchange_invoice_user_id_sync_salesperson_partners(self):
+        for move in self:
+            if move.invoice_user_id and not move.salesperson_partner_ids:
+                move.salesperson_partner_ids = move._get_salesperson_partners_from_user(move.invoice_user_id)
+            elif not move.invoice_user_id and not move.salesperson_partner_ids:
+                move.salesperson_partner_ids = self.env['res.partner']
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        moves = super().create(vals_list)
+        if self.env.context.get('skip_salesperson_partner_sync'):
+            return moves
+
+        for move, vals in zip(moves, vals_list):
+            if 'salesperson_partner_ids' in vals:
+                move._sync_invoice_user_from_salesperson_partners()
+            elif 'invoice_user_id' in vals or not move.salesperson_partner_ids:
+                move._sync_salesperson_partners_from_invoice_user()
+        return moves
+
+    def write(self, vals):
+        res = super().write(vals)
+        if self.env.context.get('skip_salesperson_partner_sync'):
+            return res
+
+        if 'salesperson_partner_ids' in vals and 'invoice_user_id' not in vals:
+            self._sync_invoice_user_from_salesperson_partners()
+        elif 'invoice_user_id' in vals and 'salesperson_partner_ids' not in vals:
+            self._sync_salesperson_partners_from_invoice_user()
+        return res
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
