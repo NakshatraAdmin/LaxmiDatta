@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import fields, models
+from odoo import fields, models, api
+from odoo.osv import expression
 
 
 class ResPartner(models.Model):
@@ -31,3 +32,32 @@ class ResPartner(models.Model):
 
         use_in_operator = (operator == '=' and bool(value)) or (operator == '!=' and not bool(value))
         return [('id', 'in' if use_in_operator else 'not in', employee_contact_ids)]
+
+    @api.model
+    def _name_search(self, name="", args=None, operator="ilike", limit=100, order=None):
+        args = args or []
+
+        domain = []
+        if name:
+            domain = [
+                "|", "|", "|",
+                ("name", operator, name),
+                ("mobile", operator, name),
+                ("phone", operator, name),
+                ("email", operator, name),
+            ]
+
+        return self._search(
+            expression.AND([domain, args]),
+            limit=limit,
+            order=order,
+        )
+
+    def name_get(self):
+        result = []
+        for partner in self:
+            name = partner.name or ""
+            if partner.mobile:
+                name = f"{name} [{partner.mobile}]"
+            result.append((partner.id, name))
+        return result
