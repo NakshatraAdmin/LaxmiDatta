@@ -259,7 +259,7 @@ class ExcelReportController(http.Controller):
                     ws.write(pr + 1, 5, 'ET-', status_fmt)
 
                     ws.merge_range(pr, 6, pr + 1, 6, '', empty_fmt)
-
+            row += ROWS_PER_WO
         workbook.close()
         output.seek(0)
 
