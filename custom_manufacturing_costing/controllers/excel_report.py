@@ -52,8 +52,11 @@ class ExcelReportController(http.Controller):
         })
         # Columns A–D: wrap + center + vcenter
         merge_fmt = workbook.add_format({
-            'align': 'center', 'valign': 'vcenter',
-            'border': 1, 'font_name': font, 'text_wrap': True,
+            'align': 'center',
+            'valign': 'vcenter',
+            'border': 1,
+            'font_name': font,
+            'text_wrap': True,
         })
         # date, time cells – centred, no wrap needed
         data_fmt = workbook.add_format({
@@ -113,10 +116,12 @@ class ExcelReportController(http.Controller):
         ws.set_column(4, 4, 10)  # E
         ws.set_column(5, 5, 10)  # F
 
-        ws.set_column(6, 6, 10)  # G
+        # G to M width = 9
+        ws.set_column(6, min(12, total_cols - 1), 9)
 
-        for c in range(7, total_cols):
-            ws.set_column(c, c, 12)
+        # Remaining columns after M
+        if total_cols > 13:
+            ws.set_column(13, total_cols - 1, 9)
 
         # ── Row heights ───────────────────────────────────────────────────────
         ws.set_row(0, 25)   # Row 1 – title
@@ -197,46 +202,63 @@ class ExcelReportController(http.Controller):
             # ── Col E/F/G: 4 ST/ET pairs, each pair merges 2 rows ────────────
             if line_items:
                 lines_to_use = list(line_items)[:4]  # max 4 pairs
+
                 for pair_idx in range(4):
-                    pr = row + pair_idx * 2  # first row of this pair
+                    pr = row + pair_idx * 2
+
                     if pair_idx < len(lines_to_use):
                         line = lines_to_use[pair_idx]
-                        # Date – merge 2 rows
+
+                        # Date
                         if line.date:
                             ws.merge_range(pr, 4, pr + 1, 4, line.date, date_fmt)
                         else:
                             ws.merge_range(pr, 4, pr + 1, 4, '', empty_fmt)
-                        # STATUS: ST- / ET-
+
+                        # Status
                         ws.write(pr, 5, 'ST-', status_fmt)
                         ws.write(pr + 1, 5, 'ET-', status_fmt)
-                        # TOTAL TIME
+
+                        # Total Time (Merged Like Worker Columns)
+                        start_time = ''
+                        end_time = ''
+
                         if line.start_date:
                             local_start = line.start_date + timedelta(hours=5, minutes=30)
-                            ws.write_datetime(pr, 6, local_start, time_fmt)
-                        else:
-                            ws.write(pr, 6, '', empty_fmt)
+                            start_time = local_start.strftime('%H:%M')
+
                         if line.end_date:
                             local_end = line.end_date + timedelta(hours=5, minutes=30)
-                            ws.write_datetime(pr + 1, 6, local_end, time_fmt)
-                        else:
-                            ws.write(pr + 1, 6, '', empty_fmt)
+                            end_time = local_end.strftime('%H:%M')
+
+                        time_text = f"{start_time}\n{end_time}".strip()
+
+                        ws.merge_range(
+                            pr, 6,
+                            pr + 1, 6,
+                            time_text,
+                            merge_fmt
+                        )
+
                     else:
-                        # No line for this pair – empty with borders
+                        # Empty Pair
                         ws.merge_range(pr, 4, pr + 1, 4, '', empty_fmt)
+
                         ws.write(pr, 5, 'ST-', status_fmt)
                         ws.write(pr + 1, 5, 'ET-', status_fmt)
-                        ws.write(pr, 6, '', empty_fmt)
-                        ws.write(pr + 1, 6, '', empty_fmt)
+
+                        ws.merge_range(pr, 6, pr + 1, 6, '', empty_fmt)
+
             else:
                 for pair_idx in range(4):
                     pr = row + pair_idx * 2
+
                     ws.merge_range(pr, 4, pr + 1, 4, '', empty_fmt)
+
                     ws.write(pr, 5, 'ST-', status_fmt)
                     ws.write(pr + 1, 5, 'ET-', status_fmt)
-                    ws.write(pr, 6, '', empty_fmt)
-                    ws.write(pr + 1, 6, '', empty_fmt)
 
-            row += ROWS_PER_WO
+                    ws.merge_range(pr, 6, pr + 1, 6, '', empty_fmt)
 
         workbook.close()
         output.seek(0)
