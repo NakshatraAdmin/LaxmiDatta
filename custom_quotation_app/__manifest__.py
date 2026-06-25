@@ -3,7 +3,7 @@
     'version': '17.0.1.0',
     'category': 'Custom',
     'description': 'Module for managing custom quotations',
-    'depends': ['base', 'mail', 'sale_management', 'stock', 'mrp', 'account', 'sale_stock', 'web'],
+    'depends': ['base', 'mail', 'sale_management', 'stock', 'mrp', 'account', 'sale_stock', 'web', 'hr'],
     'data': [
         'security/ir.model.access.csv',
         'report/report_deliveryslip.xml',

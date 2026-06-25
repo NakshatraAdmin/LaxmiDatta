@@ -6,6 +6,13 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
+              <xpath expr="//page[@name='other_information']//group[@name='sales_person']/field[@name='user_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//page[@name='other_information']//group[@name='sales_person']/field[@name='user_id']" position="after">
+                    <field name="salesperson_partner_ids" string="Salespersons" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}"/>
+                </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="before">
                     <field name="product_image_1920" widget="image" options="{'width': 10, 'height': 10}" string="Product Image"/>
                 </xpath>
@@ -13,9 +20,13 @@
                     <field name="bom_id"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="after">
+                     <field name="bill_date"/>
                     <field name="other_references"/>
                     <field name="dispatched_through_id" context="{'show_address': 1}"/>
                     <field name="vehicle_no"/>
+                </xpath>
+                <xpath expr="//field[@name='sale_order_template_id']" position="after">
+                    <field name="article"/>
                 </xpath>
             </field>
         </record>
@@ -60,6 +71,10 @@
                     <div t-if="doc.vehicle_no" class="col-auto col-3 mw-100 mb-2" name="vehicle_no">
                         <strong>Vehicle No:</strong><br/>
                         <span class="m-0" t-field="doc.vehicle_no"/>
+                    </div>
+                    <div t-if="doc.article" class="col-auto col-3 mw-100 mb-2" name="article">
+                        <strong>Artical No:</strong><br/>
+                        <span class="m-0" t-field="doc.article"/>
                     </div>
                 </div>
             </xpath>

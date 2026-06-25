@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Mandap Category Views -->
+    <record id="mandap_category_tree_view" model="ir.ui.view">
+        <field name="name">mandap.category.tree</field>
+        <field name="model">mandap.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="website_published"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mandap_category_form_view" model="ir.ui.view">
+        <field name="name">mandap.category.form</field>
+        <field name="model">mandap.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="website_published"/>
+                        </group>
+                        <group>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="Category description..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mandap_category" model="ir.actions.act_window">
+        <field name="name">Mandap Categories</field>
+        <field name="res_model">mandap.category</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Mandap Design Views -->
+    <record id="mandap_design_tree_view" model="ir.ui.view">
+        <field name="name">mandap.design.tree</field>
+        <field name="model">mandap.design</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="price"/>
+                <field name="website_published"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mandap_design_form_view" model="ir.ui.view">
+        <field name="name">mandap.design.form</field>
+        <field name="model">mandap.design</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="category_id"/>
+                            <field name="sequence"/>
+                            <field name="price"/>
+                        </group>
+                        <group>
+                            <field name="website_published"/>
+                            <field name="active"/>
+                            <field name="image" widget="image"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" widget="html"/>
+                        </page>
+                        <page string="Images">
+                            <field name="image_ids" nolabel="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="image" widget="image"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mandap_design" model="ir.actions.act_window">
+        <field name="name">Mandap Designs</field>
+        <field name="res_model">mandap.design</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_mandap_category" 
+              name="Mandap Categories" 
+              action="action_mandap_category" 
+              parent="website.menu_website_configuration"
+              sequence="50"/>
+    
+    <menuitem id="menu_mandap_design" 
+              name="Mandap Designs" 
+              action="action_mandap_design" 
+              parent="website.menu_website_configuration"
+              sequence="51"/>
+</odoo>

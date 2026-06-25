@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Mandap Color Views -->
+    <record id="mandap_color_tree_view" model="ir.ui.view">
+        <field name="name">mandap.color.tree</field>
+        <field name="model">mandap.color</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="color_code"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mandap_color_form_view" model="ir.ui.view">
+        <field name="name">mandap.color.form</field>
+        <field name="model">mandap.color</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="color_code" placeholder="#FF0000"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mandap_color" model="ir.actions.act_window">
+        <field name="name">Mandap Colors</field>
+        <field name="res_model">mandap.color</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_mandap_color" 
+              name="Mandap Colors" 
+              action="action_mandap_color" 
+              parent="website.menu_website_configuration"
+              sequence="53"/>
+</odoo>

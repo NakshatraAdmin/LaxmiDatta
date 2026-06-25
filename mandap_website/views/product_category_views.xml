@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Product Category Form View -->
+    <record id="product_category_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.category.form.inherit.mandap</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//h1/field[@name='name']" position="after">
+                <field name="show_on_homepage"/>
+            </xpath>
+            <xpath expr="//div[@class='oe_title']" position="after">
+                <field name="image" widget="image" class="oe_avatar"/>
+            </xpath>
+            <xpath expr="//group[@name='first']" position="after">
+                <group>
+                    <field name="description" widget="html" placeholder="Category description..."/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

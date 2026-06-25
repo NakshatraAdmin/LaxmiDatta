@@ -8,7 +8,73 @@
             <xpath expr="//field[@name='location_id']" position="after">
                 <field name="check_by"/>
                 <field name="pack_by"/>
+                 <field name="dispatched_through_id"/>
+                 <field name="bag_no"/>
+                 <field name="sale_user_id" invisible="1"/>
+                 
+             </xpath>
+
+            <xpath expr="//field[@name='origin']" position="after">
+                  <field name="article_no"/>
+                  <field name="vehical_num"/>
             </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_id']" position="before">
+                    <field name="product_image_1920" widget="image"  string="Product Image"  class="oe_avatar"
+                    style="'width:12px; height:12px;"/>
+                    <field name="hsn_sac"/>
+                </xpath>
         </field>
     </record>
+
+    <template id="product_image_document_customization" inherit_id="stock.report_picking">
+
+         <xpath expr="//div[@name='div_sched_date']" position="after">
+            <div class="row mt-4 mb-2" id="dispatch_ref">
+            <div t-if="o.check_by" class="col-auto col-3 mw-100 mb-2" name="div_check_by">
+                <strong>Checked By:</strong>
+                <p t-field="o.check_by" class="m-0"/>
+            </div>
+            <div t-if="o.pack_by" class="col-auto col-3 mw-100 mb-2" name="div_pack_by">
+                <strong>Packed By:</strong>
+                <p t-field="o.pack_by" class="m-0"/>
+            </div>
+             <div t-if="o.dispatched_through_id" class="col-auto col-3 mw-100 mb-2" name="div_dispatch">
+                <strong>Dispatched Through:</strong>
+                <p t-field="o.dispatched_through_id" class="m-0"/>
+            </div>
+            <div t-if="o.article_no" class="col-auto col-3 mw-100 mb-2" name="div_pack_by">
+                <strong>Article No:</strong>
+                <p t-field="o.article_no" class="m-0"/>
+            </div>
+             <div t-if="o.vehical_num" class="col-auto col-3 mw-100 mb-2" name="div_pack_by">
+                <strong>VEHICLE NO:</strong>
+                <p t-field="o.vehical_num" class="m-0"/>
+            </div>
+            <div t-if="o.sale_user_id" class="col-auto col-3 mw-100 mb-2" name="div_vehical_by">
+                <strong>Salesperson :</strong>
+                <p t-field="o.sale_user_id.name" class="m-0"/>
+            </div>
+            <div t-if="o.date_deadline" class="col-auto col-3 mw-100 mb-2" name="div_date_deadline">
+                <strong>Due Date :</strong>
+                <p t-field="o.date_deadline" class="m-0"/>
+            </div>
+        </div>
+        </xpath>
+
+    <xpath expr="//table//thead//th[contains(@name, 'th_product')]" position="before">
+                <th name="th_product_image" class="text-start"><span>Product Image</span></th>
+                <th name="hsn_sac" class="text-start"><span>HSN/SAC</span></th>
+            </xpath>
+            <xpath expr="//table//tbody//td[1]" position="before">
+                <td name="td_product_image" class="text-start">
+                    <img t-if="ml.product_id.image_1920" t-att-src="'data:image/png;base64,' + ml.product_id.image_1920.decode('utf-8')" style="max-height: 50px; max-width: 50px;"/>
+                    <span t-else="True">No Image</span>
+                </td>
+                <td>
+                    <span t-field="ml.product_id.l10n_in_hsn_code"></span>
+                </td>
+            </xpath>
+        </template>
+        
+      
 </odoo>
