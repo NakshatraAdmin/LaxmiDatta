@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
@@ -30,6 +31,12 @@ class SaleOrder(models.Model):
     vehicle_no = fields.Char()
     article= fields.Char(string="ARTICLE NO")
     bill_date = fields.Date(string='Due Date', default=fields.Date.today, tracking=True)
+    payment_ids = fields.One2many('account.payment', 'sale_order_id', string='Payments')
+    payment_count = fields.Integer(compute='_compute_payment_count')
+
+    def _compute_payment_count(self):
+        for order in self:
+            order.payment_count = len(order.payment_ids)
     
     def _get_salesperson_partners_from_user(self, user):
         self.ensure_one()
@@ -99,3 +106,34 @@ class SaleOrder(models.Model):
         vals = super()._prepare_invoice()
         vals['salesperson_partner_ids'] = [fields.Command.set(self.salesperson_partner_ids.ids)]
         return vals
+
+    def action_register_payment(self):
+        self.ensure_one()
+        if self.state not in ('draft', 'sent'):
+            raise UserError(_('You can register a payment only on draft or sent sale orders.'))
+        return {
+            'name': _('Register Payment'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order.register.payment',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'active_model': self._name,
+                'active_id': self.id,
+                'default_sale_order_id': self.id,
+                'default_amount': self.amount_total,
+                'default_communication': self.name,
+            },
+        }
+
+    def action_view_payments(self):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('account.action_account_payments')
+        action['domain'] = [('sale_order_id', '=', self.id)]
+        action['context'] = {
+            'default_payment_type': 'inbound',
+            'default_partner_type': 'customer',
+            'default_partner_id': self.partner_invoice_id.commercial_partner_id.id,
+            'default_sale_order_id': self.id,
+        }
+        return action

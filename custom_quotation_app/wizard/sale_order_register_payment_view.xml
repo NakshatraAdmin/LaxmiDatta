@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_sale_order_register_payment_form" model="ir.ui.view">
+        <field name="name">sale.order.register.payment.form</field>
+        <field name="model">sale.order.register.payment</field>
+        <field name="arch" type="xml">
+            <form string="Register Payment">
+                <group>
+                    <group>
+                        <field name="company_id" invisible="1"/>
+                        <field name="sale_order_id" invisible="1"/>
+                        <field name="partner_id"/>
+                        <field name="payment_date"/>
+                        <field name="amount"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="available_journal_ids" invisible="1"/>
+                        <field name="available_payment_method_line_ids" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="journal_id"/>
+                        <field name="payment_method_line_id"/>
+                        <field name="communication"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Create Payment" type="object" name="action_create_payment" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
