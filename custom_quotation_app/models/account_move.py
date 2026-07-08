@@ -30,7 +30,7 @@ class AccountMove(models.Model):
     )
     sale_id =fields.Many2one('sale.order',string="Sale Order")
 
-    dispatched_through_id = fields.Many2one('res.partner',related="sale_id.dispatched_through_id" , string="Dispatched Through")
+    dispatched_through_id = fields.Char(related="sale_id.dispatched_through_id", string="Dispatched Through")
     article_no = fields.Char(string="Article No" , related="sale_id.article" )
     vehical_num= fields.Char(string="VEHICLE NO" , related="sale_id.vehicle_no")
     other_references = fields.Char(string = "Other References" , related="sale_id.other_references")
