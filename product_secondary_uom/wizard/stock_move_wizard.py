@@ -15,20 +15,40 @@ class GenerateQRWizard(models.TransientModel):
     quantity_received = fields.Float(string="Quantity Received", required=True)
     keep_current_lines = fields.Boolean(string="Keep Current Lines")
 
+    def _get_next_lot_number(self, product):
+        lots = self.env['stock.lot'].search([
+            ('product_id', '=', product.id),
+        ], order='id desc')
+        next_lot_number = 1
+        for lot in lots:
+            if lot.name and lot.name.isdigit():
+                next_lot_number = int(lot.name) + 1
+                break
+
+        Lot = self.env['stock.lot']
+        while Lot.search_count([('name', '=', str(next_lot_number))]):
+            next_lot_number += 1
+        return str(next_lot_number)
+
+    def _get_available_lot_name(self, lot_number):
+        Lot = self.env['stock.lot']
+        while Lot.search_count([('name', '=', str(lot_number))]):
+            lot_number += 1
+        return str(lot_number), lot_number + 1
+
     @api.model
     def default_get(self, fields_list):
         res = super(GenerateQRWizard, self).default_get(fields_list)
         stock_move_id = self.env.context.get('active_id')
         if stock_move_id:
             stock_move = self.env['stock.move'].browse(stock_move_id)
-            last_lot = self.env['stock.lot'].search([], order='id desc', limit=1)
-            last_lot_number = str(int(last_lot.name) + 1) if last_lot and last_lot.name.isdigit() else "1"
+            first_lot_number = self._get_next_lot_number(stock_move.product_id)
 
             res.update({
                 'stock_move_id': stock_move_id,
                 'quantity_received': stock_move.product_uom_qty,
                 'quantity_per_lot': 1 if stock_move.product_id.tracking == 'serial' else 0,
-                'first_lot_number': last_lot_number,
+                'first_lot_number': first_lot_number,
             })
         return res
 
@@ -47,8 +67,9 @@ class GenerateQRWizard(models.TransientModel):
             start_lot_number = int(self.first_lot_number)
         except ValueError:
             raise UserError(_("First Lot Number must be a numeric value."))
+        next_lot_number = start_lot_number
         for i in range(num_lots):
-            lot_name = str(start_lot_number + i)
+            lot_name, next_lot_number = self._get_available_lot_name(next_lot_number)
             lot = self.env['stock.lot'].search([('name', '=', lot_name), ('product_id', '=', stock_move.product_id.id)],
                                                limit=1)
             if not lot:
@@ -67,7 +88,7 @@ class GenerateQRWizard(models.TransientModel):
             })
 
         if remaining_quantity > 0:
-            lot_name = str(start_lot_number + num_lots)
+            lot_name, next_lot_number = self._get_available_lot_name(next_lot_number)
 
             lot = self.env['stock.lot'].search([('name', '=', lot_name), ('product_id', '=', stock_move.product_id.id)],
                                                limit=1)
