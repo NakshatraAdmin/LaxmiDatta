@@ -30,7 +30,7 @@ class AccountMove(models.Model):
     )
     sale_id =fields.Many2one('sale.order',string="Sale Order")
 
-    dispatched_through_id = fields.Many2one('res.partner',related="sale_id.dispatched_through_id" , string="Dispatched Through")
+    dispatched_through_id = fields.Char(related="sale_id.dispatched_through_id", string="Dispatched Through")
     article_no = fields.Char(string="Article No" , related="sale_id.article" )
     vehical_num= fields.Char(string="VEHICLE NO" , related="sale_id.vehicle_no")
     other_references = fields.Char(string = "Other References" , related="sale_id.other_references")
@@ -98,6 +98,18 @@ class AccountMove(models.Model):
         elif 'invoice_user_id' in vals and 'salesperson_partner_ids' not in vals:
             self._sync_salesperson_partners_from_invoice_user()
         return res
+
+
+class AccountPayment(models.Model):
+    _inherit = 'account.payment'
+
+    sale_order_id = fields.Many2one(
+        'sale.order',
+        string='Sale Order',
+        copy=False,
+        index=True,
+    )
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'

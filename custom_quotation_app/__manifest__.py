@@ -11,6 +11,8 @@
         'views/product_template.xml',
         'views/mrp_bom_view.xml',
         'views/account_move_view.xml',
+        'views/account_payment_view.xml',
+        'wizard/sale_order_register_payment_view.xml',
         'views/sale_order_view.xml',
         'views/res_config_settings_view.xml',
         'views/stock.xml',
@@ -24,5 +26,7 @@
     },
     'installable': True,
     'application': True,
+    'pre_init_hook': 'pre_init_hook',
+    'post_init_hook': 'post_init_hook',
     'license': 'LGPL-3',
 }

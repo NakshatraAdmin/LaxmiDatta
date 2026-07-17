@@ -8,4 +8,4 @@ access_sub_product_group,access_sub_product_group,model_sub_product_group,base.g
 access_cost_segment,access_cost_segment,model_cost_segment,base.group_user,1,1,1,1
 access_labour_cost,access_labour_cost,model_labour_cost,base.group_user,1,1,1,1
 access_labour_cost_category,access_labour_cost_category,model_labour_cost_category,base.group_user,1,1,1,1
-
+access_sale_order_register_payment,access_sale_order_register_payment,model_sale_order_register_payment,base.group_user,1,1,1,1

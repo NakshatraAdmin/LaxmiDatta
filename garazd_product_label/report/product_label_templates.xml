@@ -216,65 +216,44 @@
 
     <template id="report_custom_stock_lot_label">
         <t t-call="web.basic_layout">
-            <div class="oe_structure"></div>
-            <div class="o_label_sheet"
-                 style="padding: 0; display: flex; justify-content: center; align-items: center; height: 100%;">
-                <table class="my-0 table table-sm table-borderless"
-                       style="width: 100%; height: 100%; margin: 0; text-align: center;">
+            <div class="oe_structure"/>
+            <div class="o_label_sheet" style="padding: 0; height: 100%;">
+                <table class="my-0 table table-sm table-borderless" style="width: 100%; height: 100%; margin: 0; text-align: center;">
                     <tr style="height: calc(100%/12);" t-foreach="docs" t-as="o">
                         <td style="text-align: center; vertical-align: middle; padding: 0;">
-                            <div style="margin: 0 auto; display: inline-block; position: relative;"
-                                 t-att-style="'width:50mm; height:28mm; border: 1px solid %s; box-sizing: border-box; overflow: hidden;' % (o.env.user.company_id.primary_color or 'black')">
+                            <div style="margin: 0 auto; display: inline-block; position: relative; page-break-inside: avoid; break-inside: avoid;" t-att-style="'width:70mm; height:29mm; border: 0px solid %s; overflow: hidden; font-family: Arial, DejaVu Sans, sans-serif; font-size: 8pt; line-height: 1.05; color: #000; letter-spacing: 0;' % (o.env.user.company_id.primary_color or 'black')">
                                 <t t-set="final_barcode" t-value="''"/>
                                 <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
-                                    <t t-if="o.product_id.valid_ean" t-set="final_barcode"
-                                       t-value="'01' + '0' * (14 - len(o.product_id.barcode)) + o.product_id.barcode"/>
-                                    <t name="gs1_datamatrix_lot" t-if="o.product_id.tracking == 'lot'"
-                                       t-set="final_barcode" t-value="(final_barcode or '') + '10' + o.name"/>
-                                    <t t-elif="o.product_id.tracking == 'serial'" t-set="final_barcode"
-                                       t-value="(final_barcode or '') + '21' + o.name"/>
+                                    <t t-if="o.product_id.valid_ean" t-set="final_barcode" t-value="'01' + '0' * (14 - len(o.product_id.barcode)) + o.product_id.barcode"/>
+                                    <t name="gs1_datamatrix_lot" t-if="o.product_id.tracking == 'lot'" t-set="final_barcode" t-value="(final_barcode or '') + '10' + o.name"/>
+                                    <t t-elif="o.product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + o.name"/>
                                 </t>
-                                <div style="padding: 1mm; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between;">
-                                    <div>
-                                        <div t-if="o.product_id.default_code" class="o_label_4x12">
-                                            <span class="o_label_4x12 lh-1">[<t t-out="o.product_id.default_code"/>]
-                                            </span>
-                                        </div>
-                                        <div class="o_label_4x12">
-                                            <span class="o_label_4x12 lh-1" t-field="o.product_id.name"/>
-                                        </div>
-                                        <div class="o_label_4x12" name="lot_name">
-                                            <span class="o_label_4x12 lh-1" name="lot_name" t-field="o.name"/>
-                                        </div>
-                                        <div class="o_label_4x12">
-                                            Qty:
-                                            <span class="o_label_4x12" t-field="o.product_qty"/>
-                                        </div>
+                                <div style="width: 100%; height: 100%; padding-top: 1.2mm; text-align: center; box-sizing: border-box;">
+                                    <div style="height: 3.8mm; overflow: hidden; margin: 0 2mm 0.25mm; font-size: 7.2pt; font-weight: 700; line-height: 3.8mm; white-space: nowrap;">
+                                        <strong style="font-weight: 700;" t-field="o.product_id.name"/>
+                                        <t t-if="o.product_id.product_template_attribute_value_ids">
+                                            <strong style="font-weight: 700;">
+                                                (<t t-esc="', '.join(o.product_id.product_template_attribute_value_ids.mapped('name'))"/>)
+                                            </strong>
+                                        </t>
                                     </div>
-
-                                    <div style="display: flex; flex-direction: column; gap: 2mm;">
+                                    <div style="margin: 0; padding: 0;">
                                         <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
-                                            <div t-if="o.name" style="align-self: center;">
-                                                <span t-out="o.name" t-options="{
-                                                'widget': 'barcode',
-                                                'quiet': 0,
-                                                'symbology': 'auto',
-                                                'img_style': 'overflow: hidden; width: 80%; height: 1.5rem;',
-
-                                            }"/>
+                                            <div t-if="o.name" style="width: 55mm; height: 4.4mm; margin: 0 auto 0.25mm; line-height: 0;">
+                                                <strong t-out="o.name" t-options="{                                                 'widget': 'barcode',                                                 'quiet': 0,                                                 'symbology': 'auto',                                                 'img_style': 'width: 100%; height: 4.4mm; display: block;',                                              }"/>
                                             </div>
                                         </t>
-
 <!--                                        <div t-if="o.product_id.barcode" style="align-self: center;">-->
-                                            <div t-out="o.product_id.barcode" style="margin-top: 5px;"
-                                                 t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': 'overflow: hidden; width: 100%; height: 1.5rem;'}"/>
+                                            <div t-out="o.product_id.barcode" style="width: 62mm; height: 5.6mm; margin: 0 auto 0.25mm; line-height: 0;" t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': 'width: 100%; height: 5.6mm; display: block;'}"/>
+                                            <div t-if="o.product_id.default_code" style="height: 3.2mm; overflow: hidden; margin: 0 1mm 0.15mm; font-size: 6.8pt; font-weight: 700; line-height: 3.2mm; white-space: nowrap;">
+                                                <span><strong style="font-weight: 700;" t-out="o.product_id.default_code"/></span>
+                                            </div>
 <!--                                        </div>-->
-
 <!--                                        <t t-else="">-->
-                                            <div t-out="o.name" t-options="{
-                                            'widget': 'barcode',
-                                            'img_style': 'width:100%; height:1.5rem; display: block;'
-                                        }"/>
+                                            <div t-out="o.name" style="width: 36mm; height: 4.6mm; margin: 0 auto 0.2mm; line-height: 0;" t-options="{'widget': 'barcode', 'img_style': 'width:100%; height:4.6mm; display: block;'}"/>
+                                            <div name="lot_name" style="height: 3.4mm; overflow: hidden; margin: 0 1mm; font-size: 6.8pt; font-weight: 700; line-height: 3.4mm; white-space: nowrap;">
+                                                Batch:<strong style="font-weight: 700;" name="lot_name" t-field="o.name"/> - Qty: <strong style="font-weight: 700;" t-field="o.product_qty"/><strong style="font-weight: 700;" t-field="o.product_uom_id"/>
+                                            </div>
 <!--                                        </t>-->
                                     </div>
                                 </div>

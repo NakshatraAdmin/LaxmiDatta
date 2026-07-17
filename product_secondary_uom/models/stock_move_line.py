@@ -78,6 +78,10 @@ class StockMove(models.Model):
             'view_mode': 'form',
             'view_id': self.env.ref('product_secondary_uom.view_generate_qr_wizard').id,
             'target': 'new',
+            'context': {
+                'active_model': 'stock.move',
+                'active_id': self.id,
+            },
         }
 
     @api.model
