@@ -97,6 +97,21 @@ class SaleOrder(models.Model):
                     )
                 advance_payment_amount += amount
             order.advance_payment_amount = advance_payment_amount
+
+    def _get_report_advance_payments(self):
+        self.ensure_one()
+        invalid_payment_states = ('draft', 'cancel', 'canceled', 'rejected')
+        confirmation_date = self.date_order if self.state not in ('draft', 'sent') else False
+        return self.payment_ids.filtered(lambda payment: (
+            payment.state not in invalid_payment_states
+            and payment.payment_type == 'inbound'
+            and payment.partner_type == 'customer'
+            and not (confirmation_date and payment.create_date and payment.create_date > confirmation_date)
+        ))
+
+    def _get_report_signatory_name(self):
+        self.ensure_one()
+        return self.user_id.name or self.write_uid.name
     
     def _get_salesperson_partners_from_user(self, user):
         self.ensure_one()
