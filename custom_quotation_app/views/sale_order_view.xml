@@ -140,25 +140,25 @@
                         overflow-wrap: anywhere; }
                         .lax-footer-table, .lax-footer-table tr, .lax-footer-table td { border: 0 !important; }
                         .lax-title td { height: 18px; background: #d9e2f3; text-align: center; font-weight: 700;
-                        font-size: 17px !important; }
-                        <!--                    .lax-company-row td { height: 75px;}-->
+                        font-size: 20px !important; }
                         .lax-logo { text-align: center; }
                         .lax-logo img { max-width: 120px; max-height: 120px; }
                         .lax-company { text-align: center; font-weight: 700; line-height: 1.08; padding-top: 1px !important; padding-bottom: 1px !important; }
-                        .lax-company > div { margin: 2px 0 !important; padding: 0 !important; line-height: 1.5 !important;}
-                        .lax-company-name { font-size: 19px !important; margin: 1px 0 2px 0 !important; padding: 0 !important; line-height: 1.5 !important;}
-                        .lax-company-contact { white-space: nowrap; white-space: nowrap; margin: 2px 0 !important; padding: 0 !important; line-height: 1.5 !important;}
-                        .lax-company-email { display: inline-block; padding-left: 10px; line-height: 1.5 !important;}
-                        .lax-company-gst, .lax-company-gst * { font-size: 16px !important; margin: 2px 0 1px 0 !important; padding: 0 !important; line-height: 1.5 !important;}
+                        .lax-company > div { margin: 2px 0 !important; padding: 0 !important; line-height: 1.8 !important;}
+                        .lax-company-name { font-size: 20px !important; margin: 1px 0 2px 0 !important; padding: 0 !important; line-height: 1.8 !important;}
+                        .lax-company-contact { white-space: nowrap; white-space: nowrap; margin: 2px 0 !important; padding: 0 !important; line-height: 1.8 !important;}
+                        .lax-company-email { display: inline-block; padding-left: 10px; line-height: 1.8 !important;}
+                        .lax-company-gst, .lax-company-gst * { font-size: 16px !important; margin: 2px 0 1px 0 !important; padding: 0 !important; line-height: 1.8 !important;}
                         .lax-website-qr { text-align: center;}
                         .lax-website-qr img { max-width: 95px; max-height: 95px; }
                         .lax-address { height: 58px; vertical-align: top !important; }
-                        .lax-nested-wrap { border: 0 !important; padding: 0 !important; vertical-align: top !important;
-                        }
+                        .lax-nested-wrap { border: 0 !important; padding: 0 !important; vertical-align: top !important; line-height: 0 !important;}
+                        .lax-nested-wrap > .lax-inner { height: 100%; }
                         .lax-inner { width: 100%; border-collapse: collapse; table-layout: fixed; }
                         .lax-inner { border: 0; }
                         .lax-inner td { border: 1px solid #000; padding: 2px 3px; overflow-wrap: anywhere; }
-                        .lax-address-box { height: 92px; vertical-align: top !important; }
+                        .lax-address-box { height: 72px; vertical-align: top !important; }
+                        .lax-party-name { font-weight: 700; padding-top:0; padding-bottom:0; }
                         .lax-meta-cell { height: 24px; text-align: left; vertical-align: middle !important; font-weight:
                         700; white-space: nowrap; padding: 0 !important; position: relative; }
                         .lax-meta-cell:after { content: ""; position: absolute; top: 0; bottom: 0; left: 46%; border-left: 1px solid #000; }
@@ -181,7 +181,7 @@
                         .lax-bank td { height: 70px; vertical-align: top !important; }
                         .lax-bank-detail { text-align: left; padding-top: 3px; }
                         .lax-qr-cell { width: 32%; text-align: center; vertical-align: middle !important; }
-                        .lax-qr-cell img { max-width: 68px; max-height: 68px; }
+                        .lax-qr-cell img { max-width: 85px; max-height: 84px; }
                         .lax-side-last td { border-bottom: 0 !important; }
                         .lax-bank-inner, .lax-bank-inner tr, .lax-bank-inner td { border: 0 !important; }
                         .lax-sign-box { text-align: center; font-weight: 700; height: 70px; position: relative; }
@@ -269,41 +269,35 @@
                                 <tr></tr>
                                 <tr></tr>
                                 <tr>
-                                    <td colspan="20" class="lax-nested-wrap">
-                                        <table class="lax-inner">
-                                            <colgroup>
-                                                <col style="width:49.5%"/>
-                                                <col style="width:50.5%"/>
-                                            </colgroup>
-                                            <tr>
-                                                <td class="lax-address-box">
-                                                    <span class="lax-bold">CONSIGNEE:- (SHIP TO )</span>
-                                                    <br/>
-                                                    <span t-field="doc.partner_shipping_id"
-                                                          t-options="{'widget': 'contact', 'fields': ['address', 'name', 'phone', 'mobile'], 'no_marker': True}"/>
-                                                    <t t-if="doc.partner_shipping_id.vat"><br/>GST NO-
-                                                        <span t-field="doc.partner_shipping_id.vat"/>
-                                                    </t>
-                                                </td>
-                                                <td class="lax-address-box">
-                                                    <span class="lax-bold">BUYER:- (BILL TO)</span>
-                                                    <br/>
-                                                    <span t-field="doc.partner_invoice_id"
-                                                          t-options="{'widget': 'contact', 'fields': ['address', 'name', 'phone', 'mobile'], 'no_marker': True}"/>
-                                                    <t t-if="doc.partner_invoice_id.vat"><br/>GST NO-
-                                                        <span t-field="doc.partner_invoice_id.vat"/>
-                                                    </t>
-                                                </td>
-                                            </tr>
-                                        </table>
+                                    <td colspan="10" class="lax-address-box">
+                                        <span class="lax-bold">CONSIGNEE:- (SHIP TO )</span>
+                                        <br/>
+                                        <span class="lax-party-name" t-field="doc.partner_shipping_id.name"/>
+                                        <br/>
+                                        <span t-field="doc.partner_shipping_id"
+                                              t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
+                                        <t t-if="doc.partner_shipping_id.vat"><br/>GST NO-
+                                            <span t-field="doc.partner_shipping_id.vat"/>
+                                        </t>
+                                    </td>
+                                    <td colspan="10" class="lax-address-box">
+                                        <span class="lax-bold">BUYER:- (BILL TO)</span>
+                                        <br/>
+                                        <span class="lax-party-name" t-field="doc.partner_invoice_id.name"/>
+                                        <br/>
+                                        <span t-field="doc.partner_invoice_id"
+                                              t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
+                                        <t t-if="doc.partner_invoice_id.vat"><br/>GST NO-
+                                            <span t-field="doc.partner_invoice_id.vat"/>
+                                        </t>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td colspan="20" class="lax-nested-wrap">
                                         <table class="lax-inner">
                                             <colgroup>
-                                                <col style="width:49.5%"/>
                                                 <col style="width:50.5%"/>
+                                                <col style="width:49.5%"/>
                                             </colgroup>
                                             <tr>
                                                 <td class="lax-meta-cell">
@@ -492,11 +486,7 @@
                                         <table class="lax-inner lax-bank-inner">
                                             <tr>
                                                 <td class="lax-qr-cell">
-                                                    <img t-if="qr_code_url" t-att-src="qr_code_url"/>
-                                                    <div t-if="qr_code_url and doc.company_id.l10n_in_upi_id"
-                                                         style="padding-top:5px; font-size:10px; !important;">UPI ID:
-                                                        <span t-field="doc.company_id.l10n_in_upi_id"/>
-                                                    </div>
+                                                    <img src="/custom_quotation_app/static/src/img/bank_qr.jpg"/>
                                                 </td>
                                                 <td>
                                                     <div class="lax-center lax-bold">BANK DETAILS</div>
