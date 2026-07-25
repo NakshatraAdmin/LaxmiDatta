@@ -2,6 +2,7 @@
 
 from . import custom_quotation
 from . import product_template
+from . import product_product
 from . import mrp_bom
 from . import account_move
 from . import sale_order

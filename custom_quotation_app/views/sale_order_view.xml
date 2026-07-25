@@ -85,6 +85,10 @@
             <field name="paperformat_id" ref="custom_quotation_app.paperformat_sale_order_laxmidatta_a4"/>
         </record>
 
+        <record id="sale_pdf_quote_builder.action_report_saleorder_raw" model="ir.actions.report">
+            <field name="paperformat_id" ref="custom_quotation_app.paperformat_sale_order_laxmidatta_a4"/>
+        </record>
+
         <template id="laxmidatta_saleorder_external_layout">
             <div class="header" style="height: 0; line-height: 0; overflow: hidden;"></div>
             <div class="article" t-att-data-oe-model="doc and doc._name" t-att-data-oe-id="doc and doc.id"
@@ -115,8 +119,9 @@
                 <t t-set="bank" t-value="doc.company_id.partner_id.bank_ids[:1]"/>
                 <t t-set="title" t-value="'QUOTATION' if doc.state in ('draft', 'sent') else 'SALES ORDER'"/>
                 <t t-set="total_qty" t-value="sum(lines.mapped('product_uom_qty'))"/>
+                <t t-set="discount_product_lines" t-value="lines.filtered(lambda l: l._is_discount_line())"/>
                 <t t-set="total_discount"
-                   t-value="sum([l.product_uom_qty * l.price_unit * l.discount / 100.0 for l in lines])"/>
+                   t-value="sum([l.product_uom_qty * l.price_unit * l.discount / 100.0 for l in (lines - discount_product_lines)]) + sum([abs(l.price_subtotal) for l in discount_product_lines])"/>
                 <t t-set="has_igst"
                    t-value="lines.mapped('tax_id').filtered(lambda tax: 'IGST' in (tax.name or '').upper())"/>
                 <t t-set="has_gst"
@@ -143,16 +148,22 @@
                         font-size: 20px !important; }
                         .lax-logo { text-align: center; }
                         .lax-logo img { max-width: 120px; max-height: 120px; }
-                        .lax-company { text-align: center; font-weight: 700; line-height: 1.08; padding-top: 1px !important; padding-bottom: 1px !important; }
-                        .lax-company > div { margin: 2px 0 !important; padding: 0 !important; line-height: 1.8 !important;}
-                        .lax-company-name { font-size: 20px !important; margin: 1px 0 2px 0 !important; padding: 0 !important; line-height: 1.8 !important;}
-                        .lax-company-contact { white-space: nowrap; white-space: nowrap; margin: 2px 0 !important; padding: 0 !important; line-height: 1.8 !important;}
+                        .lax-company { text-align: center; font-weight: 700; line-height: 1.08; padding-top: 1px
+                        !important; padding-bottom: 1px !important; }
+                        .lax-company > div { margin: 2px 0 !important; padding: 0 !important; line-height: 1.8
+                        !important;}
+                        .lax-company-name { font-size: 20px !important; margin: 1px 0 2px 0 !important; padding: 0
+                        !important; line-height: 1.8 !important;}
+                        .lax-company-contact { white-space: nowrap; white-space: nowrap; margin: 2px 0 !important;
+                        padding: 0 !important; line-height: 1.8 !important;}
                         .lax-company-email { display: inline-block; padding-left: 10px; line-height: 1.8 !important;}
-                        .lax-company-gst, .lax-company-gst * { font-size: 16px !important; margin: 2px 0 1px 0 !important; padding: 0 !important; line-height: 1.8 !important;}
+                        .lax-company-gst, .lax-company-gst * { font-size: 16px !important; margin: 2px 0 1px 0
+                        !important; padding: 0 !important; line-height: 1.8 !important;}
                         .lax-website-qr { text-align: center;}
                         .lax-website-qr img { max-width: 95px; max-height: 95px; }
                         .lax-address { height: 58px; vertical-align: top !important; }
-                        .lax-nested-wrap { border: 0 !important; padding: 0 !important; vertical-align: top !important; line-height: 0 !important;}
+                        .lax-nested-wrap { border: 0 !important; padding: 0 !important; vertical-align: top !important;
+                        line-height: 0 !important;}
                         .lax-nested-wrap > .lax-inner { height: 100%; }
                         .lax-inner { width: 100%; border-collapse: collapse; table-layout: fixed; }
                         .lax-inner { border: 0; }
@@ -161,8 +172,10 @@
                         .lax-party-name { font-weight: 700; padding-top:0; padding-bottom:0; }
                         .lax-meta-cell { height: 24px; text-align: left; vertical-align: middle !important; font-weight:
                         700; white-space: nowrap; padding: 0 !important; position: relative; }
-                        .lax-meta-cell:after { content: ""; position: absolute; top: 0; bottom: 0; left: 46%; border-left: 1px solid #000; }
-                        .lax-meta-label { display: inline-block; width: 46%; height: 24px; padding: 2px 3px; box-sizing: border-box;
+                        .lax-meta-cell:after { content: ""; position: absolute; top: 0; bottom: 0; left: 46%;
+                        border-left: 1px solid #000; }
+                        .lax-meta-label { display: inline-block; width: 46%; height: 24px; padding: 2px 3px; box-sizing:
+                        border-box;
                         vertical-align: middle; }
                         .lax-meta-value { display: inline-block; width: 54%; height: 24px; padding: 2px 3px;
                         box-sizing: border-box; text-align: left; font-weight: 400;
@@ -305,44 +318,60 @@
                                                         <span style="font-weight: 700;" t-esc="title"/>
                                                         NO
                                                     </span>
-                                                    <span class="lax-meta-value"><span t-field="doc.name"/></span>
+                                                    <span class="lax-meta-value">
+                                                        <span t-field="doc.name"/>
+                                                    </span>
                                                 </td>
                                                 <td class="lax-meta-cell">
                                                     <span class="lax-meta-label">DATE</span>
-                                                    <span class="lax-meta-value"><span t-field="doc.date_order"
-                                                          t-options="{'widget': 'date'}"/></span>
+                                                    <span class="lax-meta-value">
+                                                        <span t-field="doc.date_order"
+                                                              t-options="{'widget': 'date'}"/>
+                                                    </span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="lax-meta-cell">
                                                     <span class="lax-meta-label">SALESMAN</span>
-                                                    <span class="lax-meta-value"><span
-                                                          t-esc="', '.join(doc.salesperson_partner_ids.mapped('name')) or doc.user_id.name"/></span>
+                                                    <span class="lax-meta-value">
+                                                        <span
+                                                                t-esc="', '.join(doc.salesperson_partner_ids.mapped('name')) or doc.user_id.name"/>
+                                                    </span>
                                                 </td>
                                                 <td class="lax-meta-cell">
                                                     <span class="lax-meta-label">OTHER REF.</span>
-                                                    <span class="lax-meta-value"><span t-field="doc.other_references"/></span>
+                                                    <span class="lax-meta-value">
+                                                        <span t-field="doc.other_references"/>
+                                                    </span>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="lax-meta-cell">
                                                     <span class="lax-meta-label">DUE DATE</span>
-                                                    <span class="lax-meta-value"><span t-field="doc.bill_date"
-                                                          t-options="{'widget': 'date'}"/></span>
+                                                    <span class="lax-meta-value">
+                                                        <span t-field="doc.bill_date"
+                                                              t-options="{'widget': 'date'}"/>
+                                                    </span>
                                                 </td>
                                                 <td class="lax-meta-cell">
                                                     <span class="lax-meta-label">DISPATCHED THROUGH</span>
-                                                    <span class="lax-meta-value"><span t-field="doc.dispatched_through_id"/></span>
+                                                    <span class="lax-meta-value">
+                                                        <span t-field="doc.dispatched_through_id"/>
+                                                    </span>
                                                 </td>
                                             </tr>
                                             <tr class="lax-side-last">
                                                 <td class="lax-meta-cell">
                                                     <span class="lax-meta-label">ARTICLE</span>
-                                                    <span class="lax-meta-value"><span t-field="doc.article"/></span>
+                                                    <span class="lax-meta-value">
+                                                        <span t-field="doc.article"/>
+                                                    </span>
                                                 </td>
                                                 <td class="lax-meta-cell">
                                                     <span class="lax-meta-label">VEHICLE NO</span>
-                                                    <span class="lax-meta-value"><span t-field="doc.vehicle_no"/></span>
+                                                    <span class="lax-meta-value">
+                                                        <span t-field="doc.vehicle_no"/>
+                                                    </span>
                                                 </td>
                                             </tr>
                                         </table>
@@ -389,7 +418,7 @@
                                             <span t-esc="'%.2f' % line.price_unit"/>
                                         </td>
                                         <td class="lax-right">
-                                            <span t-esc="'%.2f' % line.discount"/>
+                                            <span t-esc="'%.2f' % (line.product_uom_qty * line.price_unit * line.discount / 100.0)"/>
                                         </td>
                                         <td colspan="2" class="lax-right">
                                             <span t-esc="'%.2f' % (line.price_unit * (1.0 - line.discount / 100.0))"/>
@@ -420,11 +449,17 @@
                             </tbody>
                             <tbody class="lax-final-block">
                                 <tr class="lax-last-block">
-                                    <td colspan="14" t-att-rowspan="2 + tax_row_count" class="lax-terms">
+                                    <td colspan="14" t-att-rowspan="3 + tax_row_count" class="lax-terms">
                                         <span class="lax-terms-title">TERMS &amp; CONDITIONS:</span>
                                         <span></span>
                                         <span class="lax-terms-note" t-field="doc.note"/>
                                     </td>
+                                    <td colspan="4" class="lax-bold">TOTAL DISCOUNT</td>
+                                    <td colspan="2" class="lax-right">
+                                        <span t-esc="'%.2f' % total_discount"/>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td colspan="4" class="lax-bold">ROUND OFF</td>
                                     <td colspan="2" class="lax-right">0.00</td>
                                 </tr>
