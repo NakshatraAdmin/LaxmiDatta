@@ -240,3 +240,83 @@ class ProductTemplate(models.Model):
             return {'error': str(e)}
 
 
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    def _has_multiple_active_variants(self):
+        self.ensure_one()
+        return self.search_count([
+            ('product_tmpl_id', '=', self.product_tmpl_id.id),
+            ('active', '=', True),
+        ]) > 1
+
+    def _compute_image_1920(self):
+        single_variant_products = self.env['product.product']
+        for product in self:
+            if product._has_multiple_active_variants():
+                product.image_1920 = product.image_variant_1920
+            else:
+                single_variant_products |= product
+        if single_variant_products:
+            super(ProductProduct, single_variant_products)._compute_image_1920()
+
+    def _compute_image_1024(self):
+        single_variant_products = self.env['product.product']
+        for product in self:
+            if product._has_multiple_active_variants():
+                product.image_1024 = product.image_variant_1024
+            else:
+                single_variant_products |= product
+        if single_variant_products:
+            super(ProductProduct, single_variant_products)._compute_image_1024()
+
+    def _compute_image_512(self):
+        single_variant_products = self.env['product.product']
+        for product in self:
+            if product._has_multiple_active_variants():
+                product.image_512 = product.image_variant_512
+            else:
+                single_variant_products |= product
+        if single_variant_products:
+            super(ProductProduct, single_variant_products)._compute_image_512()
+
+    def _compute_image_256(self):
+        single_variant_products = self.env['product.product']
+        for product in self:
+            if product._has_multiple_active_variants():
+                product.image_256 = product.image_variant_256
+            else:
+                single_variant_products |= product
+        if single_variant_products:
+            super(ProductProduct, single_variant_products)._compute_image_256()
+
+    def _compute_image_128(self):
+        single_variant_products = self.env['product.product']
+        for product in self:
+            if product._has_multiple_active_variants():
+                product.image_128 = product.image_variant_128
+            else:
+                single_variant_products |= product
+        if single_variant_products:
+            super(ProductProduct, single_variant_products)._compute_image_128()
+
+    def _compute_can_image_1024_be_zoomed(self):
+        single_variant_products = self.env['product.product']
+        for product in self:
+            if product._has_multiple_active_variants():
+                product.can_image_1024_be_zoomed = product.can_image_variant_1024_be_zoomed
+            else:
+                single_variant_products |= product
+        if single_variant_products:
+            super(ProductProduct, single_variant_products)._compute_can_image_1024_be_zoomed()
+
+    def _set_image_1920(self):
+        single_variant_products = self.env['product.product']
+        for product in self:
+            if product._has_multiple_active_variants():
+                product.image_variant_1920 = product.image_1920
+            else:
+                single_variant_products |= product
+        if single_variant_products:
+            super(ProductProduct, single_variant_products)._set_image_1920()
+
