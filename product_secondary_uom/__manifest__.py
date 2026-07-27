@@ -7,7 +7,7 @@
     "license": "LGPL-3",
     "category": "Inventory",
     "version": "17.0.1.0.1",
-    "depends": ["sale_management", "purchase", "mrp", "stock"],
+    "depends": ["sale_management", "purchase", "mrp", "stock", "custom_quotation_app"],
     "data": [
         'security/ir.model.access.csv',
         'report/stock_report_views.xml',
