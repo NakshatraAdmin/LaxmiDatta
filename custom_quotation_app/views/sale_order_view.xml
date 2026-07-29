@@ -176,10 +176,10 @@
                         border-left: 1px solid #000; }
                         .lax-meta-label { display: inline-block; width: 46%; height: 24px; padding: 2px 3px; box-sizing:
                         border-box;
-                        vertical-align: middle; }
+                        vertical-align: middle; line-height: 20px; }
                         .lax-meta-value { display: inline-block; width: 54%; height: 24px; padding: 2px 3px;
                         box-sizing: border-box; text-align: left; font-weight: 400;
-                        vertical-align: middle; }
+                        vertical-align: middle; line-height: 20px; }
                         .lax-col-head td { height: 30px; text-align: center; font-weight: 700; }
                         .lax-line td { height: 36px; }
                         .lax-section td { height: 20px; font-weight: 700; }
@@ -309,8 +309,8 @@
                                     <td colspan="20" class="lax-nested-wrap">
                                         <table class="lax-inner">
                                             <colgroup>
-                                                <col style="width:50.5%"/>
-                                                <col style="width:49.5%"/>
+                                                <col style="width:51.3%"/>
+                                                <col style="width:50%"/>
                                             </colgroup>
                                             <tr>
                                                 <td class="lax-meta-cell">
@@ -335,7 +335,7 @@
                                                     <span class="lax-meta-label">SALESMAN</span>
                                                     <span class="lax-meta-value">
                                                         <span
-                                                                t-esc="', '.join(doc.salesperson_partner_ids.mapped('name')) or doc.user_id.name"/>
+                                                                t-esc="', '.join(doc.salesperson_ids.mapped('name')) or doc.user_id.name"/>
                                                     </span>
                                                 </td>
                                                 <td class="lax-meta-cell">
