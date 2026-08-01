@@ -37,7 +37,7 @@
                     <field name="bill_date"/>
                     <field name="other_references"/>
                     <field name="dispatched_through_id"/>
-                    <!-- <field name="vehicle_no"/> -->
+                    <field name="vehicle_no"/>
                 </xpath>
                 <xpath expr="//field[@name='sale_order_template_id']" position="after">
                     <field name="article"/>
