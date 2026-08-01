@@ -22,9 +22,9 @@
                     </field>
                 </page>
             </xpath>
-             <xpath expr="//field[@name='vehicle_no']" position="after">
+             <!-- <xpath expr="//field[@name='vehicle_no']" position="after">
                 <field name="commission_type_id" readonly="state != 'draft'"/>
-            </xpath>
+            </xpath> -->
             <xpath expr="//field[@name='article']" position="after">
 
                 <field name="salesperson_ids" widget="many2many_tags" string="Commission Sales Persons"/>             </xpath>
