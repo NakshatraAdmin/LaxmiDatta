@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_picking_operations_packing_slip" inherit_id="stock.report_picking">
+        <xpath expr="//t[@t-call='web.external_layout']" position="replace">
+            <t t-set="sale_order" t-value="o.move_ids_without_package.sale_line_id.order_id[:1]"/>
+            <t t-set="bill_to" t-value="sale_order.partner_invoice_id or o.partner_id"/>
+            <t t-set="operation_lines" t-value="o.move_line_ids_without_package"/>
+            <t t-call="web.basic_layout">
+                <style>
+                    .page.packing-slip-page { margin: 0 !important; padding: 0 !important; font-family: Arial,
+                    sans-serif; color: #000; font-size: 10pt; line-height: 1.12; }
+                    .packing-slip { width: 100%; border: 2px solid #000; border-collapse: collapse; table-layout: fixed;
+                    }
+                    .packing-slip td { border: 1px solid #000; padding: 3px 4px; vertical-align: top; overflow-wrap:
+                    anywhere; }
+                    .packing-slip .slip-title { background: #c6ddf1; font-size: 13pt; font-weight: 700; line-height:
+                    18px; padding: 2px; text-align: center; vertical-align: middle; }
+                    .packing-slip .company-logo { padding: 0; text-align: center; vertical-align: middle; }
+                    .packing-slip .company-logo img { display: block; margin: 3px auto; max-width: 120px; max-height:
+                    120px; }
+                    .packing-slip .company-details { font-size: 10pt; font-weight: 700; line-height: 1.55; padding: 1px
+                    3px; vertical-align: middle; }
+                    .packing-slip .company-name { font-size: 12pt; }
+                    .packing-slip .address-box { font-size: 10pt; }
+                    .packing-slip .address-heading, .packing-slip .partner-name, .packing-slip .meta-label {
+                    font-weight: 700; }
+                    .packing-slip .partner-name { display: inline-block; margin: 6px 0 4px; }
+                    .packing-slip .partner-address { line-height: 1.35; }
+                    .packing-slip .meta-wrap-cell { padding: 0; }
+                    .packing-slip .meta-table { border-collapse: collapse; table-layout: fixed; width: 100%; }
+                    .packing-slip .meta-table td { border: 0; border-right: 1px solid #000; border-bottom: 1px solid
+                    #000; height: 19px; padding: 2px 3px; vertical-align: middle; }
+                    .packing-slip .meta-table td:last-child { border-right: 0; }
+                    .packing-slip .meta-table tr:last-child td { border-bottom: 0; }
+                    .packing-slip .column-heading td { background: #d9d9d9; font-weight: 700; padding: 4px 2px;
+                    text-align: center; vertical-align: middle; }
+                    .packing-slip .line-row td { min-height: 24px; padding: 4px 3px; vertical-align: middle; }
+                    .packing-slip .product-image { text-align: center; }
+                    .packing-slip .product-image img { max-height: 38px; max-width: 60px; }
+                    .packing-slip .serial { color: #00a6e0; font-weight: 700; text-align: center; }
+                    .text-center { text-align: center; }
+                </style>
+                <div class="page packing-slip-page">
+                    <table class="packing-slip">
+                        <colgroup>
+                            <col style="width:13.5%"/>
+                            <col style="width:8.5%"/>
+                            <col style="width:26%"/>
+                            <col style="width:10%"/>
+                            <col style="width:42%"/>
+                        </colgroup>
+
+                        <tr>
+                            <td colspan="5" class="slip-title">PACKING SLIP</td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2" class="company-logo">
+                                <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" alt="Logo"/>
+                            </td>
+                            <td colspan="3" class="company-details">
+                                <div class="company-name" t-field="o.company_id.name"/>
+                                <div>
+                                    <span t-field="o.company_id.street"/>
+                                    <span t-field="o.company_id.street2"/>
+                                    <span t-field="o.company_id.city"/>
+                                    <span t-field="o.company_id.state_id.name"/>
+                                    <span t-field="o.company_id.zip"/>
+                                </div>
+                                <div t-if="o.company_id.partner_id.mobile or o.company_id.phone">
+                                    MOB NO-
+                                    <span t-esc="o.company_id.partner_id.mobile or o.company_id.phone"/>
+                                </div>
+                                <div t-if="o.company_id.email">
+                                    EMAIL ID -
+                                    <span t-field="o.company_id.email"/>
+                                </div>
+                                <div t-if="o.company_id.vat">
+                                    GST NO-
+                                    <span t-field="o.company_id.vat"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3" class="address-box">
+                                <div class="address-heading">CONSIGNEE:- (SHIP TO )</div>
+                                <span class="partner-name" t-field="o.partner_id.name"/>
+                                <div class="partner-address"
+                                     t-field="o.partner_id"
+                                     t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
+                                <div>GST NO-
+                                    <span t-esc="o.partner_id.vat or 'NA'"/>
+                                </div>
+                            </td>
+
+                            <td colspan="2" class="address-box">
+                                <div class="address-heading">BUYER:- ( BILL TO)</div>
+                                <span class="partner-name" t-field="bill_to.name"/>
+                                <div t-if="sale_order and sale_order.partner_invoice_id"
+                                     class="partner-address"
+                                     t-field="sale_order.partner_invoice_id"
+                                     t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
+                                <div t-else=""
+                                     class="partner-address"
+                                     t-field="o.partner_id"
+                                     t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
+                                <div>GST NO-
+                                    <span t-esc="bill_to.vat or 'NA'"/>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="5" class="meta-wrap-cell">
+                                <table class="meta-table">
+                                    <colgroup>
+                                        <col style="width:22%"/>
+                                        <col style="width:26%"/>
+                                        <col style="width:26%"/>
+                                        <col style="width:26%"/>
+                                    </colgroup>
+
+                                    <tr>
+                                        <td class="meta-label">PACKING SLIP NO</td>
+                                        <td>
+                                            <span t-field="o.name"/>
+                                        </td>
+                                        <td class="meta-label">DATE</td>
+                                        <td>
+                                            <span t-field="o.scheduled_date" t-options="{'widget': 'date'}"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="meta-label">SALE ORDER NO</td>
+                                        <td>
+                                            <span t-esc="sale_order.name or o.origin or ''"/>
+                                        </td>
+                                        <td class="meta-label">SALESMAN</td>
+                                        <td>
+                                            <span t-esc="o.sale_user_id.name or sale_order.user_id.name or o.user_id.name or ''"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="meta-label">DUE DATE</td>
+                                        <td>
+                                            <span t-field="o.date_deadline" t-options="{'widget': 'date'}"/>
+                                        </td>
+                                        <td class="meta-label">DISPATCHED THROUGH</td>
+                                        <td>
+                                            <span t-field="o.dispatched_through_id"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="meta-label">ARTICLE</td>
+                                        <td>
+                                            <span t-field="o.article_no"/>
+                                        </td>
+                                        <td class="meta-label">VEHICLE NO</td>
+                                        <td>
+                                            <span t-field="o.vehical_num"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="meta-label">PACKED BY</td>
+                                        <td>
+                                            <span t-field="o.pack_by.name"/>
+                                        </td>
+                                        <td class="meta-label">CHECKED BY</td>
+                                        <td>
+                                            <span t-field="o.check_by.name"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+
+                        <tr class="column-heading">
+                            <td colspan="2">HSN/SAC</td>
+                            <td>PRODUCT NAME</td>
+                            <td>QUANTITY</td>
+                            <td>LOT &amp; SERIAL NUMBERS</td>
+                        </tr>
+
+                        <t t-foreach="operation_lines" t-as="ml">
+                            <tr class="line-row">
+                                <td class="text-center" colspan="2">
+                                    <span t-field="ml.product_id.l10n_in_hsn_code"/>
+                                </td>
+
+                                <td>
+                                    <span t-field="ml.product_id.display_name"/>
+                                </td>
+
+                                <td class="text-center">
+                                    <span t-esc="'%g' % ml.quantity"/>
+                                </td>
+
+                                <td class="serial">
+                                    <span t-esc="ml.lot_id.name or ml.lot_name or ''"/>
+                                </td>
+
+                            </tr>
+                        </t>
+                    </table>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>
