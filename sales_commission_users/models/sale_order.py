@@ -38,8 +38,8 @@ class SaleOrder(models.Model):
         # Retrieve the commission type details from the selected sales.commission record
         commission = self.commission_type_id
 
-        # Get the total invoiced amount (not the sales order amount)
-        total_invoiced_amount = sum(invoice.amount_total for invoice in self.invoice_ids)
+        # Get the total untaxed invoiced amount (not the sales order amount)
+        total_invoiced_amount = sum(invoice.amount_untaxed for invoice in self.invoice_ids)
 
         if commission:
             # Standard commission type: a fixed percentage of invoiced amount

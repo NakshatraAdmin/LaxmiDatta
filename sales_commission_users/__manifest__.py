@@ -11,7 +11,7 @@
     'company': 'Nakshatra Techno Solutions',
     'maintainer': 'Nakshatra Techno Solutions',
     'website': 'https://www.nakshatra.com/',
-    'depends': ['sale_management', 'account'],
+    'depends': ['sale_management', 'account', 'custom_quotation_app'],
     'data': [
         'security/ir.model.access.csv',
         'security/groups.xml',
