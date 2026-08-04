@@ -21,4 +21,8 @@
     <record id="stock.action_report_picking" model="ir.actions.report">
         <field name="paperformat_id" ref="custom_inventory_report.paperformat_laxmidatta_stock_a4"/>
     </record>
+
+    <record id="stock.action_report_quant_package_barcode" model="ir.actions.report">
+        <field name="paperformat_id" ref="custom_inventory_report.paperformat_laxmidatta_stock_a4"/>
+    </record>
 </odoo>
