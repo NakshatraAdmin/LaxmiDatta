@@ -44,8 +44,9 @@
         <xpath expr="//t[@t-call='web.external_layout']" position="replace">
             <t t-set="doc" t-value="o.with_context(lang=o.partner_id.lang)"/>
             <t t-set="lines" t-value="doc.invoice_line_ids.filtered(lambda l: l.display_type == 'product')"/>
+            <t t-set="sale_order" t-value="doc.invoice_line_ids.sale_line_ids.order_id[:1] or doc.sale_id"/>
             <t t-set="shipping_partner"
-               t-value="doc.invoice_line_ids.sale_line_ids.order_id[:1].partner_shipping_id or doc.partner_id"/>
+               t-value="sale_order.partner_shipping_id or doc.partner_id"/>
             <t t-set="bank" t-value="doc.company_id.partner_id.bank_ids[:1]"/>
             <t t-set="title" t-value="'CREDIT NOTE' if doc.move_type == 'out_refund' else 'TAX INVOICE'"/>
             <t t-set="total_qty" t-value="sum(lines.mapped('quantity'))"/>
@@ -191,7 +192,7 @@
                                             <td class="lax-meta-cell">
                                                 <span class="lax-meta-label">SALESMAN</span>
                                                 <span class="lax-meta-value"
-                                                      t-esc="', '.join(doc.salesperson_partner_ids.mapped('name')) or doc.invoice_user_id.name or ''"/>
+                                                      t-esc="', '.join(sale_order.salesperson_ids.mapped('name')) or sale_order.user_id.name or doc.invoice_user_id.name or ''"/>
                                             </td>
                                             <td class="lax-meta-cell">
                                                 <span class="lax-meta-label">OTHER REF.</span>

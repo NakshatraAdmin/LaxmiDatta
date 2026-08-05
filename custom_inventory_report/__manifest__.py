@@ -3,7 +3,7 @@
     'version': '17.0.1.0.0',
     'category': 'Inventory',
     'summary': 'Laxmidatta inventory PDF layout',
-    'depends': ['stock', 'custom_quotation_app'],
+    'depends': ['stock', 'custom_quotation_app', 'sales_commission_users'],
     'data': [
         'report/report_paperformat_stock.xml',
         'report/report_deliveryslip.xml',
