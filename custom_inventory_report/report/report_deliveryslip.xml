@@ -8,7 +8,7 @@
             <t t-set="packing_locations" t-value="detailed_lines.mapped('result_package_id')"/>
             <t t-set="unpackaged_lines"
                t-value="detailed_lines.filtered(lambda operation: not operation.result_package_id)"/>
-            <t t-set="sale_order" t-value="lines.sale_line_id.order_id[:1]"/>
+            <t t-set="sale_order" t-value="doc.sale_id or lines.sale_line_id.order_id[:1]"/>
             <t t-set="bill_to" t-value="sale_order.partner_invoice_id or doc.partner_id"/>
             <t t-call="web.basic_layout">
                 <style>
@@ -133,7 +133,7 @@
                                         </td>
                                         <td class="meta-label">SALESMAN</td>
                                         <td>
-                                            <span t-esc="sale_order.user_id.name or doc.user_id.name or ''"/>
+                                            <span t-esc="', '.join(sale_order.salesperson_ids.mapped('name')) or sale_order.user_id.name or ''"/>
                                         </td>
                                     </tr>
                                     <tr>

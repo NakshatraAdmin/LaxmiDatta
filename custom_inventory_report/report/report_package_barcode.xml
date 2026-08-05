@@ -38,11 +38,13 @@
                 </style>
                 <t t-foreach="docs" t-as="o">
                     <t t-set="package_move_lines"
-                       t-value="env['stock.move.line'].search([('result_package_id', '=', o.id)], limit=1)"/>
+                       t-value="env['stock.move.line'].search([('result_package_id', '=', o.id), ('picking_id.sale_id', '!=', False)], order='id desc', limit=1)"/>
                     <t t-if="not package_move_lines" t-set="package_move_lines"
-                       t-value="env['stock.move.line'].search([('package_id', '=', o.id)], limit=1)"/>
+                       t-value="env['stock.move.line'].search([('package_id', '=', o.id), ('picking_id.sale_id', '!=', False)], order='id desc', limit=1)"/>
+                    <t t-if="not package_move_lines" t-set="package_move_lines"
+                       t-value="env['stock.move.line'].search(['|', ('result_package_id', '=', o.id), ('package_id', '=', o.id)], order='id desc', limit=1)"/>
                     <t t-set="picking" t-value="package_move_lines.picking_id[:1]"/>
-                    <t t-set="sale_order" t-value="picking.move_ids_without_package.sale_line_id.order_id[:1]"/>
+                    <t t-set="sale_order" t-value="picking.sale_id or picking.move_ids_without_package.sale_line_id.order_id[:1]"/>
                     <t t-set="bill_to" t-value="sale_order.partner_invoice_id or picking.partner_id"/>
                     <t t-set="company" t-value="picking.company_id or o.company_id"/>
                     <t t-set="package_quants" t-value="o.quant_ids.filtered('quantity')"/>
