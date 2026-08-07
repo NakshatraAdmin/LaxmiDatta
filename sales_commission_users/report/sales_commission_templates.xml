@@ -48,13 +48,13 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Name</th>
-                            <th>Sale Reference</th>
-                            <th>Commission Name</th>
-                            <th>Commission Type</th>
-                            <th>Partner</th>
-                            <th>Amount</th>
+                            <th>Invoice Date</th>
+                            <th>Invoice No.</th>
+                            <th>Sales Order No.</th>
+                            <th>Customer Name</th>
+                            <th style="text-align: right;">Untaxed Amount</th>
+                            <th>Commission %</th>
+                            <th style="text-align: right;">Commission Amount</th>
                         </tr>
                     </thead>
 
@@ -62,25 +62,25 @@
                         <t t-foreach="docs" t-as="d">
                             <tr>
                                 <td>
-                                    <t t-esc="d['date']"/>
+                                    <span t-esc="d['invoice_date']"/>
                                 </td>
                                 <td>
-                                    <t t-esc="d['description']"/>
+                                    <span t-esc="d['invoice_no']"/>
                                 </td>
                                 <td>
-                                    <t t-esc="d['order_ref']"/>
+                                    <span t-esc="d['sale_order_no']"/>
                                 </td>
                                 <td>
-                                    <t t-esc="d['commission']"/>
+                                    <span t-esc="d['customer_name']"/>
                                 </td>
-                                <td>
-                                    <t t-esc="d['description'][18:]"/>
+                                <td style="text-align: right;">
+                                    <span t-esc="'{:,.2f}'.format(d['untaxed_amount'] or 0.0)"/>
                                 </td>
-                                <td>
-                                    <t t-esc="d['partner_id'].name"/>
+                                <td style="text-align: center;">
+                                    <span t-esc="'{:.2f}'.format(d['commission_percentage'] or 0.0)"/>%
                                 </td>
-                                <td>
-                                    <t t-esc="d['commission_amount']"/>
+                                <td style="text-align: right;">
+                                    <span t-esc="'{:,.2f}'.format(d['commission_amount'] or 0.0)"/>
                                 </td>
 
                             </tr>
