@@ -53,7 +53,6 @@
                             <th>Sales Order No.</th>
                             <th>Customer Name</th>
                             <th style="text-align: right;">Untaxed Amount</th>
-                            <th>Commission %</th>
                             <th style="text-align: right;">Commission Amount</th>
                         </tr>
                     </thead>
@@ -75,9 +74,6 @@
                                 </td>
                                 <td style="text-align: right;">
                                     <span t-esc="'{:,.2f}'.format(d['untaxed_amount'] or 0.0)"/>
-                                </td>
-                                <td style="text-align: center;">
-                                    <span t-esc="'{:.2f}'.format(d['commission_percentage'] or 0.0)"/>%
                                 </td>
                                 <td style="text-align: right;">
                                     <span t-esc="'{:,.2f}'.format(d['commission_amount'] or 0.0)"/>
