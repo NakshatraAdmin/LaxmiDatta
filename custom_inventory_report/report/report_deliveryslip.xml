@@ -5,18 +5,26 @@
             <t t-set="doc" t-value="o.with_context(lang=o.partner_id.lang if o.partner_id else o.env.user.lang)"/>
             <t t-set="lines" t-value="doc.move_ids_without_package"/>
             <t t-set="detailed_lines" t-value="doc.move_line_ids_without_package"/>
-            <t t-set="packing_locations" t-value="detailed_lines.mapped('picking_location_dest_id')"/>
-            <t t-set="sale_order" t-value="lines.sale_line_id.order_id[:1]"/>
+            <t t-set="packing_locations" t-value="detailed_lines.mapped('result_package_id')"/>
+            <t t-set="unpackaged_lines"
+               t-value="detailed_lines.filtered(lambda operation: not operation.result_package_id)"/>
+            <t t-set="sale_order" t-value="doc.sale_id or lines.sale_line_id.order_id[:1]"/>
             <t t-set="bill_to" t-value="sale_order.partner_invoice_id or doc.partner_id"/>
             <t t-call="web.basic_layout">
                 <style>
-                    .page.delivery-slip-page { margin: 0 !important; padding: 0 !important; font-family: Arial, sans-serif; color: #000; font-size: 10pt; line-height: 1.12; }
-                    .delivery-slip { width: 100%; border: 2px solid #000; border-collapse: collapse; table-layout: fixed; }
-                    .delivery-slip td { border: 1px solid #000; padding: 3px 4px; vertical-align: top; overflow-wrap: anywhere; }
-                    .delivery-slip .slip-title { background: #c6ddf1; font-size: 13pt; font-weight: 700; line-height: 18px; padding: 2px; text-align: center; vertical-align: middle; }
+                    .page.delivery-slip-page { padding: 0 !important; font-family: Arial, sans-serif; color: #000;
+                    font-size: 10pt; line-height: 1.12; }
+                    .delivery-slip { width: 100%; border: 2px solid #000; border-collapse: collapse; table-layout:
+                    fixed; }
+                    .delivery-slip td { border: 1px solid #000; padding: 3px 4px; vertical-align: top; overflow-wrap:
+                    anywhere; }
+                    .delivery-slip .slip-title { background: #c6ddf1; font-size: 13pt; font-weight: 700; line-height:
+                    18px; padding: 2px; text-align: center; vertical-align: middle; }
                     .delivery-slip .company-logo { padding: 0; text-align: center; vertical-align: middle; }
-                    .delivery-slip .company-logo img { display: block; margin: 2px auto; max-width: 120px; max-height: 120px; }
-                    .delivery-slip .company-details { font-size: 10pt; font-weight: 700; line-height: 1.55; padding: 1px 3px; vertical-align: middle; }
+                    .delivery-slip .company-logo img { display: block; margin: 2px auto; max-width: 120px; max-height:
+                    120px; }
+                    .delivery-slip .company-details { font-size: 10pt; font-weight: 700; line-height: 1.55; padding: 1px
+                    3px; vertical-align: middle; }
                     .delivery-slip .company-name { font-size: 12pt; }
                     .delivery-slip .address-box { font-size: 10pt; }
                     .delivery-slip .address-heading, .delivery-slip .partner-name { font-weight: 700; }
@@ -25,14 +33,18 @@
                     .delivery-slip .meta-label { font-weight: 700; }
                     .delivery-slip .meta-wrap-cell { padding: 0; }
                     .delivery-slip .meta-table { border-collapse: collapse; table-layout: fixed; width: 100%; }
-                    .delivery-slip .meta-table td { border: 0; border-right: 1px solid #000; border-bottom: 1px solid #000; height: 19px; padding: 2px 3px; vertical-align: middle; }
+                    .delivery-slip .meta-table td { border: 0; border-right: 1px solid #000; border-bottom: 1px solid
+                    #000; height: 19px; padding: 2px 3px; vertical-align: middle; }
                     .delivery-slip .meta-table td:last-child { border-right: 0; }
                     .delivery-slip .meta-table tr:last-child td { border-bottom: 0; }
-                    .delivery-slip .column-heading td { background: #d9d9d9; font-weight: 700; padding: 4px 2px; text-align: center; vertical-align: middle; }
+                    .delivery-slip .column-heading td { background: #d9d9d9; font-weight: 700; padding: 4px 2px;
+                    text-align: center; vertical-align: middle; }
                     .delivery-slip .line-row td { min-height: 24px; padding: 4px 3px; vertical-align: middle; }
-                    .delivery-slip .packing-row td { background: #d9d9d9; font-weight: 700; padding: 4px 3px; text-align: center; }
+                    .delivery-slip .packing-row td { background: #d9d9d9; font-weight: 700; padding: 4px 3px;
+                    text-align: center; }
                     .delivery-slip .serial { color: #00a6e0; font-weight: 700; text-align: center; }
-                    .delivery-slip .check-list { background: #92d050; font-size: 11pt; font-weight: 700; padding: 4px !important; text-align: center; }
+                    .delivery-slip .check-list { background: #92d050; font-size: 11pt; font-weight: 700; padding: 4px
+                    !important; text-align: center; }
                     .text-center { text-align: center; }
                 </style>
                 <div class="page delivery-slip-page">
@@ -49,7 +61,8 @@
                         </tr>
                         <tr>
                             <td colspan="2" class="company-logo">
-                                <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" alt="Logo"/>
+                                <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)"
+                                     alt="Logo"/>
                             </td>
                             <td colspan="3" class="company-details">
                                 <div class="company-name" t-field="doc.company_id.name"/>
@@ -60,61 +73,156 @@
                                     <span t-field="doc.company_id.state_id.name"/>
                                     <span t-field="doc.company_id.zip"/>
                                 </div>
-                                <div t-if="doc.company_id.partner_id.mobile or doc.company_id.phone">MOB NO-<span t-esc="doc.company_id.partner_id.mobile or doc.company_id.phone"/></div>
-                                <div t-if="doc.company_id.email">EMAIL ID -<span t-field="doc.company_id.email"/></div>
-                                <div t-if="doc.company_id.vat">GST NO-<span t-field="doc.company_id.vat"/></div>
+                                <div t-if="doc.company_id.partner_id.mobile or doc.company_id.phone">MOB NO-
+                                    <span t-esc="doc.company_id.partner_id.mobile or doc.company_id.phone"/>
+                                </div>
+                                <div t-if="doc.company_id.email">EMAIL ID -
+                                    <span t-field="doc.company_id.email"/>
+                                </div>
+                                <div t-if="doc.company_id.vat">GST NO-
+                                    <span t-field="doc.company_id.vat"/>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3" class="address-box">
                                 <div class="address-heading">CONSIGNEE:- (SHIP TO )</div>
                                 <span class="partner-name" t-field="doc.partner_id.name"/>
-                                <div class="partner-address" t-field="doc.partner_id" t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
-                                <div>GST NO- <span t-esc="doc.partner_id.vat or 'NA'"/></div>
+                                <div class="partner-address" t-field="doc.partner_id"
+                                     t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
+                                <div>GST NO-
+                                    <span t-esc="doc.partner_id.vat or 'NA'"/>
+                                </div>
                             </td>
                             <td colspan="2" class="address-box">
                                 <div class="address-heading">BUYER:- ( BILL TO)</div>
                                 <span class="partner-name" t-field="bill_to.name"/>
-                                <div t-if="sale_order and sale_order.partner_invoice_id" class="partner-address" t-field="sale_order.partner_invoice_id" t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
-                                <div t-else="" class="partner-address" t-field="doc.partner_id" t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
-                                <div>GST NO- <span t-esc="bill_to.vat or 'NA'"/></div>
+                                <div t-if="sale_order and sale_order.partner_invoice_id" class="partner-address"
+                                     t-field="sale_order.partner_invoice_id"
+                                     t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
+                                <div t-else="" class="partner-address" t-field="doc.partner_id"
+                                     t-options="{'widget': 'contact', 'fields': ['address', 'phone', 'mobile'], 'no_marker': True}"/>
+                                <div>GST NO-
+                                    <span t-esc="bill_to.vat or 'NA'"/>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="5" class="meta-wrap-cell">
                                 <table class="meta-table">
                                     <colgroup>
-                                        <col style="width:22%"/><col style="width:26%"/><col style="width:26%"/><col style="width:26%"/>
+                                        <col style="width:22%"/>
+                                        <col style="width:26%"/>
+                                        <col style="width:26%"/>
+                                        <col style="width:26%"/>
                                     </colgroup>
-                                    <tr><td class="meta-label">DELIVERY SLIP NO</td><td><span t-field="doc.name"/></td><td class="meta-label">DATE</td><td><span t-field="doc.scheduled_date" t-options="{'widget': 'date'}"/></td></tr>
-                                    <tr><td class="meta-label">SALE ORDER NO</td><td><span t-esc="sale_order.name or doc.origin or ''"/></td><td class="meta-label">SALESMAN</td><td><span t-esc="sale_order.user_id.name or doc.user_id.name or ''"/></td></tr>
-                                    <tr><td class="meta-label">DUE DATE</td><td><span t-field="doc.date_deadline" t-options="{'widget': 'date'}"/></td><td class="meta-label">DISPATCHED THROUGH</td><td><span t-esc="doc.carrier_id.name or ''"/></td></tr>
-                                    <tr><td class="meta-label">ARTICLE</td><td></td><td class="meta-label">VEHICLE NO</td><td></td></tr>
-                                    <tr><td class="meta-label">PACKED BY</td><td></td><td class="meta-label">CHECKED BY</td><td></td></tr>
+                                    <tr>
+                                        <td class="meta-label">DELIVERY SLIP NO</td>
+                                        <td>
+                                            <span t-field="doc.name"/>
+                                        </td>
+                                        <td class="meta-label">DATE</td>
+                                        <td>
+                                            <span t-field="doc.scheduled_date" t-options="{'widget': 'date'}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="meta-label">SALE ORDER NO</td>
+                                        <td>
+                                            <span t-esc="sale_order.name or doc.origin or ''"/>
+                                        </td>
+                                        <td class="meta-label">SALESMAN</td>
+                                        <td>
+                                            <span t-esc="', '.join(sale_order.salesperson_ids.mapped('name')) or sale_order.user_id.name or ''"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="meta-label">DUE DATE</td>
+                                        <td>
+                                            <span t-field="doc.date_deadline" t-options="{'widget': 'date'}"/>
+                                        </td>
+                                        <td class="meta-label">DISPATCHED THROUGH</td>
+                                        <td>
+                                            <span t-esc="doc.carrier_id.name or ''"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="meta-label">ARTICLE</td>
+                                        <td></td>
+                                        <td class="meta-label">VEHICLE NO</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="meta-label">PACKED BY</td>
+                                        <td></td>
+                                        <td class="meta-label">CHECKED BY</td>
+                                        <td></td>
+                                    </tr>
                                 </table>
                             </td>
                         </tr>
-                        <tr class="column-heading">
-                            <td>PRODUCT</td><td>HSN/SAC</td>
-                            <td>
-                                <t t-if="packing_locations"><span t-esc="packing_locations[:1].display_name"/></t>
-                                <t t-else="">PACKING SLIP NO</t>
-                            </td>
-                            <td>QUANTITY</td><td>LOT &amp; SERIAL NUMBERS</td>
-                        </tr>
                         <t t-foreach="packing_locations" t-as="packing_location">
-                            <tr t-if="packing_location_index &gt; 0" class="packing-row">
-                                <td colspan="5">PACKING SLIP NO- <span t-field="packing_location.display_name"/></td>
+
+                            <!-- Repeat Header for every Packing Slip -->
+                            <tr class="column-heading">
+                                <td>PRODUCT</td>
+                                <td>HSN/SAC</td>
+                                <td>
+                                    PACKING SLIP NO-
+                                    <span t-field="packing_location.display_name"/>
+                                </td>
+                                <td>QUANTITY</td>
+                                <td>LOT &amp; SERIAL NUMBERS</td>
                             </tr>
-                            <t t-foreach="detailed_lines.filtered(lambda operation: operation.picking_location_dest_id == packing_location)" t-as="line">
+
+                            <t t-foreach="detailed_lines.filtered(lambda operation: operation.result_package_id == packing_location)"
+                               t-as="line">
                                 <tr class="line-row">
-                                    <td><span t-field="line.product_id.display_name"/></td>
-                                    <td class="text-center"><span t-field="line.product_id.l10n_in_hsn_code"/></td>
+                                    <td>
+                                        <span t-field="line.product_id.display_name"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.product_id.l10n_in_hsn_code"/>
+                                    </td>
                                     <td></td>
-                                    <td class="text-center"><span t-esc="'%g' % line.quantity"/></td>
-                                    <td class="serial"><span t-field="line.lot_id.name"/></td>
+                                    <td class="text-center">
+                                        <span t-esc="'%g' % line.quantity"/>
+                                    </td>
+                                    <td class="serial">
+                                        <span t-field="line.lot_id.name"/>
+                                    </td>
                                 </tr>
                             </t>
+
+                        </t>
+                        <t t-if="unpackaged_lines">
+
+                            <tr class="column-heading">
+                                <td>PRODUCT</td>
+                                <td>HSN/SAC</td>
+                                <td>UNPACKED ITEMS</td>
+                                <td>QUANTITY</td>
+                                <td>LOT &amp; SERIAL NUMBERS</td>
+                            </tr>
+
+                            <t t-foreach="unpackaged_lines" t-as="line">
+                                <tr class="line-row">
+                                    <td>
+                                        <span t-field="line.product_id.display_name"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line.product_id.l10n_in_hsn_code"/>
+                                    </td>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <span t-esc="'%g' % line.quantity"/>
+                                    </td>
+                                    <td class="serial">
+                                        <span t-field="line.lot_id.name"/>
+                                    </td>
+                                </tr>
+                            </t>
+
                         </t>
                         <tr>
                             <td colspan="5" class="check-list">WITH CHECK LIST ( IF APPLICABLE )</td>

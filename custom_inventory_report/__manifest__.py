@@ -3,9 +3,12 @@
     'version': '17.0.1.0.0',
     'category': 'Inventory',
     'summary': 'Laxmidatta inventory PDF layout',
-    'depends': ['stock'],
+    'depends': ['stock', 'custom_quotation_app', 'sales_commission_users'],
     'data': [
+        'report/report_paperformat_stock.xml',
         'report/report_deliveryslip.xml',
+        # 'report/report_picking_operations.xml',
+        'report/report_package_barcode.xml',
     ],
     'installable': True,
     'license': 'LGPL-3',
