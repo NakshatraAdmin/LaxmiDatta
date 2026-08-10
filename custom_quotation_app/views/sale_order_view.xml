@@ -425,6 +425,7 @@
                                         </td>
                                         <td colspan="2" class="lax-center">
                                             <span t-field="line.product_uom_qty"/>
+                                            <span t-field="line.product_uom"/>
                                         </td>
                                         <td colspan="2" class="lax-right">
                                             <span t-esc="'%.2f' % line.price_subtotal"/>

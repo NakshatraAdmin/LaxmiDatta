@@ -187,6 +187,7 @@
                                     <td></td>
                                     <td class="text-center">
                                         <span t-esc="'%g' % line.quantity"/>
+                                        <span t-field="line.product_uom_id"/>
                                     </td>
                                     <td class="serial">
                                         <span t-field="line.lot_id.name"/>
@@ -216,6 +217,7 @@
                                     <td></td>
                                     <td class="text-center">
                                         <span t-esc="'%g' % line.quantity"/>
+                                        <span t-field="line.product_uom_id"/>
                                     </td>
                                     <td class="serial">
                                         <span t-field="line.lot_id.name"/>

@@ -181,6 +181,7 @@
                                     </td>
                                     <td class="text-center">
                                         <span t-esc="'%g' % quant.quantity"/>
+                                        <span t-field="quant.product_id.uom_id"/>
                                     </td>
                                     <td class="serial">
                                         <span t-field="quant.lot_id.name"/>
