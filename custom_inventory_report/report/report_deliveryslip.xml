@@ -179,7 +179,7 @@
                                t-as="line">
                                 <tr class="line-row">
                                     <td>
-                                        <span t-field="line.product_id.display_name"/>
+                                        <span t-field="line.product_id.name"/>
                                     </td>
                                     <td class="text-center">
                                         <span t-field="line.product_id.l10n_in_hsn_code"/>
@@ -209,7 +209,7 @@
                             <t t-foreach="unpackaged_lines" t-as="line">
                                 <tr class="line-row">
                                     <td>
-                                        <span t-field="line.product_id.display_name"/>
+                                        <span t-field="line.product_id.name"/>
                                     </td>
                                     <td class="text-center">
                                         <span t-field="line.product_id.l10n_in_hsn_code"/>

@@ -406,9 +406,9 @@
                                             <span t-else="">No Image</span>
                                         </td>
                                         <td colspan="6">
-                                            <span t-esc="line.name"/>
+                                            <span t-esc="(line.name or '')[len(line.product_id.default_code) + 2:].lstrip() if line.product_id.default_code and (line.name or '').startswith('[' + line.product_id.default_code + ']') else line.name"/>
                                             <span class="lax-compat">
-                                                <span t-field="line.name"/>
+                                                <span t-esc="(line.name or '')[len(line.product_id.default_code) + 2:].lstrip() if line.product_id.default_code and (line.name or '').startswith('[' + line.product_id.default_code + ']') else line.name"/>
                                             </span>
                                         </td>
                                         <td colspan="2" class="lax-center lax-hsn">

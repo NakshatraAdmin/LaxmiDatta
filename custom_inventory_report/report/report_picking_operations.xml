@@ -193,7 +193,7 @@
                                 </td>
 
                                 <td>
-                                    <span t-field="ml.product_id.display_name"/>
+                                    <span t-field="ml.product_id.name"/>
                                 </td>
 
                                 <td class="text-center">

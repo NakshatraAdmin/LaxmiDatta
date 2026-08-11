@@ -60,6 +60,15 @@
             <t t-set="gst_amount"
                t-value="sum([line.price_total - line.price_subtotal for line in lines if line.tax_ids.filtered(lambda tax: 'GST' in (tax.name or '').upper() and 'IGST' not in (tax.name or '').upper())])"/>
             <t t-set="paid_amount" t-value="doc.amount_total - doc.amount_residual"/>
+            <t t-set="advance_payments"
+               t-value="sale_order._get_report_advance_payments() if sale_order else doc.env['account.payment']"/>
+            <t t-set="summary_total_amount"
+               t-value="sale_order.amount_total if sale_order else doc.amount_total"/>
+            <t t-set="summary_paid_amount"
+               t-value="sale_order.advance_payment_amount if sale_order else paid_amount"/>
+            <t t-set="summary_net_receivable"
+               t-value="summary_total_amount - summary_paid_amount"/>
+            <t t-set="taxed_lines" t-value="lines.filtered(lambda line: line.tax_ids)"/>
             <t t-call="custom_invoice_report.laxmidatta_invoice_external_layout">
                 <style>
                     .page{margin-top:0!important;padding-top:0!important}.lax-invoice-page,.lax-invoice-page
@@ -79,7 +88,9 @@
                     td{height:70px;vertical-align:top!important}.lax-qr-cell{width:32%;text-align:center;vertical-align:middle!important}.lax-qr-cell
                     img{max-width:85px;max-height:84px}.lax-bank-inner,.lax-bank-inner tr,.lax-bank-inner
                     td{border:0!important}.lax-sign-box{text-align:center;font-weight:700;height:70px;position:relative}.lax-sign-user{position:absolute;top:32px;left:0;right:0}.lax-sign-bottom{position:absolute;bottom:0;left:0;right:0}.lax-final-block,.lax-last-block{page-break-inside:avoid}.footer
-                    table,.footer tr,.footer td{border:0!important}
+                    table,.footer tr,.footer td{border:0!important}.lax-hsn-summary{table-layout:fixed}.lax-hsn-summary
+                    td{height:20px;text-align:center}.lax-hsn-summary-head td{background:#d9d9d9;font-weight:700}.lax-hsn-summary-subhead
+                    td{font-weight:700}.lax-hsn-block{page-break-inside:avoid}
                 </style>
                 <div class="page lax-invoice-page">
                     <table class="lax-report">
@@ -136,8 +147,8 @@
                                     </div>
                                 </td>
                                 <td colspan="3" rowspan="4" class="lax-website-qr">
-                                    <img t-if="doc.company_id.website"
-                                         t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=120&amp;height=120' % doc.company_id.website"/>
+<!--                                    <img t-if="doc.company_id.website"-->
+<!--                                         t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=120&amp;height=120' % doc.company_id.website"/>-->
                                 </td>
                             </tr>
                             <tr/>
@@ -252,7 +263,7 @@
                                         <span t-else="">No Image</span>
                                     </td>
                                     <td colspan="6">
-                                        <span t-field="line.name"/>
+                                        <span t-esc="(line.name or '')[len(line.product_id.default_code) + 2:].lstrip() if line.product_id.default_code and (line.name or '').startswith('[' + line.product_id.default_code + ']') else line.name"/>
                                     </td>
                                     <td colspan="2" class="lax-center lax-hsn">
                                         <span t-field="line.product_id.l10n_in_hsn_code"/>
@@ -268,6 +279,7 @@
                                     </td>
                                     <td colspan="2" class="lax-center">
                                         <span t-esc="'%.2f' % line.quantity"/>
+                                        <span t-field="line.product_uom_id"/>
                                     </td>
                                     <td colspan="2" class="lax-right">
                                         <span t-esc="'%.2f' % line.price_subtotal"/>
@@ -323,26 +335,79 @@
                                     <span t-esc="'%.2f' % doc.amount_total"/>
                                 </td>
                             </tr>
+                            <tr class="lax-hsn-block">
+                                <td colspan="20" class="lax-nested-wrap">
+                                    <table class="lax-inner lax-hsn-summary">
+                                        <colgroup>
+                                            <col style="width:20%"/><col style="width:13%"/>
+                                            <col style="width:8%"/><col style="width:12%"/>
+                                            <col style="width:8%"/><col style="width:12%"/>
+                                            <col style="width:12%"/><col style="width:15%"/>
+                                        </colgroup>
+                                        <tr class="lax-hsn-summary-head">
+                                            <td rowspan="2">HSN/SAC</td>
+                                            <td rowspan="2">TAXABLE<br/>VALUE</td>
+                                            <td colspan="2">CGST</td>
+                                            <td colspan="2">SGST</td>
+                                            <td rowspan="2">IGST</td>
+                                            <td rowspan="2">TOTAL TAX<br/>AMOUNT</td>
+                                        </tr>
+                                        <tr class="lax-hsn-summary-subhead">
+                                            <td>RATE</td><td>AMOUNT</td><td>RATE</td><td>AMOUNT</td>
+                                        </tr>
+                                        <t t-foreach="taxed_lines" t-as="taxed_line">
+                                            <t t-set="line_igst_taxes" t-value="taxed_line.tax_ids.filtered(lambda tax: 'IGST' in (tax.name or '').upper())"/>
+                                            <t t-set="line_gst_taxes" t-value="taxed_line.tax_ids.filtered(lambda tax: 'GST' in (tax.name or '').upper() and 'IGST' not in (tax.name or '').upper())"/>
+                                            <t t-set="line_tax_amount" t-value="taxed_line.price_total - taxed_line.price_subtotal"/>
+                                            <t t-set="line_igst_amount" t-value="line_tax_amount if line_igst_taxes else 0.0"/>
+                                            <t t-set="line_gst_amount" t-value="line_tax_amount if line_gst_taxes else 0.0"/>
+                                            <t t-set="line_igst_rate" t-value="sum(line_igst_taxes.mapped('amount'))"/>
+                                            <t t-set="line_gst_rate" t-value="sum(line_gst_taxes.mapped('amount')) / 2.0"/>
+                                            <tr>
+                                                <td><span t-esc="taxed_line.product_id.l10n_in_hsn_code or '-'"/></td>
+                                                <td class="lax-right"><span t-esc="'%.2f' % taxed_line.price_subtotal"/></td>
+                                                <td><span t-if="line_gst_taxes" t-esc="('%g' % line_gst_rate) + '%'"/></td>
+                                                <td class="lax-right"><span t-if="line_gst_taxes" t-esc="'%.2f' % (line_gst_amount / 2.0)"/></td>
+                                                <td><span t-if="line_gst_taxes" t-esc="('%g' % line_gst_rate) + '%'"/></td>
+                                                <td class="lax-right"><span t-if="line_gst_taxes" t-esc="'%.2f' % (line_gst_amount / 2.0)"/></td>
+                                                <td class="lax-right"><span t-if="line_igst_taxes" t-esc="'%.2f' % line_igst_amount"/></td>
+                                                <td class="lax-right"><span t-esc="'%.2f' % line_tax_amount"/></td>
+                                            </tr>
+                                        </t>
+                                        <tr class="lax-bold">
+                                            <td>TOTAL</td>
+                                            <td class="lax-right"><span t-esc="'%.2f' % sum(taxed_lines.mapped('price_subtotal'))"/></td>
+                                            <td/><td class="lax-right"><span t-esc="'%.2f' % (gst_amount / 2.0)"/></td>
+                                            <td/><td class="lax-right"><span t-esc="'%.2f' % (gst_amount / 2.0)"/></td>
+                                            <td class="lax-right"><span t-esc="'%.2f' % igst_amount"/></td>
+                                            <td class="lax-right"><span t-esc="'%.2f' % (gst_amount + igst_amount)"/></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
                             <tr class="lax-summary">
                                 <td colspan="3" class="lax-bold">TOTAL AMOUNT</td>
                                 <td colspan="2" class="lax-right">
-                                    <span t-esc="'%.2f' % doc.amount_total"/>
+                                    <span t-esc="'%.2f' % summary_total_amount"/>
                                 </td>
                                 <td colspan="15" class="lax-center lax-bold">PAYMENT DETAILS</td>
                             </tr>
                             <tr class="lax-summary">
                                 <td colspan="3" class="lax-bold">LESS PAID</td>
                                 <td colspan="2" class="lax-right">
-                                    <span t-esc="'%.2f' % paid_amount"/>
+                                    <span t-esc="'%.2f' % summary_paid_amount"/>
                                 </td>
                                 <td colspan="15">
-                                    <span t-field="doc.payment_reference"/>
+                                    <t t-foreach="advance_payments" t-as="payment">
+                                        <span t-esc="'%.2f%s%s' % (payment.amount, payment.currency_id.symbol or '', (' - ' + payment.ref) if payment.ref else '')"/>
+                                        <t t-if="not payment_last">,</t>
+                                    </t>
                                 </td>
                             </tr>
                             <tr class="lax-summary">
                                 <td colspan="3" class="lax-bold">NET RECEIVABLE RS</td>
                                 <td colspan="2" class="lax-right">
-                                    <span t-esc="'%.2f' % doc.amount_residual"/>
+                                    <span t-esc="'%.2f' % summary_net_receivable"/>
                                 </td>
                                 <td colspan="15"/>
                             </tr>
