@@ -31,7 +31,7 @@
                            string="Product Image"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                    <field name="bom_id"/>
+                    <field name="bom_id" optional="show"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="after">
                     <field name="bill_date"/>

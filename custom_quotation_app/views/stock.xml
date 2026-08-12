@@ -23,6 +23,9 @@
                     style="'width:12px; height:12px;"/>
                     <field name="hsn_sac"/>
                 </xpath>
+            <xpath expr="//field[@name='move_ids_without_package']/tree/field[@name='product_packaging_id']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
         </field>
     </record>
 

@@ -25,9 +25,12 @@
                     <field name="product_image_1920" widget="image" options="{'width': 10, 'height': 10}" string="Product Image"/>
                 </xpath>
                 <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_uom_id']" position="after">
-                    <field name="secondary_product_uom_qty"/>
-                    <field name="sec_uom_id"/>
-                    <field name="secondary_unit_price"/>
+                    <field name="secondary_product_uom_qty" optional="show"/>
+                    <field name="sec_uom_id" optional="show"/>
+                    <field name="secondary_unit_price" optional="show"/>
+                </xpath>
+                <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="attributes">
+                    <attribute name="optional">show</attribute>
                 </xpath>
             </field>
         </record>
