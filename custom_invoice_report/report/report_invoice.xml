@@ -50,6 +50,10 @@
             <t t-set="bank" t-value="doc.company_id.partner_id.bank_ids[:1]"/>
             <t t-set="title" t-value="'CREDIT NOTE' if doc.move_type == 'out_refund' else 'TAX INVOICE'"/>
             <t t-set="total_qty" t-value="sum(lines.mapped('quantity'))"/>
+            <t t-set="discount_product_lines"
+               t-value="lines.filtered(lambda line: line.sale_line_ids.filtered(lambda sale_line: sale_line._is_discount_line()))"/>
+            <t t-set="total_discount"
+               t-value="sum([line.quantity * line.price_unit * line.discount / 100.0 for line in (lines - discount_product_lines)]) + sum([abs(line.price_subtotal) for line in discount_product_lines])"/>
             <t t-set="has_igst"
                t-value="lines.mapped('tax_ids').filtered(lambda tax: 'IGST' in (tax.name or '').upper())"/>
             <t t-set="has_gst"
@@ -312,10 +316,16 @@
                         </tbody>
                         <tbody class="lax-final-block">
                             <tr class="lax-last-block">
-                                <td colspan="14" t-att-rowspan="2 + tax_row_count" class="lax-terms">
+                                <td colspan="14" t-att-rowspan="3 + tax_row_count" class="lax-terms">
                                     <span class="lax-bold">TERMS &amp; CONDITIONS:</span>
                                     <span class="lax-terms-note" t-field="doc.narration"/>
                                 </td>
+                                <td colspan="4" class="lax-bold">TOTAL DISCOUNT</td>
+                                <td colspan="2" class="lax-right">
+                                    <span t-esc="'%.2f' % total_discount"/>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td colspan="4" class="lax-bold">ROUND OFF</td>
                                 <td colspan="2" class="lax-right">0.00</td>
                             </tr>
