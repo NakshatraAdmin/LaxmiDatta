@@ -43,14 +43,6 @@
         <field name="model">mrp.bom</field>
         <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//form/sheet/group/group/field[@name='product_tmpl_id']" position="attributes">
-                <attribute name="invisible">True</attribute>
-            </xpath>
-            <xpath expr="(//form/sheet/group/group/field[@name='product_id'])[1]" position="attributes">
-                <attribute name="groups"/>
-                <attribute name="invisible">False</attribute>
-                <attribute name="string">Product Variant</attribute>
-            </xpath>
             <xpath expr="(//form/sheet/group/group/field[@name='product_id'])[2]" position="attributes">
                 <attribute name="invisible">True</attribute>
             </xpath>

@@ -63,15 +63,17 @@
                t-value="sum([line.price_total - line.price_subtotal for line in lines if line.tax_ids.filtered(lambda tax: 'IGST' in (tax.name or '').upper())])"/>
             <t t-set="gst_amount"
                t-value="sum([line.price_total - line.price_subtotal for line in lines if line.tax_ids.filtered(lambda tax: 'GST' in (tax.name or '').upper() and 'IGST' not in (tax.name or '').upper())])"/>
-            <t t-set="paid_amount" t-value="doc.amount_total - doc.amount_residual"/>
             <t t-set="advance_payments"
                t-value="sale_order._get_report_advance_payments() if sale_order else doc.env['account.payment']"/>
+            <t t-set="invoice_payment_values"
+               t-value="doc.sudo().invoice_payments_widget and doc.sudo().invoice_payments_widget['content'] or []"/>
+            <t t-set="invoice_payment_amount" t-value="doc.amount_total - doc.amount_residual"/>
             <t t-set="summary_total_amount"
                t-value="sale_order.amount_total if sale_order else doc.amount_total"/>
             <t t-set="summary_paid_amount"
-               t-value="sale_order.advance_payment_amount if sale_order else paid_amount"/>
+               t-value="sale_order.advance_payment_amount if sale_order else 0.0"/>
             <t t-set="summary_net_receivable"
-               t-value="summary_total_amount - summary_paid_amount"/>
+               t-value="summary_total_amount - summary_paid_amount - invoice_payment_amount"/>
             <t t-set="taxed_lines" t-value="lines.filtered(lambda line: line.tax_ids)"/>
             <t t-call="custom_invoice_report.laxmidatta_invoice_external_layout">
                 <style>
@@ -85,7 +87,7 @@
                     *{font-size:16px!important;margin:2px 0 1px 0!important;padding:0!important;line-height:1.8!important}.lax-address-box{height:72px;vertical-align:top!important}.lax-party-name,.lax-bold{font-weight:700}.lax-nested-wrap{border:0!important;padding:0!important;vertical-align:top!important;line-height:0!important}.lax-nested-wrap&gt;.lax-inner{height:100%}.lax-meta-cell{height:24px;text-align:left;vertical-align:middle!important;font-weight:700;white-space:nowrap;padding:0!important;position:relative}.lax-meta-cell:after{content:'';position:absolute;top:0;bottom:0;left:46%;border-left:1px
                     solid #000}.lax-meta-label{display:inline-block;width:46%;height:24px;padding:2px
                     3px;box-sizing:border-box;vertical-align:middle;line-height:20px}.lax-meta-value{display:inline-block;width:54%;height:24px;padding:2px
-                    3px;box-sizing:border-box;text-align:left;font-weight:400;vertical-align:middle;line-height:20px}.lax-side-last td{border-bottom:0!important}.lax-col-head
+                    3px;box-sizing:border-box;text-align:left;font-weight:400;vertical-align:middle;line-height:20px}.lax-salesman-cell{height:auto;min-height:24px;white-space:normal}.lax-salesman-cell .lax-meta-label,.lax-salesman-cell .lax-meta-value{height:auto;min-height:24px;vertical-align:top}.lax-salesman-cell .lax-meta-value{white-space:normal}.lax-side-last td{border-bottom:0!important}.lax-col-head
                     td{height:30px;text-align:center;font-weight:700}.lax-line
                     td{height:36px}.lax-right{text-align:right}.lax-hsn,.lax-nowrap{white-space:nowrap;overflow-wrap:normal!important}.lax-terms{height:86px;vertical-align:top!important}.lax-terms-note,.lax-terms-note
                     *{text-align:justify;font-weight:400}.lax-summary td{height:18px}.lax-bank
@@ -210,9 +212,8 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="lax-meta-cell">
-                                                <span class="lax-meta-label">SALESMAN</span>
-                                                <span class="lax-meta-value">
+                                            <td class="lax-meta-cell lax-salesman-cell">
+                                                <span class="lax-meta-label">SALESMAN</span><span class="lax-meta-value">
                                                     <span t-esc="', '.join(sale_order.salesperson_ids.mapped('name')) or sale_order.user_id.name or doc.invoice_user_id.name or ''"/>
                                                 </span>
                                             </td>
@@ -419,6 +420,18 @@
                                     <t t-foreach="advance_payments" t-as="payment">
                                         <span t-esc="'%.2f%s%s' % (payment.amount, payment.currency_id.symbol or '', (' - ' + payment.ref) if payment.ref else '')"/>
                                         <t t-if="not payment_last">,</t>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr class="lax-summary">
+                                <td colspan="3" class="lax-bold">LESS PAYMENT</td>
+                                <td colspan="2" class="lax-right">
+                                    <span t-esc="'%.2f' % invoice_payment_amount"/>
+                                </td>
+                                <td colspan="15">
+                                    <t t-foreach="invoice_payment_values" t-as="payment">
+                                        <span t-esc="'%.2f - %s%s' % (payment['amount'], payment['journal_name'], (' (' + payment['payment_method_name'] + ')') if payment['payment_method_name'] else '')"/>
+                                        <t t-if="not payment_last">, </t>
                                     </t>
                                 </td>
                             </tr>
