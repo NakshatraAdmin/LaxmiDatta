@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Bulk Pricelist Update Wizard Form View -->
+        <record id="view_bulk_pricelist_update_wizard_form" model="ir.ui.view">
+            <field name="name">bulk.pricelist.update.wizard.form</field>
+            <field name="model">bulk.pricelist.update.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Bulk Update Prices">
+                    <sheet>
+                        <group>
+                            <group string="Pricelist &amp; Target Scope">
+                                <field name="pricelist_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                                <field name="apply_on" widget="radio"/>
+                                <field name="pricelist_item_ids"
+                                       invisible="apply_on != 'selected_items'"
+                                       required="apply_on == 'selected_items'"
+                                       widget="many2many_tags"
+                                       domain="[('pricelist_id', 'in', pricelist_ids)]"/>
+                            </group>
+                            <group string="Price Adjustment Rules">
+                                <field name="computation_method" widget="radio"/>
+                                <field name="value"/>
+                                <field name="min_quantity"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_apply_bulk_update"
+                                string="Apply Changes"
+                                type="object"
+                                class="btn-primary"/>
+                        <button string="Cancel"
+                                class="btn-secondary"
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Bulk Pricelist Update Action -->
+        <record id="action_bulk_pricelist_update_wizard" model="ir.actions.act_window">
+            <field name="name">Bulk Update Prices</field>
+            <field name="res_model">bulk.pricelist.update.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Bulk Pricelist Update Menu Item -->
+        <menuitem id="menu_bulk_pricelist_update_wizard"
+                  name="Bulk Update Prices"
+                  action="action_bulk_pricelist_update_wizard"
+                  parent="sale.product_menu_catalog"
+                  sequence="35"/>
+
+    </data>
+</odoo>

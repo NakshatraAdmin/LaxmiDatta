@@ -179,7 +179,7 @@
                                t-as="line">
                                 <tr class="line-row">
                                     <td>
-                                        <span t-field="line.product_id.display_name"/>
+                                        <span t-field="line.product_id.name"/>
                                     </td>
                                     <td class="text-center">
                                         <span t-field="line.product_id.l10n_in_hsn_code"/>
@@ -187,6 +187,7 @@
                                     <td></td>
                                     <td class="text-center">
                                         <span t-esc="'%g' % line.quantity"/>
+                                        <span t-field="line.product_uom_id"/>
                                     </td>
                                     <td class="serial">
                                         <span t-field="line.lot_id.name"/>
@@ -208,7 +209,7 @@
                             <t t-foreach="unpackaged_lines" t-as="line">
                                 <tr class="line-row">
                                     <td>
-                                        <span t-field="line.product_id.display_name"/>
+                                        <span t-field="line.product_id.name"/>
                                     </td>
                                     <td class="text-center">
                                         <span t-field="line.product_id.l10n_in_hsn_code"/>
@@ -216,6 +217,7 @@
                                     <td></td>
                                     <td class="text-center">
                                         <span t-esc="'%g' % line.quantity"/>
+                                        <span t-field="line.product_uom_id"/>
                                     </td>
                                     <td class="serial">
                                         <span t-field="line.lot_id.name"/>

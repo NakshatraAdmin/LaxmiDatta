@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit Product Pricelist Form View to add Bulk Update Prices button -->
+        <record id="product_pricelist_view_inherit_bulk_update" model="ir.ui.view">
+            <field name="name">product.pricelist.form.inherit.bulk.update</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <button name="%(action_bulk_pricelist_update_wizard)d"
+                                string="Bulk Update Prices"
+                                type="action"
+                                class="oe_highlight"
+                                context="{'default_pricelist_ids': [id]}"
+                                invisible="1"/>
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Action Binding on Pricelist List View for Multi-Selection Bulk Updates -->
+        <record id="action_bulk_pricelist_update_pricelist_multi" model="ir.actions.act_window">
+            <field name="name">Bulk Update Prices</field>
+            <field name="res_model">bulk.pricelist.update.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="product.model_product_pricelist"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
+        <!-- Action Binding on Pricelist Items Tree View for Multi-Selection Bulk Updates -->
+        <record id="action_bulk_pricelist_update_item_multi" model="ir.actions.act_window">
+            <field name="name">Bulk Update Selected Prices</field>
+            <field name="res_model">bulk.pricelist.update.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="product.model_product_pricelist_item"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
+    </data>
+</odoo>

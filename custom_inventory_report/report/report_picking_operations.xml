@@ -193,11 +193,12 @@
                                 </td>
 
                                 <td>
-                                    <span t-field="ml.product_id.display_name"/>
+                                    <span t-field="ml.product_id.name"/>
                                 </td>
 
                                 <td class="text-center">
                                     <span t-esc="'%g' % ml.quantity"/>
+                                    <span t-field="ml.product_uom_id"/>
                                 </td>
 
                                 <td class="serial">

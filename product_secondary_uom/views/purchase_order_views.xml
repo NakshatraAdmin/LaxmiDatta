@@ -6,9 +6,9 @@
         <field name="model">purchase.order</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_uom'][2]" position="after">
-                <field name="secondary_product_uom_qty"/>
-                <field name="sec_uom_id"/>
-                <field name="secondary_unit_price"/>
+                <field name="secondary_product_uom_qty" optional="show"/>
+                <field name="sec_uom_id" optional="show"/>
+                <field name="secondary_unit_price" optional="show"/>
             </xpath>
         </field>
     </record>

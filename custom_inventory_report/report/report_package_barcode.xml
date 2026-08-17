@@ -177,10 +177,11 @@
                             <t t-foreach="package_quants" t-as="quant">
                                 <tr class="line-row">
                                     <td colspan="3">
-                                        <span t-field="quant.product_id.display_name"/>
+                                        <span t-field="quant.product_id.name"/>
                                     </td>
                                     <td class="text-center">
                                         <span t-esc="'%g' % quant.quantity"/>
+                                        <span t-field="quant.product_id.uom_id"/>
                                     </td>
                                     <td class="serial">
                                         <span t-field="quant.lot_id.name"/>

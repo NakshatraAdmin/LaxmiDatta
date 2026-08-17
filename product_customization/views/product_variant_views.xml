@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Select the exact product variant on sales order lines. -->
+    <record id="sale_order_form_show_product_variant" model="ir.ui.view">
+        <field name="name">sale.order.form.show.product.variant</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="column_invisible">False</attribute>
+                <attribute name="optional">show</attribute>
+                <attribute name="string">Product Variant</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_template_id']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- The purchase configurator adds both fields; keep only its variant selector. -->
+    <record id="purchase_order_form_show_product_variant" model="ir.ui.view">
+        <field name="name">purchase.order.form.show.product.variant</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase_extended.purchase_order_form_product_configurator"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_template_id']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="column_invisible">False</attribute>
+                <attribute name="optional">show</attribute>
+                <attribute name="string">Product Variant</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- A BoM can be chosen directly by variant; product_tmpl_id remains available
+         invisibly for Odoo's domains, defaults, and onchange logic. -->
+    <record id="mrp_bom_form_show_product_variant" model="ir.ui.view">
+        <field name="name">mrp.bom.form.show.product.variant</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="(//form/sheet/group/group/field[@name='product_id'])[2]" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_bom_tree_show_product_variant" model="ir.ui.view">
+        <field name="name">mrp.bom.tree.show.product.variant</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="product_tmpl_id" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="product_id" position="attributes">
+                <attribute name="groups"/>
+                <attribute name="column_invisible">False</attribute>
+                <attribute name="optional">show</attribute>
+                <attribute name="string">Product Variant</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

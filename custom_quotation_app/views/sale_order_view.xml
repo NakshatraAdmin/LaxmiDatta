@@ -31,7 +31,7 @@
                            string="Product Image"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
-                    <field name="bom_id"/>
+                    <field name="bom_id" optional="show"/>
                 </xpath>
                 <xpath expr="//field[@name='payment_term_id']" position="after">
                     <field name="bill_date"/>
@@ -406,9 +406,9 @@
                                             <span t-else="">No Image</span>
                                         </td>
                                         <td colspan="6">
-                                            <span t-esc="line.name"/>
+                                            <span t-esc="(line.name or '')[len(line.product_id.default_code) + 2:].lstrip() if line.product_id.default_code and (line.name or '').startswith('[' + line.product_id.default_code + ']') else line.name"/>
                                             <span class="lax-compat">
-                                                <span t-field="line.name"/>
+                                                <span t-esc="(line.name or '')[len(line.product_id.default_code) + 2:].lstrip() if line.product_id.default_code and (line.name or '').startswith('[' + line.product_id.default_code + ']') else line.name"/>
                                             </span>
                                         </td>
                                         <td colspan="2" class="lax-center lax-hsn">
@@ -425,6 +425,7 @@
                                         </td>
                                         <td colspan="2" class="lax-center">
                                             <span t-field="line.product_uom_qty"/>
+                                            <span t-field="line.product_uom"/>
                                         </td>
                                         <td colspan="2" class="lax-right">
                                             <span t-esc="'%.2f' % line.price_subtotal"/>
