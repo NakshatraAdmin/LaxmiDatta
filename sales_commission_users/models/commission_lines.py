@@ -14,9 +14,9 @@ class CommissionLines(models.Model):
     sale_order_id = fields.Many2one('sale.order', help="Sale order",
                                     string='Sale Order')
     description = fields.Char(string="Name", help="Description")
-    sales_person_id = fields.Many2one('res.users',
+    sales_person_id = fields.Many2one('hr.employee',
                                       string='Sales Person',
-                                      help="Sales person")
+                                      help="Employee receiving the commission")
     order_ref = fields.Char(string='Order Reference', help="Order reference")
     partner_id = fields.Many2one('res.partner', string='Partner',
                                  help="Partner")
@@ -34,7 +34,10 @@ class CommissionLines(models.Model):
 
     def action_create_invoice(self):
         """Creating invoice for sales commission"""
-        if len(self.sales_person_id.mapped('partner_id')) > 1:
+        employee_contacts = self.sales_person_id.mapped('work_contact_id')
+        if any(not employee.work_contact_id for employee in self.sales_person_id):
+            raise UserError(_('The sales person must have a work contact.'))
+        if len(employee_contacts) > 1:
             raise UserError(_('Sales Person should be same.'))
         else:
             lines = [(0, 0, {
@@ -45,7 +48,7 @@ class CommissionLines(models.Model):
             }) for rec in self]
             invoice = self.env['account.move'].create({
                 'move_type': 'out_invoice',
-                'partner_id': self.sales_person_id.mapped('partner_id').id,
+                'partner_id': employee_contacts.id,
                 'payment_reference': self.mapped('order_ref'),
                 'invoice_date': (datetime.now()).date(),
                 'invoice_line_ids': lines

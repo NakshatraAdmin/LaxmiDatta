@@ -6,14 +6,14 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+<!--            <xpath expr="//field[@name='order_line']/tree/field[@name='product_template_id']" position="attributes">-->
+<!--                <attribute name="column_invisible">False</attribute>-->
+<!--                <attribute name="optional">show</attribute>-->
+<!--            </xpath>-->
             <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
                 <attribute name="column_invisible">False</attribute>
                 <attribute name="optional">show</attribute>
                 <attribute name="string">Product Variant</attribute>
-            </xpath>
-            <xpath expr="//field[@name='order_line']/tree/field[@name='product_template_id']" position="attributes">
-                <attribute name="column_invisible">True</attribute>
-                <attribute name="optional">hide</attribute>
             </xpath>
         </field>
     </record>
