@@ -9,7 +9,11 @@ class SaleOrder(models.Model):
     # Commission type field pointing to the sales.commission model
     commission_type_id = fields.Many2one('sales.commission', string="Commission Type")
 
-    salesperson_ids = fields.Many2many('res.users', string="Salespersons", help="List of Salespeople")
+    salesperson_ids = fields.Many2many(
+        'hr.employee',
+        string="Salespersons",
+        help="Employees who receive commission for this sale order",
+    )
 
     commission_ids = fields.One2many('commission.lines', 'sale_order_id',
                                      string='Sales Commission',

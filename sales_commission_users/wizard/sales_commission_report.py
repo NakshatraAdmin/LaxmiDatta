@@ -8,7 +8,11 @@ class SalesCommissionReport(models.TransientModel):
     _name = 'sales.commission.report'
     _description = 'Sales Commission Report'
 
-    sales_person_ids = fields.Many2many('res.users', string='Sales Persons', help="Select multiple sales persons")
+    sales_person_ids = fields.Many2many(
+        'hr.employee',
+        string='Sales Persons',
+        help="Select multiple employee sales persons",
+    )
     start_date = fields.Date(string='Start Date', help="Start date")
     end_date = fields.Date(string='End Date', help="End date")
 

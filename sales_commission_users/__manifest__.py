@@ -2,7 +2,7 @@
 
 {
     'name': 'Sales Commission',
-    'version': '17.0.1.0.0',
+    'version': '17.0.1.1.0',
     'category': 'Sales',
     'summary': """To Create Sales Commission for Sales Person.""",
     'description': """Allows to create sales commission based on Product, 
@@ -11,7 +11,7 @@
     'company': 'Nakshatra Techno Solutions',
     'maintainer': 'Nakshatra Techno Solutions',
     'website': 'https://www.nakshatra.com/',
-    'depends': ['sale_management', 'account', 'custom_quotation_app'],
+    'depends': ['sale_management', 'account', 'hr', 'custom_quotation_app'],
     'data': [
         'security/ir.model.access.csv',
         'security/groups.xml',

@@ -36,7 +36,7 @@
                                      <td>
                                         Salesperson :
                                         <t t-foreach="data['sales_person_ids']" t-as="sp_id">
-                                            <t t-set="sp" t-value="env['res.users'].browse(sp_id)"/>
+                                            <t t-set="sp" t-value="env['hr.employee'].browse(sp_id)"/>
                                             <span t-esc="sp.name"/><span>,</span> </t>
                                     </td>
                                 </t>
