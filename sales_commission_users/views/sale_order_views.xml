@@ -30,4 +30,30 @@
                 <field name="salesperson_ids" widget="many2many_tags" string="Commission Sales Persons"/>             </xpath>
         </field>
     </record>
+
+    <record id="view_quotation_tree_with_onboarding_inherited" model="ir.ui.view">
+        <field name="name">
+            sale.order.tree.inherit.sales.commission.users
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="replace">
+                <field name="salesperson_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_inherited" model="ir.ui.view">
+        <field name="name">
+            sale.order.search.inherit.sales.commission.users
+        </field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <filter name="salesperson" position="attributes">
+                <attribute name="context">{'group_by': 'salesperson_ids'}</attribute>
+            </filter>
+        </field>
+    </record>
 </odoo>
