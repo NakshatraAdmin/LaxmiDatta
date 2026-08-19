@@ -18,15 +18,37 @@
                                        required="apply_on == 'selected_items'"
                                        widget="many2many_tags"
                                        domain="[('pricelist_id', 'in', pricelist_ids)]"/>
+                                <field name="category_ids"
+                                       invisible="apply_on != 'category'"
+                                       required="apply_on == 'category'"
+                                       widget="many2many_tags"
+                                       options="{'no_create': True}"/>
+                                <field name="category_id"
+                                       invisible="apply_on != 'products_under_category'"
+                                       required="apply_on == 'products_under_category'"
+                                       options="{'no_create': True}"/>
                             </group>
                             <group string="Price Adjustment Rules">
-                                <field name="computation_method" widget="radio"/>
-                                <field name="value"/>
+                                <field name="computation_method" widget="radio" invisible="apply_on == 'products_under_category'"/>
+                                <field name="value" invisible="apply_on == 'products_under_category'"/>
                                 <field name="min_quantity"/>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
                             </group>
                         </group>
+                        <notebook invisible="apply_on != 'products_under_category'">
+                            <page string="Products">
+                                <field name="product_line_ids">
+                                    <tree editable="bottom" create="false" delete="false">
+                                        <field name="product_id" readonly="1" force_save="1"/>
+                                        <field name="current_price" readonly="1" force_save="1"/>
+                                        <field name="new_price"/>
+                                        <field name="price_difference" readonly="1" force_save="1"/>
+                                        <field name="effective_from"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                     <footer>
                         <button name="action_apply_bulk_update"
