@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_picking_form_zero_receipt_quantities" model="ir.ui.view">
+        <field name="name">stock.picking.form.zero.receipt.quantities</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_zero_receipt_quantities"
+                        string="Set Quantities to Zero"
+                        type="object"
+                        class="btn-secondary"
+                        groups="stock.group_stock_user"
+                        invisible="picking_type_code != 'incoming' or state in ('done', 'cancel')"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

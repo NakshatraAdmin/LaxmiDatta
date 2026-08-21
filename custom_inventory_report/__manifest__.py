@@ -5,6 +5,7 @@
     'summary': 'Laxmidatta inventory PDF layout',
     'depends': ['stock', 'custom_quotation_app', 'sales_commission_users'],
     'data': [
+        'views/stock_picking_views.xml',
         'report/report_paperformat_stock.xml',
         'report/report_deliveryslip.xml',
         # 'report/report_picking_operations.xml',
