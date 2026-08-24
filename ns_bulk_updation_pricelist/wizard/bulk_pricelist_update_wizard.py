@@ -122,12 +122,55 @@ class BulkPricelistUpdateWizard(models.TransientModel):
             ('categ_id', 'child_of', self.category_id.id),
         ])
         lines = []
-        pricelist = self.pricelist_ids[0] if self.pricelist_ids else False
+
+        # Extract real integer database IDs (handling NewId in onchange context)
+        pricelist_ids = []
+        if self.pricelist_ids:
+            for p in self.pricelist_ids:
+                pid = p._origin.id if (hasattr(p, '_origin') and p._origin) else p.id
+                if pid and isinstance(pid, int):
+                    pricelist_ids.append(pid)
+
+        # Search existing pricelist items sorted by latest (id desc)
+        existing_items = self.env['product.pricelist.item'].search([
+            ('pricelist_id', 'in', pricelist_ids),
+        ], order='id desc') if pricelist_ids else self.env['product.pricelist.item']
+
+        item_map = {}
+        tmpl_item_map = {}
+        for item in existing_items:
+            pl_id = item.pricelist_id.id
+            if item.product_id and (pl_id, item.product_id.id) not in item_map:
+                item_map[(pl_id, item.product_id.id)] = item
+            elif item.product_tmpl_id and (pl_id, item.product_tmpl_id.id) not in tmpl_item_map:
+                tmpl_item_map[(pl_id, item.product_tmpl_id.id)] = item
+
+        primary_pricelist = self.pricelist_ids[0] if self.pricelist_ids else False
+        pricelist_obj = primary_pricelist._origin if (primary_pricelist and hasattr(primary_pricelist, '_origin') and primary_pricelist._origin) else primary_pricelist
+
         for product in products:
             current_price = 0.0
-            if pricelist:
+            item = False
+            if pricelist_obj:
+                item = item_map.get((pricelist_obj.id, product.id)) or tmpl_item_map.get((pricelist_obj.id, product.product_tmpl_id.id))
+
+            if item:
+                if item.compute_price == 'fixed':
+                    current_price = item.fixed_price
+                elif item.compute_price == 'percentage':
+                    base_price = product.lst_price or 0.0
+                    current_price = base_price * (1.0 - (item.percent_price / 100.0))
+                else:
+                    try:
+                        current_price = item._compute_price(product, 1.0, product.uom_id, fields.Datetime.now())
+                    except Exception:
+                        try:
+                            current_price = pricelist_obj._get_product_price(product, 1.0)
+                        except Exception:
+                            current_price = product.lst_price or 0.0
+            elif pricelist_obj:
                 try:
-                    current_price = pricelist._get_product_price(product, 1.0)
+                    current_price = pricelist_obj._get_product_price(product, 1.0)
                 except Exception:
                     current_price = product.lst_price or 0.0
             else:
@@ -147,15 +190,34 @@ class BulkPricelistUpdateWizard(models.TransientModel):
             if record.date_start and record.date_end and record.date_start > record.date_end:
                 raise ValidationError(_("Start Date cannot be after End Date."))
 
-    def _update_item(self, item, product=None):
-        """Update existing product.pricelist.item record with proper calculation values."""
-        vals = {}
-        if self.min_quantity:
-            vals['min_quantity'] = self.min_quantity
-        if self.date_start:
-            vals['date_start'] = self.date_start
-        if self.date_end:
-            vals['date_end'] = self.date_end
+    def _archive_and_remove_existing_items(self, pricelist, product=None, product_tmpl=None, item=None):
+        """Archive existing price rules for the specified product/tmpl/pricelist (or item) into
+        product.pricelist.history, and delete the old active price rules by delegating to ProductPricelistItem."""
+        if item:
+            existing_items = item
+        else:
+            domain = [('pricelist_id', '=', pricelist.id)]
+            if product:
+                domain += ['|', ('product_id', '=', product.id), ('product_tmpl_id', '=', product.product_tmpl_id.id)]
+            elif product_tmpl:
+                domain += [('product_tmpl_id', '=', product_tmpl.id)]
+            existing_items = self.env['product.pricelist.item'].search(domain)
+
+        if existing_items:
+            # Reuses the exact same history archival implementation defined on product.pricelist.item
+            existing_items.with_context(active_wizard_id=self.id)._archive_older_matching_items()
+
+    def _get_updated_item_vals(self, item, product=None):
+        """Compute values for creating a new price item based on an existing item and wizard settings."""
+        vals = {
+            'pricelist_id': item.pricelist_id.id,
+            'product_id': item.product_id.id if item.product_id else (product.id if product else False),
+            'product_tmpl_id': item.product_tmpl_id.id if item.product_tmpl_id else (product.product_tmpl_id.id if product else False),
+            'applied_on': item.applied_on,
+            'min_quantity': self.min_quantity or item.min_quantity or 1.0,
+            'date_start': self.date_start or item.date_start,
+            'date_end': self.date_end or item.date_end,
+        }
 
         if self.computation_method == 'fixed_price':
             vals.update({
@@ -164,16 +226,28 @@ class BulkPricelistUpdateWizard(models.TransientModel):
             })
         elif self.computation_method == 'percentage':
             if item.compute_price == 'percentage':
-                vals['percent_price'] = item.percent_price + self.value
+                vals.update({
+                    'compute_price': 'percentage',
+                    'percent_price': item.percent_price + self.value,
+                })
             elif item.compute_price == 'fixed':
                 new_price = item.fixed_price * (1.0 + (self.value / 100.0))
-                vals['fixed_price'] = max(0.0, new_price)
+                vals.update({
+                    'compute_price': 'fixed',
+                    'fixed_price': max(0.0, new_price),
+                })
             elif item.compute_price == 'formula':
                 if hasattr(item, 'price_discount'):
-                    vals['price_discount'] = item.price_discount - self.value
+                    vals.update({
+                        'compute_price': 'formula',
+                        'price_discount': item.price_discount - self.value,
+                    })
                 else:
                     new_price = item.fixed_price * (1.0 + (self.value / 100.0))
-                    vals['fixed_price'] = max(0.0, new_price)
+                    vals.update({
+                        'compute_price': 'fixed',
+                        'fixed_price': max(0.0, new_price),
+                    })
             else:
                 vals.update({
                     'compute_price': 'percentage',
@@ -182,7 +256,10 @@ class BulkPricelistUpdateWizard(models.TransientModel):
         elif self.computation_method == 'fixed_amount':
             if item.compute_price == 'fixed':
                 new_price = item.fixed_price + self.value
-                vals['fixed_price'] = max(0.0, new_price)
+                vals.update({
+                    'compute_price': 'fixed',
+                    'fixed_price': max(0.0, new_price),
+                })
             elif item.compute_price == 'percentage':
                 target_prod = product or item.product_id or (item.product_tmpl_id.product_variant_id if item.product_tmpl_id else None)
                 base_price = target_prod.lst_price if target_prod else 0.0
@@ -198,9 +275,7 @@ class BulkPricelistUpdateWizard(models.TransientModel):
                     'compute_price': 'fixed',
                     'fixed_price': max(0.0, new_price),
                 })
-
-        if vals:
-            item.write(vals)
+        return vals
 
     def _get_new_item_price_vals(self, product=None):
         """Return dict with price computation fields for newly created pricelist item."""
@@ -251,8 +326,10 @@ class BulkPricelistUpdateWizard(models.TransientModel):
             if not self.pricelist_item_ids:
                 raise UserError(_("Please select at least one Pricelist Item."))
             for item in self.pricelist_item_ids:
-                self._update_item(item)
-                modified_items |= item
+                new_vals = self._get_updated_item_vals(item)
+                self._archive_and_remove_existing_items(item.pricelist_id, item=item)
+                new_item = self.env['product.pricelist.item'].create(new_vals)
+                modified_items |= new_item
 
         elif self.apply_on == 'all_products':
             for pricelist in self.pricelist_ids:
@@ -261,8 +338,10 @@ class BulkPricelistUpdateWizard(models.TransientModel):
                 ])
                 if items:
                     for item in items:
-                        self._update_item(item)
-                        modified_items |= item
+                        new_vals = self._get_updated_item_vals(item)
+                        self._archive_and_remove_existing_items(pricelist, item=item)
+                        new_item = self.env['product.pricelist.item'].create(new_vals)
+                        modified_items |= new_item
                 else:
                     item_vals = {
                         'pricelist_id': pricelist.id,
@@ -285,24 +364,18 @@ class BulkPricelistUpdateWizard(models.TransientModel):
             if not products:
                 raise UserError(_("No products found in the selected category."))
 
-            existing_items = self.env['product.pricelist.item'].search([
-                ('pricelist_id', 'in', self.pricelist_ids.ids),
-            ])
-            item_map = {}
-            tmpl_item_map = {}
-            for item in existing_items:
-                if item.product_id:
-                    item_map[(item.pricelist_id.id, item.product_id.id)] = item
-                elif item.product_tmpl_id:
-                    tmpl_item_map[(item.pricelist_id.id, item.product_tmpl_id.id)] = item
-
-            new_items_vals = []
             for pricelist in self.pricelist_ids:
                 for product in products:
-                    existing_item = item_map.get((pricelist.id, product.id)) or tmpl_item_map.get((pricelist.id, product.product_tmpl_id.id))
-                    if existing_item:
-                        self._update_item(existing_item, product=product)
-                        modified_items |= existing_item
+                    existing_items = self.env['product.pricelist.item'].search([
+                        ('pricelist_id', '=', pricelist.id),
+                        '|', ('product_id', '=', product.id), ('product_tmpl_id', '=', product.product_tmpl_id.id),
+                    ])
+                    if existing_items:
+                        for existing_item in existing_items:
+                            new_vals = self._get_updated_item_vals(existing_item, product=product)
+                            self._archive_and_remove_existing_items(pricelist, item=existing_item)
+                            new_item = self.env['product.pricelist.item'].create(new_vals)
+                            modified_items |= new_item
                     else:
                         item_vals = {
                             'pricelist_id': pricelist.id,
@@ -314,11 +387,8 @@ class BulkPricelistUpdateWizard(models.TransientModel):
                             'date_end': self.date_end,
                         }
                         item_vals.update(self._get_new_item_price_vals(product=product))
-                        new_items_vals.append(item_vals)
-
-            if new_items_vals:
-                created_items = self.env['product.pricelist.item'].create(new_items_vals)
-                modified_items |= created_items
+                        new_item = self.env['product.pricelist.item'].create(item_vals)
+                        modified_items |= new_item
 
         elif self.apply_on == 'products_under_category':
             if not self.category_id:
@@ -335,52 +405,24 @@ class BulkPricelistUpdateWizard(models.TransientModel):
                 if line.new_price < 0:
                     raise ValidationError(_("New Price cannot be negative."))
 
-            existing_items = self.env['product.pricelist.item'].search([
-                ('pricelist_id', 'in', self.pricelist_ids.ids),
-            ])
-            item_map = {}
-            tmpl_item_map = {}
-            for item in existing_items:
-                if item.product_id:
-                    item_map[(item.pricelist_id.id, item.product_id.id)] = item
-                elif item.product_tmpl_id:
-                    tmpl_item_map[(item.pricelist_id.id, item.product_tmpl_id.id)] = item
-
-            new_items_vals = []
             for line in edited_lines:
                 product = line.product_id
                 start_date = line.effective_from or self.date_start
                 for pricelist in self.pricelist_ids:
-                    existing_item = item_map.get((pricelist.id, product.id)) or tmpl_item_map.get((pricelist.id, product.product_tmpl_id.id))
-                    if existing_item:
-                        vals = {
-                            'compute_price': 'fixed',
-                            'fixed_price': line.new_price,
-                            'min_quantity': self.min_quantity or 1.0,
-                        }
-                        if start_date:
-                            vals['date_start'] = start_date
-                        if self.date_end:
-                            vals['date_end'] = self.date_end
-                        existing_item.write(vals)
-                        modified_items |= existing_item
-                    else:
-                        item_vals = {
-                            'pricelist_id': pricelist.id,
-                            'product_id': product.id,
-                            'product_tmpl_id': product.product_tmpl_id.id,
-                            'applied_on': '0_product_variant',
-                            'compute_price': 'fixed',
-                            'fixed_price': line.new_price,
-                            'min_quantity': self.min_quantity or 1.0,
-                            'date_start': start_date,
-                            'date_end': self.date_end,
-                        }
-                        new_items_vals.append(item_vals)
-
-            if new_items_vals:
-                created_items = self.env['product.pricelist.item'].create(new_items_vals)
-                modified_items |= created_items
+                    self._archive_and_remove_existing_items(pricelist, product=product)
+                    item_vals = {
+                        'pricelist_id': pricelist.id,
+                        'product_id': product.id,
+                        'product_tmpl_id': product.product_tmpl_id.id,
+                        'applied_on': '0_product_variant',
+                        'compute_price': 'fixed',
+                        'fixed_price': line.new_price,
+                        'min_quantity': self.min_quantity or 1.0,
+                        'date_start': start_date,
+                        'date_end': self.date_end,
+                    }
+                    new_item = self.env['product.pricelist.item'].create(item_vals)
+                    modified_items |= new_item
 
         return {
             'name': _('Updated Pricelist Items'),
