@@ -84,11 +84,19 @@
                     3px;vertical-align:middle;overflow-wrap:anywhere}.lax-title
                     td{height:18px;background:#d9e2f3;text-align:center;font-weight:700;font-size:20px!important}.lax-logo,.lax-website-qr,.lax-center{text-align:center}.lax-logo
                     img{max-width:120px;max-height:120px}.lax-website-qr
-                    img{max-width:95px;max-height:95px}.lax-company{text-align:center;font-weight:700;line-height:1.08;padding-top:1px!important;padding-bottom:1px!important}.lax-company&gt;div{margin:2px 0!important;padding:0!important;line-height:1.8!important}.lax-company-name{font-size:20px!important;margin:1px 0 2px 0!important;padding:0!important;line-height:1.8!important}.lax-company-contact{white-space:nowrap;margin:2px 0!important;padding:0!important;line-height:1.8!important}.lax-company-email{display:inline-block;padding-left:10px;line-height:1.8!important}.lax-company-gst,.lax-company-gst
-                    *{font-size:16px!important;margin:2px 0 1px 0!important;padding:0!important;line-height:1.8!important}.lax-address-box{height:72px;vertical-align:top!important}.lax-party-name,.lax-bold{font-weight:700}.lax-nested-wrap{border:0!important;padding:0!important;vertical-align:top!important;line-height:0!important}.lax-nested-wrap&gt;.lax-inner{height:100%}.lax-meta-cell{height:24px;text-align:left;vertical-align:middle!important;font-weight:700;white-space:nowrap;padding:0!important;position:relative}.lax-meta-cell:after{content:'';position:absolute;top:0;bottom:0;left:46%;border-left:1px
+                    img{max-width:95px;max-height:95px}.lax-company{text-align:center;font-weight:700;line-height:1.08;padding-top:1px!important;padding-bottom:1px!important}.lax-company&gt;div{margin:2px
+                    0!important;padding:0!important;line-height:1.8!important}.lax-company-name{font-size:20px!important;margin:1px
+                    0 2px
+                    0!important;padding:0!important;line-height:1.8!important}.lax-company-contact{white-space:nowrap;margin:2px
+                    0!important;padding:0!important;line-height:1.8!important}.lax-company-email{display:inline-block;padding-left:10px;line-height:1.8!important}.lax-company-gst,.lax-company-gst
+                    *{font-size:16px!important;margin:2px 0 1px
+                    0!important;padding:0!important;line-height:1.8!important}.lax-address-box{height:72px;vertical-align:top!important}.lax-party-name,.lax-bold{font-weight:700}.lax-nested-wrap{border:0!important;padding:0!important;vertical-align:top!important;line-height:0!important}.lax-nested-wrap&gt;.lax-inner{height:100%}.lax-meta-cell{height:24px;text-align:left;vertical-align:middle!important;font-weight:700;white-space:nowrap;padding:0!important;position:relative}.lax-meta-cell:after{content:'';position:absolute;top:0;bottom:0;left:46%;border-left:1px
                     solid #000}.lax-meta-label{display:inline-block;width:46%;height:24px;padding:2px
                     3px;box-sizing:border-box;vertical-align:middle;line-height:20px}.lax-meta-value{display:inline-block;width:54%;height:24px;padding:2px
-                    3px;box-sizing:border-box;text-align:left;font-weight:400;vertical-align:middle;line-height:20px}.lax-salesman-cell{height:auto;min-height:24px;white-space:normal}.lax-salesman-cell .lax-meta-label,.lax-salesman-cell .lax-meta-value{height:auto;min-height:24px;vertical-align:top}.lax-salesman-cell .lax-meta-value{white-space:normal}.lax-side-last td{border-bottom:0!important}.lax-col-head
+                    3px;box-sizing:border-box;text-align:left;font-weight:400;vertical-align:middle;line-height:20px}.lax-salesman-cell{height:auto;min-height:24px;white-space:normal}.lax-salesman-cell
+                    .lax-meta-label,.lax-salesman-cell
+                    .lax-meta-value{height:auto;min-height:24px;vertical-align:top}.lax-salesman-cell
+                    .lax-meta-value{white-space:normal}.lax-side-last td{border-bottom:0!important}.lax-col-head
                     td{height:30px;text-align:center;font-weight:700}.lax-line
                     td{height:36px}.lax-right{text-align:right}.lax-hsn,.lax-nowrap{white-space:nowrap;overflow-wrap:normal!important}.lax-terms{height:86px;vertical-align:top!important}.lax-terms-note,.lax-terms-note
                     *{text-align:justify;font-weight:400}.lax-summary td{height:18px}.lax-bank
@@ -96,7 +104,8 @@
                     img{max-width:85px;max-height:84px}.lax-bank-inner,.lax-bank-inner tr,.lax-bank-inner
                     td{border:0!important}.lax-sign-box{text-align:center;font-weight:700;height:70px;position:relative}.lax-sign-user{position:absolute;top:32px;left:0;right:0}.lax-sign-bottom{position:absolute;bottom:0;left:0;right:0}.lax-final-block,.lax-last-block{page-break-inside:avoid}.footer
                     table,.footer tr,.footer td{border:0!important}.lax-hsn-summary{table-layout:fixed}.lax-hsn-summary
-                    td{height:20px;text-align:center}.lax-hsn-summary-head td{background:#d9d9d9;font-weight:700}.lax-hsn-summary-subhead
+                    td{height:20px;text-align:center}.lax-hsn-summary-head
+                    td{background:#d9d9d9;font-weight:700}.lax-hsn-summary-subhead
                     td{font-weight:700}.lax-hsn-block{page-break-inside:avoid}
                 </style>
                 <div class="page lax-invoice-page">
@@ -157,8 +166,8 @@
                                     </div>
                                 </td>
                                 <td colspan="3" rowspan="4" class="lax-website-qr">
-<!--                                    <img t-if="doc.company_id.website"-->
-<!--                                         t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=120&amp;height=120' % doc.company_id.website"/>-->
+                                    <!--                                    <img t-if="doc.company_id.website"-->
+                                    <!--                                         t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=120&amp;height=120' % doc.company_id.website"/>-->
                                 </td>
                             </tr>
                             <tr/>
@@ -214,13 +223,16 @@
                                         </tr>
                                         <tr>
                                             <td class="lax-meta-cell lax-salesman-cell">
-                                                <span class="lax-meta-label">SALESMAN</span><span class="lax-meta-value">
+                                                <span class="lax-meta-label">SALESMAN</span>
+                                                <span class="lax-meta-value">
                                                     <span t-esc="', '.join(sale_order.salesperson_ids.mapped('name')) or sale_order.user_id.name or doc.invoice_user_id.name or ''"/>
                                                 </span>
                                             </td>
                                             <td class="lax-meta-cell">
                                                 <span class="lax-meta-label">OTHER REF.</span>
-                                                <span class="lax-meta-value"><span t-field="doc.other_references"/></span>
+                                                <span class="lax-meta-value">
+                                                    <span t-field="doc.other_references"/>
+                                                </span>
                                             </td>
                                         </tr>
                                         <tr>
@@ -232,17 +244,23 @@
                                             </td>
                                             <td class="lax-meta-cell">
                                                 <span class="lax-meta-label">DISPATCHED THROUGH</span>
-                                                <span class="lax-meta-value"><span t-field="doc.dispatched_through_id"/></span>
+                                                <span class="lax-meta-value">
+                                                    <span t-field="doc.dispatched_through_id"/>
+                                                </span>
                                             </td>
                                         </tr>
                                         <tr class="lax-side-last">
                                             <td class="lax-meta-cell">
                                                 <span class="lax-meta-label">ARTICLE</span>
-                                                <span class="lax-meta-value"><span t-field="doc.article_no"/></span>
+                                                <span class="lax-meta-value">
+                                                    <span t-field="doc.article_no"/>
+                                                </span>
                                             </td>
                                             <td class="lax-meta-cell">
                                                 <span class="lax-meta-label">VEHICLE NO</span>
-                                                <span class="lax-meta-value"><span t-field="doc.vehical_num"/></span>
+                                                <span class="lax-meta-value">
+                                                    <span t-field="doc.vehical_num"/>
+                                                </span>
                                             </td>
                                         </tr>
                                     </table>
@@ -359,44 +377,91 @@
                                 <td colspan="20" class="lax-nested-wrap">
                                     <table class="lax-inner lax-hsn-summary">
                                         <colgroup>
-                                            <col style="width:18%"/><col style="width:12%"/>
-                                            <col style="width:7%"/><col style="width:10%"/>
-                                            <col style="width:7%"/><col style="width:10%"/>
-                                            <col style="width:7%"/><col style="width:10%"/>
+                                            <col style="width:18%"/>
+                                            <col style="width:12%"/>
+                                            <col style="width:7%"/>
+                                            <col style="width:10%"/>
+                                            <col style="width:7%"/>
+                                            <col style="width:10%"/>
+                                            <col style="width:7%"/>
+                                            <col style="width:10%"/>
                                             <col style="width:19%"/>
                                         </colgroup>
                                         <tr class="lax-hsn-summary-head">
                                             <td rowspan="2">HSN/SAC</td>
-                                            <td rowspan="2">TAXABLE<br/>VALUE</td>
+                                            <td rowspan="2">TAXABLE<br/>VALUE
+                                            </td>
                                             <td colspan="2">CGST</td>
                                             <td colspan="2">SGST</td>
                                             <td colspan="2">IGST</td>
-                                            <td rowspan="2">TOTAL TAX<br/>AMOUNT</td>
+                                            <td rowspan="2">TOTAL TAX<br/>AMOUNT
+                                            </td>
                                         </tr>
                                         <tr class="lax-hsn-summary-subhead">
-                                            <td>RATE</td><td>AMOUNT</td><td>RATE</td><td>AMOUNT</td>
-                                            <td>RATE</td><td>AMOUNT</td>
+                                            <td>RATE</td>
+                                            <td>AMOUNT</td>
+                                            <td>RATE</td>
+                                            <td>AMOUNT</td>
+                                            <td>RATE</td>
+                                            <td>AMOUNT</td>
                                         </tr>
                                         <t t-foreach="hsn_tax_details" t-as="hsn_detail">
                                             <tr>
-                                                <td><span t-esc="hsn_detail['hsn_code']"/></td>
-                                                <td class="lax-right"><span t-esc="'%.2f' % hsn_detail['taxable_value']"/></td>
-                                                <td><span t-if="hsn_detail['cgst_rate']" t-esc="('%g' % hsn_detail['cgst_rate']) + '%'"/></td>
-                                                <td class="lax-right"><span t-if="hsn_detail['cgst_amount']" t-esc="'%.2f' % hsn_detail['cgst_amount']"/></td>
-                                                <td><span t-if="hsn_detail['sgst_rate']" t-esc="('%g' % hsn_detail['sgst_rate']) + '%'"/></td>
-                                                <td class="lax-right"><span t-if="hsn_detail['sgst_amount']" t-esc="'%.2f' % hsn_detail['sgst_amount']"/></td>
-                                                <td><span t-if="hsn_detail['igst_rate']" t-esc="('%g' % hsn_detail['igst_rate']) + '%'"/></td>
-                                                <td class="lax-right"><span t-if="hsn_detail['igst_amount']" t-esc="'%.2f' % hsn_detail['igst_amount']"/></td>
-                                                <td class="lax-right"><span t-esc="'%.2f' % hsn_detail['total_tax_amount']"/></td>
+                                                <td>
+                                                    <span t-esc="hsn_detail['hsn_code']"/>
+                                                </td>
+                                                <td class="lax-right">
+                                                    <span t-esc="'%.2f' % hsn_detail['taxable_value']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-if="hsn_detail['cgst_rate']"
+                                                          t-esc="('%g' % hsn_detail['cgst_rate']) + '%'"/>
+                                                </td>
+                                                <td class="lax-right">
+                                                    <span t-if="hsn_detail['cgst_amount']"
+                                                          t-esc="'%.2f' % hsn_detail['cgst_amount']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-if="hsn_detail['sgst_rate']"
+                                                          t-esc="('%g' % hsn_detail['sgst_rate']) + '%'"/>
+                                                </td>
+                                                <td class="lax-right">
+                                                    <span t-if="hsn_detail['sgst_amount']"
+                                                          t-esc="'%.2f' % hsn_detail['sgst_amount']"/>
+                                                </td>
+                                                <td>
+                                                    <span t-if="hsn_detail['igst_rate']"
+                                                          t-esc="('%g' % hsn_detail['igst_rate']) + '%'"/>
+                                                </td>
+                                                <td class="lax-right">
+                                                    <span t-if="hsn_detail['igst_amount']"
+                                                          t-esc="'%.2f' % hsn_detail['igst_amount']"/>
+                                                </td>
+                                                <td class="lax-right">
+                                                    <span t-esc="'%.2f' % hsn_detail['total_tax_amount']"/>
+                                                </td>
                                             </tr>
                                         </t>
                                         <tr class="lax-bold">
                                             <td>TOTAL</td>
-                                            <td class="lax-right"><span t-esc="'%.2f' % sum(taxed_lines.mapped('price_subtotal'))"/></td>
-                                            <td/><td class="lax-right"><span t-esc="'%.2f' % (gst_amount / 2.0)"/></td>
-                                            <td/><td class="lax-right"><span t-esc="'%.2f' % (gst_amount / 2.0)"/></td>
-                                            <td/><td class="lax-right"><span t-esc="'%.2f' % igst_amount"/></td>
-                                            <td class="lax-right"><span t-esc="'%.2f' % (gst_amount + igst_amount)"/></td>
+                                            <td class="lax-right">
+                                                <span t-esc="'%.2f' % sum(taxed_lines.mapped('price_subtotal'))"/>
+                                            </td>
+                                            <td/>
+                                            <td class="lax-right">
+                                                <span t-esc="'%.2f' % (gst_amount / 2.0)"/>
+                                            </td>
+                                            <td/>
+                                            <td class="lax-right">
+                                                <span t-esc="'%.2f' % (gst_amount / 2.0)"/>
+                                            </td>
+                                            <td/>
+                                            <td class="lax-right">
+                                                <span t-esc="'%.2f' % igst_amount"/>
+                                            </td>
+                                            <td class="lax-right">
+                                                <span t-esc="'%.2f' % (gst_amount + igst_amount)"/>
+                                            </td>
                                         </tr>
                                     </table>
                                 </td>
@@ -427,8 +492,8 @@
                                 </td>
                                 <td colspan="15">
                                     <t t-foreach="invoice_payment_values" t-as="payment">
-                                        <span t-esc="'%.2f - %s%s' % (payment['amount'], payment['journal_name'], (' (' + payment['payment_method_name'] + ')') if payment['payment_method_name'] else '')"/>
-                                        <t t-if="not payment_last">, </t>
+                                        <span t-esc="'%.2f - %s' % (payment['amount'], payment.get('ref') or '')"/>
+                                        <t t-if="not payment_last">,</t>
                                     </t>
                                 </td>
                             </tr>
