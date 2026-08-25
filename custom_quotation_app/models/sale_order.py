@@ -9,16 +9,6 @@ from odoo.tools import image_data_uri
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    # The HTML field uses Odoo's web editor, including its "/" powerbox.
-    # Keep the standard sale field's compute and storage configuration.
-    name = fields.Html(
-        string='Description',
-        compute='_compute_name',
-        store=True,
-        readonly=False,
-        required=True,
-        precompute=True,
-    )
     product_image_1920 = fields.Image(
         string='Product Image',
         related='product_id.image_1920',

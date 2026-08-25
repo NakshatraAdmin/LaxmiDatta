@@ -30,14 +30,6 @@
                     <field name="product_image_1920" widget="image" options="{'width': 10, 'height': 10}"
                            string="Product Image"/>
                 </xpath>
-                <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="replace">
-                    <field
-                            name="name"
-                            widget="html"
-                            optional="show"
-                            options="{'resizable': false}"
-                    />
-                </xpath>
                 <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
                     <field name="bom_id" optional="show"/>
                 </xpath>
