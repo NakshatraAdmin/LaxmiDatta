@@ -8,10 +8,11 @@
     'website': 'https://www.volar.com',
     'author': 'Product Customization',
     'category': 'Inventory/Purchase',
-    'depends': ['product', 'purchase','sale'],
+    'depends': ['product', 'purchase_stock', 'sale'],
     'data': [
     # 'views/product_product_view.xml',
     'views/custom_fields.xml',
+    'views/account_move_views.xml',
     'views/report_saleorder_templates.xml',
     ],
     'installable': True,

@@ -76,6 +76,10 @@
             <t t-set="summary_net_receivable"
                t-value="summary_total_amount - summary_paid_amount - invoice_payment_amount"/>
             <t t-set="taxed_lines" t-value="lines.filtered(lambda line: line.tax_ids)"/>
+            <t t-set="rounding_line"
+               t-value="doc.line_ids.filtered(lambda l: l.display_type == 'rounding')[:1]"/>
+            <t t-set="round_off"
+               t-value="rounding_line.balance if rounding_line else 0.0"/>
             <t t-call="custom_invoice_report.laxmidatta_invoice_external_layout">
                 <style>
                     .page{margin-top:0!important;padding-top:0!important}.lax-invoice-page,.lax-invoice-page
@@ -93,10 +97,42 @@
                     0!important;padding:0!important;line-height:1.8!important}.lax-address-box{height:72px;vertical-align:top!important}.lax-party-name,.lax-bold{font-weight:700}.lax-nested-wrap{border:0!important;padding:0!important;vertical-align:top!important;line-height:0!important}.lax-nested-wrap&gt;.lax-inner{height:100%}.lax-meta-cell{height:24px;text-align:left;vertical-align:middle!important;font-weight:700;white-space:nowrap;padding:0!important;position:relative}.lax-meta-cell:after{content:'';position:absolute;top:0;bottom:0;left:46%;border-left:1px
                     solid #000}.lax-meta-label{display:inline-block;width:46%;height:24px;padding:2px
                     3px;box-sizing:border-box;vertical-align:middle;line-height:20px}.lax-meta-value{display:inline-block;width:54%;height:24px;padding:2px
-                    3px;box-sizing:border-box;text-align:left;font-weight:400;vertical-align:middle;line-height:20px}.lax-salesman-cell{height:auto;min-height:24px;white-space:normal}.lax-salesman-cell
-                    .lax-meta-label,.lax-salesman-cell
-                    .lax-meta-value{height:auto;min-height:24px;vertical-align:top}.lax-salesman-cell
-                    .lax-meta-value{white-space:normal}.lax-side-last td{border-bottom:0!important}.lax-col-head
+                    3px;box-sizing:border-box;text-align:left;font-weight:400;vertical-align:middle;line-height:20px}.lax-salesman-cell
+                    {
+                    height: auto !important;
+                    min-height: 24px;
+                    white-space: normal !important;
+                    vertical-align: top !important;
+                    position: relative;
+                    font-size: 0 !important;
+                    }.lax-salesman-cell .lax-meta-label {
+                    display: inline-block;
+                    width: 46%;
+                    min-height: 24px;
+                    height: auto;
+                    padding: 2px 3px;
+                    box-sizing: border-box;
+                    vertical-align: top;
+                    line-height: 20px;
+                    white-space: nowrap;
+                    font-size: 13px !important;
+                    }
+                    .lax-salesman-cell .lax-meta-value {
+                    display: inline-block;
+                    width: 54%;
+                    min-height: 24px;
+                    height: auto;
+                    padding: 2px 3px;
+                    box-sizing: border-box;
+                    vertical-align: top;
+                    text-align: left;
+                    font-weight: 400;
+                    line-height: 20px;
+                    white-space: normal !important;
+                    overflow-wrap: anywhere;
+                    word-break: normal;
+                    font-size: 13px !important;
+                    }.lax-side-last td{border-bottom:0!important}.lax-col-head
                     td{height:30px;text-align:center;font-weight:700}.lax-line
                     td{height:36px}.lax-right{text-align:right}.lax-hsn,.lax-nowrap{white-space:nowrap;overflow-wrap:normal!important}.lax-terms{height:86px;vertical-align:top!important}.lax-terms-note,.lax-terms-note
                     *{text-align:justify;font-weight:400}.lax-summary td{height:18px}.lax-bank
@@ -347,7 +383,9 @@
                             </tr>
                             <tr>
                                 <td colspan="4" class="lax-bold">ROUND OFF</td>
-                                <td colspan="2" class="lax-right">0.00</td>
+                                <td colspan="2" class="lax-right">
+                                    <span t-esc="'%.2f' % round_off"/>
+                                </td>
                             </tr>
                             <tr t-if="has_igst">
                                 <td colspan="4" class="lax-bold">IGST</td>
@@ -474,7 +512,7 @@
                                 <td colspan="15" class="lax-center lax-bold">PAYMENT DETAILS</td>
                             </tr>
                             <tr class="lax-summary">
-                                <td colspan="3" class="lax-bold">LESS PAID</td>
+                                <td colspan="3" class="lax-bold">LESS ADVANCE</td>
                                 <td colspan="2" class="lax-right">
                                     <span t-esc="'%.2f' % summary_paid_amount"/>
                                 </td>
@@ -486,7 +524,7 @@
                                 </td>
                             </tr>
                             <tr class="lax-summary">
-                                <td colspan="3" class="lax-bold">LESS PAYMENT</td>
+                                <td colspan="3" class="lax-bold">LESS BALANCE PAYMENT</td>
                                 <td colspan="2" class="lax-right">
                                     <span t-esc="'%.2f' % invoice_payment_amount"/>
                                 </td>
