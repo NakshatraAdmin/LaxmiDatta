@@ -64,13 +64,15 @@
                t-value="sum([detail['igst_amount'] for detail in hsn_tax_details])"/>
             <t t-set="gst_amount"
                t-value="sum([detail['cgst_amount'] + detail['sgst_amount'] for detail in hsn_tax_details])"/>
+            <t t-set="total_tax_amount"
+               t-value="igst_amount + gst_amount"/>
             <t t-set="advance_payments"
                t-value="sale_order._get_report_advance_payments() if sale_order else doc.env['account.payment']"/>
             <t t-set="invoice_payment_values"
                t-value="doc.sudo().invoice_payments_widget and doc.sudo().invoice_payments_widget['content'] or []"/>
             <t t-set="invoice_payment_amount" t-value="doc.amount_total - doc.amount_residual"/>
             <t t-set="summary_total_amount"
-               t-value="sale_order.amount_total if sale_order else doc.amount_total"/>
+               t-value="(doc.amount_untaxed + total_tax_amount)"/>
             <t t-set="summary_paid_amount"
                t-value="sale_order.advance_payment_amount if sale_order else 0.0"/>
             <t t-set="summary_net_receivable"
@@ -408,7 +410,7 @@
                             <tr>
                                 <td colspan="4" class="lax-bold">FINAL AMOUNT</td>
                                 <td colspan="2" class="lax-right lax-bold">
-                                    <span t-esc="'%.2f' % doc.amount_total"/>
+                                    <span t-esc="'%.2f' % (doc.amount_untaxed + total_tax_amount)"/>
                                 </td>
                             </tr>
                             <tr class="lax-hsn-block">
@@ -530,7 +532,10 @@
                                 </td>
                                 <td colspan="15">
                                     <t t-foreach="invoice_payment_values" t-as="payment">
-                                        <span t-esc="'%.2f - %s' % (payment['amount'], payment.get('ref') or '')"/>
+                                        <t t-set="payment_record"
+                                           t-value="doc.env['account.payment'].browse(payment.get('account_payment_id'))"/>
+
+                                        <span t-esc="'%.2f - %s' % (payment['amount'], payment_record.ref or '')"/>
                                         <t t-if="not payment_last">,</t>
                                     </t>
                                 </td>

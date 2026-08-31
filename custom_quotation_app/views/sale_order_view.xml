@@ -38,6 +38,7 @@
                     <field name="other_references"/>
                     <field name="dispatched_through_id"/>
                     <field name="vehicle_no"/>
+                    <field name="invoice_cash_rounding_id"/>
                 </xpath>
                 <xpath expr="//field[@name='sale_order_template_id']" position="after">
                     <field name="article"/>
@@ -133,6 +134,9 @@
                    t-value="sum([line.price_tax for line in lines if line.tax_id.filtered(lambda tax: 'GST' in (tax.name or '').upper() and 'IGST' not in (tax.name or '').upper())])"/>
                 <t t-set="qr_code_url" t-value="doc._generate_qr_code(silent_errors=True)"/>
                 <t t-set="advance_payments" t-value="doc._get_report_advance_payments()"/>
+                <t t-set="total_tax_amount" t-value="igst_amount + gst_amount"/>
+                <t t-set="rounded_total"
+                   t-value="doc.amount_untaxed + doc.amount_tax + doc.cash_rounding_amount"/>
                 <t t-call="custom_quotation_app.laxmidatta_saleorder_external_layout">
                     <style>
                         .page { margin-top: 0 !important; padding-top: 0 !important; }
@@ -499,7 +503,9 @@
                                 </tr>
                                 <tr>
                                     <td colspan="4" class="lax-bold">ROUND OFF</td>
-                                    <td colspan="2" class="lax-right">0.00</td>
+                                    <td colspan="2" class="lax-right">
+                                        <span t-esc="'%.2f' % doc.cash_rounding_amount"/>
+                                    </td>
                                 </tr>
                                 <tr t-if="has_igst">
                                     <td colspan="4" class="lax-bold">IGST</td>
@@ -522,13 +528,13 @@
                                 <tr>
                                     <td colspan="4" class="lax-bold">FINAL AMOUNT</td>
                                     <td colspan="2" class="lax-right lax-bold">
-                                        <span t-esc="'%.2f' % doc.amount_total"/>
+                                        <span t-esc="'%.2f' % rounded_total"/>
                                     </td>
                                 </tr>
                                 <tr class="lax-summary lax-last-block">
                                     <td colspan="3" class="lax-bold">TOTAL AMOUNT</td>
                                     <td colspan="2" class="lax-right">
-                                        <span t-esc="'%.2f' % doc.amount_total"/>
+                                        <span t-esc="'%.2f' % rounded_total"/>
                                     </td>
                                     <td colspan="15" class="lax-center lax-bold">PAYMENT DETAILS</td>
                                 </tr>
@@ -547,7 +553,10 @@
                                 <tr class="lax-summary">
                                     <td colspan="3" class="lax-bold">NET RECEIVABLE RS</td>
                                     <td colspan="2" class="lax-right">
-                                        <span t-esc="'%.2f' % (doc.amount_total - doc.advance_payment_amount)"/>
+                                        <span t-esc="'%.2f' % (
+                                            rounded_total
+                                            - doc.advance_payment_amount
+                                        )"/>
                                     </td>
                                     <td colspan="15"></td>
                                 </tr>

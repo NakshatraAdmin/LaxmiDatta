@@ -18,6 +18,9 @@
                 <attribute name="string">Product Variant</attribute>
                 <attribute name="widget">purchase_product_many2one</attribute>
             </xpath>
+            <xpath expr="//field[@name='fiscal_position_id']" position="after">
+                <field name="invoice_cash_rounding_id"/>
+            </xpath>
         </field>
     </record>
 </odoo>
