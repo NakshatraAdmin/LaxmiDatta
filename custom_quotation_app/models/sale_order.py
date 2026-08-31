@@ -4,7 +4,7 @@ import base64
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.tools import image_data_uri
+from odoo.tools import formatLang, image_data_uri
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
@@ -57,6 +57,39 @@ class SaleOrder(models.Model):
         store=True,
         currency_field='currency_id',
     )
+    invoice_cash_rounding_id = fields.Many2one(
+        'account.cash.rounding',
+        string='Cash Rounding Method',
+        default=lambda self: self._get_default_cash_rounding(),
+    )
+    cash_rounding_amount = fields.Monetary(
+        string='Rounding',
+        compute='_compute_cash_rounding_amount',
+        currency_field='currency_id',
+    )
+
+    @api.model
+    def _get_default_cash_rounding(self):
+        return self.env['account.cash.rounding'].search([
+            ('company_id', '=', self.env.company.id)
+        ], limit=1)
+
+    @api.depends(
+        'amount_untaxed',
+        'amount_tax',
+        'invoice_cash_rounding_id',
+        'currency_id',
+    )
+    def _compute_cash_rounding_amount(self):
+        for order in self:
+            rounding = order.invoice_cash_rounding_id
+
+            if rounding:
+                order.cash_rounding_amount = rounding.compute_difference(
+                    order.currency_id, order.amount_untaxed + order.amount_tax,
+                )
+            else:
+                order.cash_rounding_amount = 0.0
 
     def _compute_payment_count(self):
         for order in self:
@@ -97,6 +130,52 @@ class SaleOrder(models.Model):
                     )
                 advance_payment_amount += amount
             order.advance_payment_amount = advance_payment_amount
+
+    @api.depends(
+        'order_line.price_subtotal',
+        'order_line.price_tax',
+        'order_line.price_total',
+        'invoice_cash_rounding_id',
+        'currency_id',
+    )
+    def _amount_all(self):
+        super()._amount_all()
+        for order in self:
+            rounding = order.invoice_cash_rounding_id
+            if rounding:
+                base_amount = order.amount_untaxed + order.amount_tax
+                order.amount_total = base_amount + rounding.compute_difference(
+                    order.currency_id, base_amount,
+                )
+
+    @api.depends_context('lang')
+    @api.depends(
+        'order_line.tax_id',
+        'order_line.price_unit',
+        'amount_total',
+        'amount_untaxed',
+        'currency_id',
+        'invoice_cash_rounding_id',
+        'cash_rounding_amount',
+    )
+    def _compute_tax_totals(self):
+        """Provide the same rounding data that the invoice totals widget uses."""
+        super()._compute_tax_totals()
+        for order in self:
+            if not order.invoice_cash_rounding_id:
+                continue
+            totals = order.tax_totals
+            rounding_amount = order.cash_rounding_amount
+            totals['display_rounding'] = True
+            if rounding_amount:
+                totals['rounding_amount'] = rounding_amount
+                totals['formatted_rounding_amount'] = formatLang(
+                    self.env, rounding_amount, currency_obj=order.currency_id,
+                )
+            totals['amount_total'] = order.amount_total
+            totals['formatted_amount_total'] = formatLang(
+                self.env, order.amount_total, currency_obj=order.currency_id,
+            )
 
     def _get_report_advance_payments(self):
         self.ensure_one()
@@ -180,6 +259,16 @@ class SaleOrder(models.Model):
     def _prepare_invoice(self):
         vals = super()._prepare_invoice()
         vals['salesperson_partner_ids'] = [fields.Command.set(self.salesperson_partner_ids.ids)]
+        if self.invoice_cash_rounding_id:
+            vals['invoice_cash_rounding_id'] = self.invoice_cash_rounding_id.id
+        else:
+            rounding_method = self.env['account.cash.rounding'].search([
+                ('company_id', '=', self.company_id.id)
+            ], limit=1)
+
+            if rounding_method:
+                vals['invoice_cash_rounding_id'] = rounding_method.id
+
         return vals
 
     def _generate_qr_code(self, silent_errors=False):
