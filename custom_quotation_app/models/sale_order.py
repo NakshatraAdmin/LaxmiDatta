@@ -78,6 +78,8 @@ class SaleOrder(models.Model):
         'amount_untaxed',
         'amount_tax',
         'invoice_cash_rounding_id',
+        'invoice_cash_rounding_id.rounding',
+        'invoice_cash_rounding_id.rounding_method',
         'currency_id',
     )
     def _compute_cash_rounding_amount(self):
@@ -136,17 +138,38 @@ class SaleOrder(models.Model):
         'order_line.price_tax',
         'order_line.price_total',
         'invoice_cash_rounding_id',
+        'invoice_cash_rounding_id.rounding',
+        'invoice_cash_rounding_id.rounding_method',
         'currency_id',
     )
-    def _amount_all(self):
-        super()._amount_all()
+    def _compute_amounts(self):
+        """Compute SO totals and apply cash rounding as Odoo does for invoices."""
         for order in self:
+            order = order.with_company(order.company_id)
+            order_lines = order.order_line.filtered(lambda line: not line.display_type)
+
+            if order.company_id.tax_calculation_rounding_method == 'round_globally':
+                tax_results = order.env['account.tax']._compute_taxes([
+                    line._convert_to_tax_base_line_dict()
+                    for line in order_lines
+                ])
+                totals = tax_results['totals'].get(order.currency_id, {})
+                amount_untaxed = totals.get('amount_untaxed', 0.0)
+                amount_tax = totals.get('amount_tax', 0.0)
+            else:
+                amount_untaxed = sum(order_lines.mapped('price_subtotal'))
+                amount_tax = sum(order_lines.mapped('price_tax'))
+
+            order.amount_untaxed = amount_untaxed
+            order.amount_tax = amount_tax
+            amount_total = amount_untaxed + amount_tax
+
             rounding = order.invoice_cash_rounding_id
             if rounding:
-                base_amount = order.amount_untaxed + order.amount_tax
-                order.amount_total = base_amount + rounding.compute_difference(
-                    order.currency_id, base_amount,
+                amount_total += rounding.compute_difference(
+                    order.currency_id, amount_total,
                 )
+            order.amount_total = amount_total
 
     @api.depends_context('lang')
     @api.depends(
@@ -156,6 +179,9 @@ class SaleOrder(models.Model):
         'amount_untaxed',
         'currency_id',
         'invoice_cash_rounding_id',
+        'invoice_cash_rounding_id.rounding',
+        'invoice_cash_rounding_id.rounding_method',
+        'invoice_cash_rounding_id.strategy',
         'cash_rounding_amount',
     )
     def _compute_tax_totals(self):
@@ -165,17 +191,34 @@ class SaleOrder(models.Model):
             if not order.invoice_cash_rounding_id:
                 continue
             totals = order.tax_totals
-            rounding_amount = order.cash_rounding_amount
+            rounding = order.invoice_cash_rounding_id
+            rounding_amount = rounding.compute_difference(
+                order.currency_id, totals['amount_total'],
+            )
             totals['display_rounding'] = True
             if rounding_amount:
-                totals['rounding_amount'] = rounding_amount
-                totals['formatted_rounding_amount'] = formatLang(
-                    self.env, rounding_amount, currency_obj=order.currency_id,
+                if rounding.strategy == 'add_invoice_line':
+                    totals['rounding_amount'] = rounding_amount
+                    totals['formatted_rounding_amount'] = formatLang(
+                        self.env, rounding_amount, currency_obj=order.currency_id,
+                    )
+                elif rounding.strategy == 'biggest_tax' and totals['subtotals_order']:
+                    max_tax_group = max((
+                        tax_group
+                        for tax_groups in totals['groups_by_subtotal'].values()
+                        for tax_group in tax_groups
+                    ), key=lambda tax_group: tax_group['tax_group_amount'])
+                    max_tax_group['tax_group_amount'] += rounding_amount
+                    max_tax_group['formatted_tax_group_amount'] = formatLang(
+                        self.env,
+                        max_tax_group['tax_group_amount'],
+                        currency_obj=order.currency_id,
+                    )
+
+                totals['amount_total'] += rounding_amount
+                totals['formatted_amount_total'] = formatLang(
+                    self.env, totals['amount_total'], currency_obj=order.currency_id,
                 )
-            totals['amount_total'] = order.amount_total
-            totals['formatted_amount_total'] = formatLang(
-                self.env, order.amount_total, currency_obj=order.currency_id,
-            )
 
     def _get_report_advance_payments(self):
         self.ensure_one()
