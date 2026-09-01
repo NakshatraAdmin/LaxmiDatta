@@ -155,6 +155,7 @@ class ProductPricelistItem(models.Model):
                     }
                     history_vals.append(h_val)
                 if history_vals:
-                    self.env['product.pricelist.history'].create(history_vals)
-                older_items.unlink()
+                    self.env['product.pricelist.history'].sudo().create(history_vals)
+                older_items.sudo().unlink()
+
 
