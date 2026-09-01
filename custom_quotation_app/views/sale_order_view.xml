@@ -51,6 +51,12 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="attributes">
+                    <attribute name="column_invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="salesperson_partner_ids" string="Salespersons" widget="many2many_tags"/>
+                </xpath>
                 <xpath expr="//field[@name='amount_total']" position="after">
                     <field name="advance_payment_amount" sum="Total Advance Payment" widget="monetary" optional="show"/>
                 </xpath>
@@ -508,7 +514,7 @@
                                 <tr>
                                     <td colspan="4" class="lax-bold">ROUND OFF</td>
                                     <td colspan="2" class="lax-right">
-                                        <span t-esc="'%.2f' % report_rounding_amount"/>
+                                        <span t-esc="'%+.2f' % (-report_rounding_amount)"/>
                                     </td>
                                 </tr>
                                 <tr t-if="has_igst">

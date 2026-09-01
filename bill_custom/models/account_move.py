@@ -14,6 +14,14 @@ class AccountMove(models.Model):
         readonly=True,
         help="Select a completed receipt to add only the products and quantities received in it.",
     )
+    grn_no = fields.Char(
+        string="GRN No",
+        related="receipt_id.name",
+        store=True,
+        copy=False,
+        readonly=True,
+        help="The receipt number selected while creating the vendor bill.",
+    )
 
     @api.onchange("purchase_vendor_bill_id", "purchase_id")
     def _onchange_purchase_auto_complete(self):

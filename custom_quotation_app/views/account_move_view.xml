@@ -11,18 +11,20 @@
                     <attribute name="force_save">1</attribute>
                 </xpath>
                 <xpath expr="//group[@name='sale_info_group']/field[@name='invoice_user_id']" position="after">
-                    <field name="salesperson_partner_ids" string="Salespersons" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}"/>
+                    <field name="salesperson_partner_ids" string="Salespersons" widget="many2many_tags"
+                           options="{'no_create': True, 'no_create_edit': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='ref']" position="before">
-                 <field name="dispatched_through_id"/>
-                 <field name="article_no"/>
-                  <field name="vehical_num"/>
-                  <field name="other_references"/>
-                 
-             </xpath>
+                    <field name="salesperson_ids" readonly="1" widget="many2many_tags"/>
+                    <field name="dispatched_through_id"/>
+                    <field name="article_no"/>
+                    <field name="vehical_num"/>
+                    <field name="other_references"/>
+                </xpath>
 
                 <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="before">
-                    <field name="product_image_1920" widget="image" options="{'width': 10, 'height': 10}" string="Product Image"/>
+                    <field name="product_image_1920" widget="image" options="{'width': 10, 'height': 10}"
+                           string="Product Image"/>
                 </xpath>
                 <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_uom_id']" position="after">
                     <field name="secondary_product_uom_qty" optional="show"/>
@@ -37,32 +39,45 @@
 
         <template id="report_invoice_document_customization" inherit_id="account.report_invoice_document">
             <xpath expr="//table//thead//th[contains(@name, 'th_description')]" position="before">
-                <th name="th_product_image" class="text-start"><span>Product Image</span></th>
+                <th name="th_product_image" class="text-start">
+                    <span>Product Image</span>
+                </th>
             </xpath>
             <xpath expr="//table//tbody//td[contains(@name, 'account_invoice_line_name')]" position="before">
                 <td name="td_product_image" class="text-start">
-                    <img t-if="line.product_id.image_1920" t-att-src="'data:image/png;base64,' + line.product_id.image_1920.decode('utf-8')" style="max-height: 50px; max-width: 50px;"/>
+                    <img t-if="line.product_id.image_1920"
+                         t-att-src="'data:image/png;base64,' + line.product_id.image_1920.decode('utf-8')"
+                         style="max-height: 50px; max-width: 50px;"/>
                     <span t-else="True">No Image</span>
                 </td>
             </xpath>
 
-<xpath expr="//div[@name='invoice_date']" position="after">                         <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.dispatched_through_id" name="dispatched_through_id">
-                                <strong>Dispatched Through:</strong><br/>
-                                <span t-field="o.dispatched_through_id"></span>
-                            </div>
-                             <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.article_no" name="article_no">
-                                <strong>Article No:</strong><br/>
-                                <span t-field="o.article_no"></span>
-                            </div>
-                             <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.vehical_num" name="vehical_num">
-                                <strong>VEHICLE NO:</strong><br/>
-                                <span t-field="o.vehical_num"></span>
-                            </div>
-                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.other_references" name="other_references">
-                                <strong>Other References:</strong><br/>
-                                <span t-field="o.other_references"></span>
-                            </div>
-                        </xpath>
+            <xpath expr="//div[@name='invoice_date']" position="after">
+                <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2"
+                     t-if="o.dispatched_through_id" name="dispatched_through_id">
+                    <strong>Dispatched Through:</strong>
+                    <br/>
+                    <span t-field="o.dispatched_through_id"></span>
+                </div>
+                <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2"
+                     t-if="o.article_no" name="article_no">
+                    <strong>Article No:</strong>
+                    <br/>
+                    <span t-field="o.article_no"></span>
+                </div>
+                <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2"
+                     t-if="o.vehical_num" name="vehical_num">
+                    <strong>VEHICLE NO:</strong>
+                    <br/>
+                    <span t-field="o.vehical_num"></span>
+                </div>
+                <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2"
+                     t-if="o.other_references" name="other_references">
+                    <strong>Other References:</strong>
+                    <br/>
+                    <span t-field="o.other_references"></span>
+                </div>
+            </xpath>
         </template>
     </data>
 </odoo>

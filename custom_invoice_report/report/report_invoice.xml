@@ -81,7 +81,7 @@
             <t t-set="rounding_line"
                t-value="doc.line_ids.filtered(lambda l: l.display_type == 'rounding')[:1]"/>
             <t t-set="round_off"
-               t-value="rounding_line.balance if rounding_line else 0.0"/>
+               t-value="(-doc.direction_sign * rounding_line.amount_currency) if rounding_line else 0.0"/>
             <t t-call="custom_invoice_report.laxmidatta_invoice_external_layout">
                 <style>
                     .page{margin-top:0!important;padding-top:0!important}.lax-invoice-page,.lax-invoice-page
@@ -386,7 +386,7 @@
                             <tr>
                                 <td colspan="4" class="lax-bold">ROUND OFF</td>
                                 <td colspan="2" class="lax-right">
-                                    <span t-esc="'%.2f' % round_off"/>
+                                    <span t-esc="'%+.2f' % round_off"/>
                                 </td>
                             </tr>
                             <tr t-if="has_igst">

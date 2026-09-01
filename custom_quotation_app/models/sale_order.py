@@ -302,6 +302,10 @@ class SaleOrder(models.Model):
     def _prepare_invoice(self):
         vals = super()._prepare_invoice()
         vals['salesperson_partner_ids'] = [fields.Command.set(self.salesperson_partner_ids.ids)]
+
+        if self.salesperson_ids:
+            vals['salesperson_ids'] = [fields.Command.set(self.salesperson_ids.ids)]
+
         if self.invoice_cash_rounding_id:
             vals['invoice_cash_rounding_id'] = self.invoice_cash_rounding_id.id
         else:
