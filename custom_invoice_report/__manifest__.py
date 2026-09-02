@@ -5,7 +5,7 @@
     'summary': 'Laxmidatta customer invoice PDF layout',
     # Indian invoices use l10n_in's primary report template.  Inheriting that
     # template lets this layout coexist with its GST/HSN report extensions.
-    'depends': ['account', 'sale_management', 'l10n_in', 'custom_quotation_app', 'sales_commission_users'],
+    'depends': ['account', 'sale_management', 'l10n_in', 'l10n_in_edi', 'custom_quotation_app', 'sales_commission_users'],
     'data': [
         'report/report_invoice.xml',
     ],

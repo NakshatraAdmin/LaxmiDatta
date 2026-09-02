@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import logging
+
 from odoo import api, fields, models
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
@@ -22,6 +27,27 @@ class AccountMove(models.Model):
         string='Other References',
         compute='_compute_sale_order_details',
     )
+
+    def _get_l10n_in_edi_report_values(self):
+        """Return e-invoice response values without breaking PDF generation.
+
+        Odoo's standard helper assumes that every sent Indian EDI document has
+        a readable JSON attachment. Historical or manually altered documents
+        can have an empty/corrupt attachment, in which case json.loads raises
+        and prevents the complete invoice from being printed.
+        """
+        self.ensure_one()
+        try:
+            values = self._get_l10n_in_edi_response_json()
+        except (ValueError, UnicodeDecodeError, AttributeError, TypeError):
+            _logger.warning(
+                "Ignoring invalid Indian E-Invoice response attachment while "
+                "rendering invoice %s",
+                self.display_name,
+                exc_info=True,
+            )
+            return {}
+        return values if isinstance(values, dict) else {}
 
     def _get_hsn_tax_details(self):
         """Return one GST summary row per HSN/SAC code for the invoice."""

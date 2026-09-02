@@ -8,6 +8,11 @@
             <field name="purchase_id" position="after">
                 <field name="receipt_id" invisible="1" force_save="1"/>
             </field>
+            <div name="journal_div" position="after">
+                <field name="grn_no"
+                       readonly="1"
+                       invisible="move_type not in ('in_invoice', 'in_refund')"/>
+            </div>
         </field>
     </record>
 </odoo>

@@ -34,6 +34,11 @@ class AccountMove(models.Model):
     article_no = fields.Char(string="Article No" , related="sale_id.article" )
     vehical_num= fields.Char(string="VEHICLE NO" , related="sale_id.vehicle_no")
     other_references = fields.Char(string = "Other References" , related="sale_id.other_references")
+    salesperson_ids = fields.Many2many(
+        'hr.employee',
+        string="Salespersons",
+        help="Employees who receive commission"
+    )
 
     def _get_salesperson_partners_from_user(self, user):
         self.ensure_one()

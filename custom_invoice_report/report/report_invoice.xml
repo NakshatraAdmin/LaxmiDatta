@@ -81,7 +81,7 @@
             <t t-set="rounding_line"
                t-value="doc.line_ids.filtered(lambda l: l.display_type == 'rounding')[:1]"/>
             <t t-set="round_off"
-               t-value="rounding_line.balance if rounding_line else 0.0"/>
+               t-value="(-doc.direction_sign * rounding_line.amount_currency) if rounding_line else 0.0"/>
             <t t-call="custom_invoice_report.laxmidatta_invoice_external_layout">
                 <style>
                     .page{margin-top:0!important;padding-top:0!important}.lax-invoice-page,.lax-invoice-page
@@ -139,6 +139,7 @@
                     td{height:36px}.lax-right{text-align:right}.lax-hsn,.lax-nowrap{white-space:nowrap;overflow-wrap:normal!important}.lax-terms{height:86px;vertical-align:top!important}.lax-terms-note,.lax-terms-note
                     *{text-align:justify;font-weight:400}.lax-summary td{height:18px}.lax-bank
                     td{height:70px;vertical-align:top!important}.lax-qr-cell{width:32%;text-align:center;vertical-align:middle!important}.lax-qr-cell
+                    img{max-width:110px;max-height:110px}.lax-einvoice td{padding:6px!important;vertical-align:top!important}.lax-einvoice-details{word-break:break-all}.lax-einvoice-qr{text-align:center;vertical-align:middle!important}.lax-einvoice-qr img{width:130px;max-width:130px;max-height:130px}
                     img{max-width:85px;max-height:84px}.lax-bank-inner,.lax-bank-inner tr,.lax-bank-inner
                     td{border:0!important}.lax-sign-box{text-align:center;font-weight:700;height:70px;position:relative}.lax-sign-user{position:absolute;top:32px;left:0;right:0}.lax-sign-bottom{position:absolute;bottom:0;left:0;right:0}.lax-final-block,.lax-last-block{page-break-inside:avoid}.footer
                     table,.footer tr,.footer td{border:0!important}.lax-hsn-summary{table-layout:fixed}.lax-hsn-summary
@@ -386,7 +387,7 @@
                             <tr>
                                 <td colspan="4" class="lax-bold">ROUND OFF</td>
                                 <td colspan="2" class="lax-right">
-                                    <span t-esc="'%.2f' % round_off"/>
+                                    <span t-esc="'%+.2f' % round_off"/>
                                 </td>
                             </tr>
                             <tr t-if="has_igst">
@@ -582,6 +583,27 @@
                                         </div>
                                         <div class="lax-sign-bottom">AUTHORISED SIGNATORY</div>
                                     </div>
+                                </td>
+                            </tr>
+                            <t t-set="l10n_in_einvoice_json" t-value="doc._get_l10n_in_edi_report_values()"/>
+                            <tr class="lax-einvoice" t-if="l10n_in_einvoice_json">
+                                <td colspan="6" class="lax-einvoice-details">
+                                    <div class="lax-bold">ACKNOWLEDGEMENT</div>
+                                    <div>
+                                        <span t-esc="l10n_in_einvoice_json.get('AckNo', '')"/>
+                                    </div>
+                                    <div>
+                                        <span t-esc="l10n_in_einvoice_json.get('AckDt', '')"/>
+                                    </div>
+                                </td>
+                                <td colspan="9" class="lax-einvoice-details">
+                                    <div class="lax-bold">IRN:</div>
+                                    <span t-esc="l10n_in_einvoice_json.get('Irn', '')"/>
+                                </td>
+                                <td colspan="5" class="lax-einvoice-qr">
+                                    <img t-if="l10n_in_einvoice_json.get('SignedQRCode')"
+                                         t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=500&amp;height=500' % l10n_in_einvoice_json.get('SignedQRCode')"
+                                         alt="E-Invoice QR Code"/>
                                 </td>
                             </tr>
                         </tbody>
