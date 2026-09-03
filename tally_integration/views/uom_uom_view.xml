@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_uom_uom_send_to_tally" model="ir.actions.server">
+        <field name="name">Send To Tally</field>
+        <field name="model_id" ref="uom.model_uom_uom"/>
+        <field name="binding_model_id" ref="uom.model_uom_uom"/>
+        <field name="binding_view_types">tree,form</field>
+        <field name="state">code</field>
+        <field name="code">
+action = records.action_send_to_tally()
+        </field>
+    </record>
+
+    <record id="view_uom_uom_form_inherit_tally" model="ir.ui.view">
+        <field name="name">uom.uom.form.inherit.tally</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="is_tally"/>
+            </field>
+        </field>
+    </record>
+</odoo>

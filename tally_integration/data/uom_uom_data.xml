@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!--
+        Odoo 17 requires every unit of measure to belong to a category.  Version
+        19 removed that requirement and uses ``relative_factor`` instead of the
+        version 17 ``factor_inv``/``uom_type`` fields.
+
+        These UQCs are kept in their own category so they do not accidentally
+        convert to Odoo's standard length, weight, volume, or time units.
+    -->
+    <record id="uom_category_tally_uqc" model="uom.category">
+        <field name="name">Tally UQC</field>
+    </record>
+
+    <record id="uom_uom_bag" model="uom.uom">
+        <field name="name">Bags</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">reference</field>
+        <field name="l10n_in_code">BAG</field>
+    </record>
+    <record id="uom_uom_bal" model="uom.uom">
+        <field name="name">Bale</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">BAL</field>
+    </record>
+    <record id="uom_uom_bdl" model="uom.uom">
+        <field name="name">Bundles</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">BDL</field>
+    </record>
+    <record id="uom_uom_bkl" model="uom.uom">
+        <field name="name">Buckles</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">BKL</field>
+    </record>
+    <record id="uom_uom_bou" model="uom.uom">
+        <field name="name">Billions of Units</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">BOU</field>
+    </record>
+    <record id="uom_uom_box" model="uom.uom">
+        <field name="name">Box</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">BOX</field>
+    </record>
+    <record id="uom_uom_btl" model="uom.uom">
+        <field name="name">Bottles</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">BTL</field>
+    </record>
+    <record id="uom_uom_bun" model="uom.uom">
+        <field name="name">Bunches</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">BUN</field>
+    </record>
+    <record id="uom_uom_can" model="uom.uom">
+        <field name="name">Cans</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">CAN</field>
+    </record>
+    <record id="uom_uom_cbm" model="uom.uom">
+        <field name="name">Cubic Metres</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">CBM</field>
+    </record>
+    <record id="uom_uom_ccm" model="uom.uom">
+        <field name="name">Cubic Centimetres</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">CCM</field>
+    </record>
+    <record id="uom_uom_cms" model="uom.uom">
+        <field name="name">Centimetres</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">CMS</field>
+    </record>
+    <record id="uom_uom_ctn" model="uom.uom">
+        <field name="name">Cartons</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">CTN</field>
+    </record>
+    <record id="uom_uom_doz" model="uom.uom">
+        <field name="name">Dozens</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">DOZ</field>
+    </record>
+    <record id="uom_uom_drm" model="uom.uom">
+        <field name="name">Drums</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">DRM</field>
+    </record>
+    <record id="uom_uom_ggk" model="uom.uom">
+        <field name="name">Great Gross</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">GGK</field>
+    </record>
+    <record id="uom_uom_gms" model="uom.uom">
+        <field name="name">Grams</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">GMS</field>
+    </record>
+    <record id="uom_uom_grs" model="uom.uom">
+        <field name="name">Gross</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">GRS</field>
+    </record>
+    <record id="uom_uom_gyd" model="uom.uom">
+        <field name="name">Gross Yards</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">GYD</field>
+    </record>
+    <record id="uom_uom_kgs" model="uom.uom">
+        <field name="name">Kilograms</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">KGS</field>
+    </record>
+    <record id="uom_uom_klr" model="uom.uom">
+        <field name="name">Kilolitre</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">KLR</field>
+    </record>
+    <record id="uom_uom_kme" model="uom.uom">
+        <field name="name">Kilometre</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">KME</field>
+    </record>
+    <record id="uom_uom_ltr" model="uom.uom">
+        <field name="name">Litre</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">LTR</field>
+    </record>
+    <record id="uom_uom_mtr" model="uom.uom">
+        <field name="name">Metre</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">MTR</field>
+    </record>
+    <record id="uom_uom_mlt" model="uom.uom">
+        <field name="name">Millilitre</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">MLT</field>
+    </record>
+    <record id="uom_uom_mts" model="uom.uom">
+        <field name="name">Metric Ton</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">MTS</field>
+    </record>
+    <record id="uom_uom_nos" model="uom.uom">
+        <field name="name">Numbers</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">NOS</field>
+    </record>
+    <record id="uom_uom_oth" model="uom.uom">
+        <field name="name">Others</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">OTH</field>
+    </record>
+    <record id="uom_uom_pac" model="uom.uom">
+        <field name="name">Packs</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">PAC</field>
+    </record>
+    <record id="uom_uom_pcs" model="uom.uom">
+        <field name="name">Pieces</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">PCS</field>
+    </record>
+    <record id="uom_uom_prs" model="uom.uom">
+        <field name="name">Pairs</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">PRS</field>
+    </record>
+    <record id="uom_uom_qtl" model="uom.uom">
+        <field name="name">Quintal</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">QTL</field>
+    </record>
+    <record id="uom_uom_rol" model="uom.uom">
+        <field name="name">Rolls</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">ROL</field>
+    </record>
+    <record id="uom_uom_set" model="uom.uom">
+        <field name="name">Sets</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">SET</field>
+    </record>
+    <record id="uom_uom_sqf" model="uom.uom">
+        <field name="name">Square Feet</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">SQF</field>
+    </record>
+    <record id="uom_uom_sqm" model="uom.uom">
+        <field name="name">Square Metre</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">SQM</field>
+    </record>
+    <record id="uom_uom_sqy" model="uom.uom">
+        <field name="name">Square Yards</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">SQY</field>
+    </record>
+    <record id="uom_uom_tbs" model="uom.uom">
+        <field name="name">Tablets</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">TBS</field>
+    </record>
+    <record id="uom_uom_tgm" model="uom.uom">
+        <field name="name">Ten Gross</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">TGM</field>
+    </record>
+    <record id="uom_uom_thd" model="uom.uom">
+        <field name="name">Thousands</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">THD</field>
+    </record>
+    <record id="uom_uom_ton" model="uom.uom">
+        <field name="name">Tonnes</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">TON</field>
+    </record>
+    <record id="uom_uom_tub" model="uom.uom">
+        <field name="name">Tubes</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">TUB</field>
+    </record>
+    <record id="uom_uom_ugs" model="uom.uom">
+        <field name="name">US Gallons</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">UGS</field>
+    </record>
+    <record id="uom_uom_unt" model="uom.uom">
+        <field name="name">Unit</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">UNT</field>
+    </record>
+    <record id="uom_uom_yds" model="uom.uom">
+        <field name="name">Yards</field>
+        <field name="category_id" ref="uom_category_tally_uqc"/>
+        <field name="factor_inv" eval="1.0"/>
+        <field name="uom_type">bigger</field>
+        <field name="l10n_in_code">YDS</field>
+    </record>
+</odoo>

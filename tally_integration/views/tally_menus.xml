@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_tally_integration_root"
+              name="Tally Integration"
+              sequence="25"
+              web_icon="tally_integration,static/description/icon.png"
+              active="False"/>
+
+    <!-- Dashboard Submenu -->
+    <menuitem id="menu_tally_dashboard"
+              name="Integration Overview"
+              parent="menu_tally_integration_root"
+              action="action_tally_dashboard"
+              sequence="1"/>
+
+    <!-- Log Details Submenu -->
+    <menuitem id="menu_tally_log_details"
+              name="Log Details"
+              parent="menu_tally_integration_root"
+              action="action_tally_log_details"
+              sequence="10"/>
+
+    <!-- Error Log Submenu -->
+    <menuitem id="menu_tally_error_log"
+              name="Error Log"
+              parent="menu_tally_integration_root"
+              action="action_tally_error_log"
+              sequence="20"/>
+</odoo>

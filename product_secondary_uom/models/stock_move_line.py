@@ -142,6 +142,40 @@ class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'
 
     on_hand_qty = fields.Float(related="lot_id.product_qty")
+
+    def write(self, vals):
+        """Restore the move link before stock updates a reservation.
+
+        Odoo's reservation code expects every reservable move line to have a
+        ``move_id``. A move line created from the picking UI can temporarily
+        be saved without that link; editing its destination package then makes
+        the standard code call ``_should_bypass_reservation`` on an empty
+        ``stock.move`` recordset. Link it exactly as the standard create flow
+        does before delegating to the stock implementation.
+        """
+        if self.env.context.get('_skip_orphan_move_link'):
+            return super().write(vals)
+
+        orphan_lines = self.filtered(lambda line: not line.move_id and line.picking_id)
+        for line in orphan_lines:
+            moves = line._get_linkable_moves()
+            if moves:
+                # Writing only move_id does not affect a reservation, and
+                # prevents the following package write from seeing an empty
+                # move recordset.
+                line.with_context(_skip_orphan_move_link=True).write({
+                    'move_id': moves[0].id,
+                })
+            else:
+                # This mirrors stock.move.line.create() for a picking line
+                # which has no existing move for its product.
+                move = self.env['stock.move'].create(line._prepare_stock_move_vals())
+                line.with_context(_skip_orphan_move_link=True).write({
+                    'move_id': move.id,
+                })
+                move._post_process_created_moves()
+        return super().write(vals)
+
 #     @api.model
 #     def _default_quant_id(self):
 #         if self._context.get('default_product_id'):

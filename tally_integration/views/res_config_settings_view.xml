@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_custom_company" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.custom.company</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='general_settings']/block[@id='user_default_rights']" position="before">
+                <block title="Tally" id="tally_detail">
+                    <setting id="custom_company_details"
+                             string="Tally Company Details"
+                             company_dependent="1"
+                             class="col-lg-12"
+                             help="Configure tally company details.">
+                        <div class="w-100 row">
+                            <label class="d-block w-50 py-2" for="tally_company_name"/>
+                            <field name="tally_company_name" placeholder="Enter company name"/>
+                        </div>
+                        <div class="w-100 row">
+                            <label class="d-block w-50 py-2" for="tally_company_id"/>
+                            <field name="tally_company_id" placeholder="Enter company ID"/>
+                        </div>
+                        <div class="w-100 row">
+                            <label class="d-block w-50 py-2" for="tally_url"/>
+                            <field name="tally_url" placeholder="https://tally.com"/>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+
+<!--            <xpath expr="//form/app/block[@id='analytic']" position="before">-->
+<!--                <block title="Tally" id="tall_detail" >-->
+<!--                    <setting id="custom_company_details"-->
+<!--                             string="Tally Company Details"-->
+<!--                             company_dependent="1"-->
+<!--                             help="Configure tally company details.">-->
+<!--                        <div class="content-group">-->
+<!--                            <div class="mt16">-->
+<!--                                <label for="tally_company_name" class="o_light_label"/>-->
+<!--                                <field name="tally_company_name" placeholder="Enter company name"/>-->
+<!--                            </div>-->
+<!--                            <div class="mt16">-->
+<!--                                <label for="tally_company_id" class="o_light_label"/>-->
+<!--                                <field name="tally_company_id" placeholder="Enter company ID"/>-->
+<!--                            </div>-->
+<!--                            <div class="mt16">-->
+<!--                                <label for="tally_url" class="o_light_label"/>-->
+<!--                                <field name="tally_url" placeholder="https://tally.com"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </setting>-->
+<!--                </block>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+</odoo>
