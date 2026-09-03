@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tally_dashboard_user,tally.dashboard.user,model_tally_dashboard,base.group_user,1,1,1,1
+access_tally_log_details_user,tally.log.details.user,model_tally_log_details,base.group_user,1,1,1,1
+access_tally_error_log_user,tally.error.log.user,model_tally_error_log,base.group_user,1,1,1,1

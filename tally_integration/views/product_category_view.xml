@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_product_category_send_to_tally" model="ir.actions.server">
+        <field name="name">Send To Tally</field>
+        <field name="model_id" ref="product.model_product_category"/>
+        <field name="binding_model_id" ref="product.model_product_category"/>
+        <field name="binding_view_types">tree,form</field>
+        <field name="state">code</field>
+        <field name="code">
+action = records.action_send_to_tally()
+        </field>
+    </record>
+</odoo>

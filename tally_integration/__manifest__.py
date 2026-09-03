@@ -1,0 +1,32 @@
+{
+    'name': 'Tally Integration',
+    'version': '17.0.1.0.0',
+    'category': 'Hidden',
+    'summary': 'Tally Integration',
+    "license": "OPL-1",
+    'website': "https://www.nakshatrainfo.com",
+    'description': """
+        Tally Integration Dashboard, Logging, and UOM Synchronization
+""",
+    'author': 'Nakshatra Solutions',
+    'depends': ['base', 'product', 'stock', 'uom', 'l10n_in', 'account_accountant', 'sale_management', 'purchase'],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/uom_uom_data.xml',
+        'data/tally_dashboard_data.xml',
+        'views/res_config_settings_view.xml',
+        'views/account_move_view.xml',
+        'views/account_account_view.xml',
+        'views/account_payment_view.xml',
+        'views/product_category_view.xml',
+        'views/product_product_view.xml',
+        'views/res_partner_view.xml',
+        'views/uom_uom_view.xml',
+        'views/tally_dashboard_views.xml',
+        'views/tally_log_details_views.xml',
+        'views/tally_error_log_views.xml',
+        'views/tally_menus.xml',
+    ],
+    'installable': True,
+    'auto_install': False,
+}

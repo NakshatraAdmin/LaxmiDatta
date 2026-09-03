@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_form_inherit_tally" model="ir.ui.view">
+        <field name="name">account.account.form.inherit.tally</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <field name="account_type" position="after">
+                <field name="tally_name"/>
+                <field name="coa_type"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_list_inherit_tally" model="ir.ui.view">
+        <field name="name">account.account.list.inherit.tally</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="tally_name" optional="show"/>
+                <field name="coa_type" optional="show"/>
+            </field>
+        </field>
+    </record>
+</odoo>

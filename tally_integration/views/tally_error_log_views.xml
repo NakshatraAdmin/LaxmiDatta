@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tally_error_log_tree" model="ir.ui.view">
+        <field name="name">tally.error.log.list</field>
+        <field name="model">tally.error.log</field>
+        <field name="arch" type="xml">
+            <tree string="Integration Error Log" create="0">
+                <field name="date"/>
+                <field name="error_log"/>
+                <field name="integration_name"/>
+                <field name="remark"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_tally_error_log_form" model="ir.ui.view">
+        <field name="name">tally.error.log.form</field>
+        <field name="model">tally.error.log</field>
+        <field name="arch" type="xml">
+            <form string="Integration Error Log" create="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="integration_name" placeholder="Integration Name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date" readonly="1"/>
+                            <field name="remark" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Error Log" name="error_log">
+                            <field name="error_log" readonly="1"/>
+                        </page>
+                        <page string="Attachment(s)" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary" readonly="1"/>
+                        </page>
+                        <page string="JSON Log" name="json_log">
+                            <field name="json_log" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_tally_error_log" model="ir.actions.act_window">
+        <field name="name">Error Log</field>
+        <field name="res_model">tally.error.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No integration error logs found!
+            </p>
+        </field>
+    </record>
+</odoo>
