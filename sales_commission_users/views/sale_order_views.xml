@@ -45,12 +45,13 @@
     </record>
 
     <record id="view_sales_order_filter_inherited" model="ir.ui.view">
-        <field name="name">
-            sale.order.search.inherit.sales.commission.users
-        </field>
+        <field name="name">sale.order.search.inherit.sales.commission.users</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="salesperson_ids"  string="Commission Sales Persons"/>
+            </field>
             <filter name="salesperson" position="attributes">
                 <attribute name="context">{'group_by': 'salesperson_ids'}</attribute>
             </filter>

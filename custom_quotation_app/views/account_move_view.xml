@@ -54,6 +54,9 @@
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
+                 <field name="invoice_user_id" position="after">
+                    <field name="salesperson_ids"  string="Commission Sales Persons"/>
+                </field>
                 <field name="invoice_user_id" position="replace"/>
                 <filter name="salesperson" position="replace"/>
             </field>

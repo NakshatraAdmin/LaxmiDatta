@@ -449,6 +449,7 @@ class BulkPricelistUpdateLine(models.TransientModel):
         string='Product',
         readonly=True,
     )
+    base_price = fields.Float(related='product_id.lst_price', readonly=True)
     current_price = fields.Float(
         string='Current Price',
         readonly=True,

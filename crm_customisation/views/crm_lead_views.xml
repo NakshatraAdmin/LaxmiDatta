@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_view_tree_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.tree.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='country_id']" position="after">
+                <field name="salesperson_ids" widget="many2many_tags" string="Commission Sales Persons"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_form_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.salespersons</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[field[@name='team_id']]/field[@name='user_id']" position="after">
+                <field name="salesperson_ids"
+                       widget="many2many_tags"
+                       string="Salespersons"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_search_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.search.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="salesperson_ids" string="Commission Sales Persons"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
