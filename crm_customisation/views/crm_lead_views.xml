@@ -1,5 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="crm_opportunity_view_tree_inherit_salespersons" model="ir.ui.view">
+        <field name="name">crm.opportunity.tree.inherit.salespersons</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="salesperson_ids" widget="many2many_tags" string="Commission Sales Persons" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_opportunity_view_form_inherit_salespersons" model="ir.ui.view">
+        <field name="name">crm.opportunity.form.inherit.salespersons</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group/field[@name='user_id']" position="after">
+                <field name="salesperson_ids" widget="many2many_tags" string="Commission Sales Persons"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_opportunity_view_search_inherit_salespersons" model="ir.ui.view">
+        <field name="name">crm.opportunity.search.inherit.salespersons</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="salesperson_ids" string="Commission Sales Persons"/>
+            </xpath>
+        </field>
+    </record>
+
     <record id="crm_lead_view_tree_inherit" model="ir.ui.view">
         <field name="name">crm.lead.tree.inherit</field>
         <field name="model">crm.lead</field>
@@ -17,9 +50,7 @@
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[field[@name='team_id']]/field[@name='user_id']" position="after">
-                <field name="salesperson_ids"
-                       widget="many2many_tags"
-                       string="Salespersons"/>
+                <field name="salesperson_ids" widget="many2many_tags" string="Salespersons"/>
             </xpath>
         </field>
     </record>
